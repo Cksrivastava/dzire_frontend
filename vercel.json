@@ -1,0 +1,9 @@
+{
+  "name": "my-app",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
