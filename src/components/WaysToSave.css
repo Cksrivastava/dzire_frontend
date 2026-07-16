@@ -1,0 +1,170 @@
+.ways-to-save-section {
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.ways-to-save-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111111;
+  margin: 0 0 10px 0;
+}
+
+.ways-to-save-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.save-card {
+  background-color: #fff9f6;
+  border: 1px solid #ffd2b3;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease;
+  padding: 18px;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.save-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+}
+
+.save-card-image-wrapper {
+  width: 100%;
+  height: 230px;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.save-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.save-card:hover .save-card-image {
+  transform: scale(1.04);
+}
+
+.save-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  flex-grow: 1;
+}
+
+.save-card-tag {
+  font-size: 11px;
+  font-weight: 700;
+  color: #ff6600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.save-card-heading {
+  font-size: 19px;
+  font-weight: 700;
+  color: #1e1e1e;
+  margin: 0 0 10px 0;
+  line-height: 1.25;
+}
+
+.save-card-desc {
+  font-size: 13.5px;
+  color: #4a4a4a;
+  line-height: 1.5;
+  margin: 0 0 16px 0;
+  flex-grow: 1;
+}
+
+.save-card-btn {
+  background-color: #ff6600;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 20px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.25s ease, transform 0.15s ease;
+}
+
+.save-card-btn:hover {
+  background-color: #e65c00;
+}
+
+.save-card-btn:active {
+  transform: scale(0.97);
+}
+
+/* Responsive adjustments */
+@media (max-width: 990px) {
+  .ways-to-save-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .save-card-heading {
+    font-size: 17px;
+  }
+
+  .save-card-image-wrapper {
+    height: 180px;
+  }
+
+  .save-card {
+    padding: 14px;
+  }
+
+  .save-card-desc {
+    font-size: 12.5px;
+  }
+}
+
+@media (max-width: 850px) {
+  .ways-to-save-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .ways-to-save-section {
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  .ways-to-save-title {
+    font-size: 20px;
+  }
+
+  .save-card-heading {
+    font-size: 22px;
+  }
+
+  .save-card-image-wrapper {
+    height: 280px;
+  }
+
+  .save-card {
+    padding: 24px;
+  }
+
+  .save-card-desc {
+    font-size: 14px;
+  }
+}

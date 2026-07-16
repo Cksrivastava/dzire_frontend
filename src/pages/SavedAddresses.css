@@ -1,0 +1,179 @@
+.addresses-content {
+  flex: 1;
+}
+
+.addresses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.address-card {
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e7eb;
+  padding: 24px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.address-card.default {
+  border-color: #ff6600;
+  background-color: #fffaf7;
+}
+
+.address-default-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background-color: #ff6600;
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 20px;
+  text-transform: uppercase;
+}
+
+.address-name {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+  color: #111111;
+  padding-right: 60px; /* Space for badge */
+}
+
+.address-details {
+  font-size: 14px;
+  color: #667085;
+  line-height: 1.6;
+  margin: 0 0 20px 0;
+  flex: 1;
+}
+
+.address-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: auto;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 16px;
+}
+
+.btn-edit, .btn-delete, .btn-set-default {
+  background: none;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+}
+
+.btn-edit {
+  color: #ff6600;
+}
+
+.btn-delete {
+  color: #f04438;
+}
+
+.btn-set-default {
+  color: #667085;
+  margin-left: auto;
+}
+
+.btn-set-default:hover {
+  color: #111111;
+}
+
+.add-new-address-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed #d1d5db;
+  background-color: #f9fafb;
+  min-height: 200px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.add-new-address-card:hover {
+  border-color: #ff6600;
+  background-color: #fff4ed;
+}
+
+.add-new-icon {
+  width: 48px;
+  height: 48px;
+  background-color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #667085;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s;
+}
+
+.add-new-address-card:hover .add-new-icon {
+  color: #ff6600;
+}
+
+.add-new-text {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111111;
+}
+
+/* Modal styles for adding address */
+.address-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.address-modal {
+  background: white;
+  width: 100%;
+  max-width: 500px;
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.address-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.address-modal-header h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #667085;
+}
+
+@media (max-width: 768px) {
+  .addresses-grid {
+    grid-template-columns: 1fr;
+  }
+}

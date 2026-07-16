@@ -1,0 +1,338 @@
+/* ==========================================================================
+   GLOBAL FONT DECLARATIONS (RUBIK & INTER)
+   ========================================================================== */
+
+/* 1. Rubik Font - Title, Button, Menu, Footer-Title */
+
+/* Titles & Headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.category-heading,
+.trending-header-title,
+.workout-subtitle,
+.workout-title,
+.popular-searches-heading,
+.save-card-heading,
+.popular-header h3,
+.popular-header h2,
+.classes-heading-row h1,
+.sidebar-heading,
+.event-feature-heading,
+.event-location-heading-row,
+.shipping-sidebar-heading,
+.price-card-title,
+.blog-title,
+.section-title,
+.ways-to-save-title,
+.price-cards-header h2,
+[class*="title"],
+[class*="heading"] {
+  font-family: 'Rubik', sans-serif !important;
+  font-weight: 600 !important;
+}
+
+/* Buttons */
+button,
+input[type="button"],
+input[type="submit"],
+.btn,
+.button,
+[class*="btn"],
+[class*="button"],
+.product-section-tab {
+  font-family: 'Rubik', sans-serif !important;
+}
+
+/* Menu (Navigation Links and items) */
+.nav-link,
+.nav-item,
+.menu-item,
+.menu-link,
+.navbar a,
+[class*="nav-"] a,
+[class*="menu-"] a,
+[class*="dropdown-item"],
+.sec-nav-links a,
+.sec-nav-simple-link,
+.sec-nav-link-title,
+.browse-categories-btn,
+.cat-dropdown-item {
+  font-family: 'Rubik', sans-serif !important;
+}
+
+/* Footer-Title */
+.footer-links-title,
+.footer h4,
+[class*="footer-links-title"] {
+  font-family: 'Rubik', sans-serif !important;
+}
+
+
+/* 2. Inter Font - At Text, Caption, Brand, Copyright */
+
+/* All Body & General Text */
+body,
+p,
+span,
+li,
+a,
+input,
+textarea,
+select,
+div,
+label,
+td,
+th {
+  font-family: 'Inter', sans-serif;
+}
+
+/* Brand */
+.brand,
+.brand-logo,
+[class*="brand"],
+[class*="logo"] {
+  font-family: 'Inter', sans-serif !important;
+}
+
+/* Caption & Copyright */
+.caption,
+.copyright,
+.bottom-copyright,
+[class*="caption"],
+[class*="copyright"] {
+  font-family: 'Inter', sans-serif !important;
+}
+
+/* Section subtitles / descriptions — override Rubik [class*="title"] wildcard */
+.trending-header-subtitle,
+.trending-header-description {
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 500 !important;
+}
+
+/* Tab Content Inner Blocks */
+.wildcraft-tab-content,
+.wildcraft-tab-content p,
+.wildcraft-tab-content span:not([style*="color"]),
+.wildcraft-tab-content li,
+.wildcraft-tab-content div:not([class*="title"]),
+.tab-pane-box,
+.tab-pane-box p,
+.tab-pane-box span:not([style*="color"]),
+.tab-pane-box li,
+.tab-pane-box div:not([class*="title"]),
+.overview-tab-pane,
+.overview-tab-pane p,
+.overview-tab-pane span:not([style*="color"]),
+.overview-tab-pane li,
+.overview-tab-pane div:not([class*="title"]),
+.spec-item,
+.spec-item span,
+.tech-badge-card,
+.tech-badge-card span,
+.spec-grid-layout,
+.spec-grid-layout div,
+.reviews-pane p,
+.reviews-pane span:not([style*="color"]),
+.reviews-pane div:not([class*="title"]):not([style*="color"]) {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 14px !important;
+  line-height: 1.65 !important;
+  color: #555 !important;
+}
+
+/* Global Shared Modern Header styling */
+.trending-header-modern {
+  width: 100%;
+  background: transparent;
+  padding: 0 0 20px;
+  box-sizing: border-box;
+}
+
+.trending-header-content {
+  width: 100%;
+}
+
+.trending-header-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #ff6600;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  margin-bottom: 8px;
+  background: #fff3eb;
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 1px solid #ffd2b3;
+  text-transform: uppercase;
+}
+
+.trending-header-title {
+  margin: 0;
+  font-size: 24px;
+  line-height: 1.1;
+  font-weight: 800;
+  color: #111111;
+  letter-spacing: -0.5px;
+}
+
+.trending-header-main-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  width: 100%;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.trending-header-left-side {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.trending-header-description {
+  font-size: 14px;
+  color: #666666;
+  margin: 0;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* Centering and standard container sizing for all pages to match navbar/home page */
+.product-page,
+.wildcraft-page,
+.wishlist-page,
+.wishlist-wrapper,
+.cart-page,
+.cart-container,
+.rental-page,
+.compare-page-wrapper,
+.privacy-page,
+.privacy-container,
+.terms-page,
+.terms-container,
+.returns-page,
+.returns-wrapper,
+.return-request-container,
+.rp-page,
+.booking-page,
+.od-page,
+.account-container,
+.auth-page,
+.auth-wrapper,
+.register-page,
+.register-container,
+.event-detail-page,
+.classes-page,
+.event-container,
+.cookie-page,
+.cookie-container,
+.shop-page,
+.contact-page,
+.store-pickup-container,
+.shipping-policy-page {
+  width: 100% !important;
+  max-width: 1300px !important;
+}
+
+@media (min-width: 769px) {
+
+  .product-page,
+  .wildcraft-page,
+  .wishlist-page,
+  .wishlist-wrapper,
+  .cart-page,
+  .cart-container,
+  .rental-page,
+  .compare-page-wrapper,
+  .privacy-page,
+  .privacy-container,
+  .terms-page,
+  .terms-container,
+  .returns-page,
+  .returns-wrapper,
+  .return-request-container,
+  .rp-page,
+  .booking-page,
+  .od-page,
+  .account-container,
+  .auth-page,
+  .auth-wrapper,
+  .register-page,
+  .register-container,
+  .event-detail-page,
+  .classes-page,
+  .event-container,
+  .cookie-page,
+  .cookie-container,
+  .shop-page,
+  .contact-page,
+  .store-pickup-container,
+  .shipping-policy-page {
+    padding-left: 32px !important;
+    padding-right: 32px !important;
+  }
+}
+
+/* Override global gray text color inside the banner cards */
+.wildcraft-banner-card,
+.wildcraft-banner-card h4,
+.wildcraft-banner-card p {
+  color: #ffffff !important;
+}
+
+/* ============================================================
+   GLOBAL OVERFLOW PREVENTION (no horizontal scroll)
+   ============================================================ */
+html,
+body {
+  overflow-x: visible;
+  max-width: 100%;
+}
+
+/* Mobile padding overrides for all page containers */
+@media (max-width: 768px) {
+  .product-page,
+  .wildcraft-page,
+  .wishlist-page,
+  .wishlist-wrapper,
+  .cart-page,
+  .cart-container,
+  .rental-page,
+  .compare-page-wrapper,
+  .privacy-page,
+  .privacy-container,
+  .terms-page,
+  .terms-container,
+  .returns-page,
+  .returns-wrapper,
+  .return-request-container,
+  .rp-page,
+  .booking-page,
+  .od-page,
+  .account-container,
+  .auth-page,
+  .auth-wrapper,
+  .register-page,
+  .register-container,
+  .event-detail-page,
+  .classes-page,
+  .event-container,
+  .cookie-page,
+  .cookie-container,
+  .shop-page,
+  .contact-page,
+  .store-pickup-container,
+  .shipping-policy-page {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+}
+

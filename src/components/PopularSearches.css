@@ -1,0 +1,71 @@
+.popular-searches-section {
+  background-color: #ffffff;
+  font-family: "Inter", sans-serif;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.popular-searches-container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 20px 24px 20px;
+  text-align: center;
+}
+
+.popular-searches-heading {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: #111111;
+  margin: 0 0 8px 0;
+  text-transform: uppercase;
+}
+
+.popular-searches-links {
+  line-height: 1.4;
+  font-size: 11px;
+  color: #888888;
+  word-wrap: break-word;
+  display: block;
+}
+
+.popular-search-link {
+  color: blue;
+  text-decoration: none;
+  font-weight: 500;
+  display: inline-block;
+  transition: color 0.2s ease, text-decoration 0.2s ease;
+}
+
+.popular-search-link:hover {
+  color: #ff6600;
+  text-decoration: underline;
+}
+
+.popular-search-separator {
+  color: #cbd5e1;
+  margin: 0 6px;
+  display: inline-block;
+  user-select: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .popular-searches-container {
+    padding: 20px 16px 15px;
+  }
+
+  .popular-searches-heading {
+    font-size: 11px;
+    margin-bottom: 12px;
+  }
+
+  .popular-searches-links {
+    font-size: 9.5px;
+    line-height: 1.8;
+  }
+
+  .popular-search-separator {
+    margin: 0 5px;
+  }
+}

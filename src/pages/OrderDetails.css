@@ -1,0 +1,508 @@
+* {
+  box-sizing: border-box;
+}
+
+.od-page {
+  min-height: 100vh;
+  background: #ffff;
+  color: #ff6600;
+  font-family: "Inter", "Segoe UI", Arial, sans-serif;
+  padding-bottom: 34px;
+}
+
+.od-topbar {
+  height: 58px;
+  background: #ff6600;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 11%;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.od-topbar h1 {
+  flex: 1;
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.od-icon-btn,
+.od-help-btn {
+  border: none;
+  background: transparent;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.od-icon-btn {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+}
+
+.od-help-btn {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.od-layout {
+  width: 78%;
+  margin: 24px auto 0;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+
+.od-product-card,
+.od-status-card,
+.od-chat-box,
+.od-rate-section,
+.od-bottom-order,
+.od-section,
+.od-offer-card {
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+}
+
+.od-product-card {
+  padding: 20px;
+}
+
+.od-product-content {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.od-product-content h2 {
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #111111;
+}
+
+.od-product-content p,
+.od-product-content span {
+  display: block;
+  margin: 0 0 7px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #666666;
+}
+
+.od-product-content h3 {
+  margin: 8px 0 0;
+  font-size: 19px;
+  font-weight: 600;
+  color: #ff6600;
+}
+
+.od-product-content img {
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  border: 1px solid #eeeeee;
+}
+
+.od-status-card {
+  padding: 22px 20px;
+  margin-top: 12px;
+}
+
+.od-timeline-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.od-timeline-row svg {
+  color: #16a34a;
+  fill: #16a34a;
+}
+
+.od-timeline-row p {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #222222;
+}
+
+.od-green-line {
+  width: 2px;
+  height: 34px;
+  background: #16a34a;
+  margin-left: 8px;
+}
+
+.od-update-btn {
+  margin-top: 26px;
+  border: none;
+  background: transparent;
+  color: #ff6600;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+}
+
+.od-update-box {
+  margin-top: 16px;
+  background: #fff7f0;
+  border: 1px solid #ffd5b5;
+  padding: 14px;
+}
+
+.od-update-box p {
+  margin: 7px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #444444;
+}
+
+.od-chat-box {
+  height: 52px;
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #111111;
+}
+
+.od-chat-box svg {
+  color: #ff6600;
+}
+
+.od-rate-section {
+  margin-top: 12px;
+  padding: 20px;
+}
+
+.od-rate-section h2,
+.od-section h2,
+.od-offer-card h2 {
+  margin: 0 0 16px;
+  font-size: 17px;
+  font-weight: 600;
+  color: #111111;
+}
+
+.od-rating-box {
+  background: #fff;
+  padding: 15px;
+  border: 1px solid #eeeeee;
+}
+
+.od-rating-box p {
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #333333;
+}
+
+.od-stars {
+  height: 52px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  border: 1px solid #f0f0f0;
+}
+
+.od-stars svg {
+  cursor: pointer;
+}
+
+.od-helpful-card {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  padding: 14px;
+  border: 1px solid #eeeeee;
+  color: #111111;
+}
+
+.od-helpful-card svg {
+  color: #ff6600;
+}
+
+.od-helpful-card.active {
+  background: #fff7f0;
+  border-color: #ff6600;
+}
+
+.od-helpful-card p {
+  flex: 1;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.od-bottom-order {
+  margin-top: 12px;
+  padding: 14px 18px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 700;
+  color: #666666;
+}
+
+.od-bottom-order button {
+  border: none;
+  background: transparent;
+  color: #ff6600;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.od-section {
+  padding: 18px;
+  margin-bottom: 12px;
+}
+
+.od-delivery-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.od-delivery-row svg {
+  color: #ff6600;
+}
+
+.od-delivery-row p {
+  margin: 0;
+}
+
+.od-delivery-row strong {
+  font-size: 14px;
+  font-weight: 600;
+  margin-right: 8px;
+  color: #111111;
+}
+
+.od-delivery-row span {
+  display: block;
+  margin-top: 5px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #555555;
+  line-height: 1.45;
+}
+
+.od-divider {
+  height: 1px;
+  background: #eeeeee;
+  margin: 16px 0;
+}
+
+.od-price-row,
+.od-small-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.od-price-row {
+  padding: 8px 0;
+  font-size: 14px;
+}
+
+.od-price-row span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 700;
+  color: #333333;
+}
+
+.od-price-row b {
+  font-weight: 700;
+  color: #111111;
+}
+
+.od-small-row {
+  font-size: 13px;
+  font-weight: 600;
+  color: #777777;
+  padding: 3px 0;
+}
+
+.od-cut {
+  color: #888888 !important;
+  text-decoration: line-through;
+}
+
+.od-dashed {
+  border-top: 1px dashed #bbbbbb;
+  margin: 12px 0;
+}
+
+.od-total-row span,
+.od-total-row b {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111111;
+}
+
+.od-total-row b {
+  color: #ff6600;
+}
+
+.od-payment-box {
+  margin-top: 16px;
+  border: 1px solid #eeeeee;
+  background: #fafafa;
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+.od-payment-box span {
+  color: #777777;
+  font-weight: 700;
+}
+
+.od-payment-box b {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  color: #111111;
+}
+
+.od-payment-box svg {
+  color: #ff6600;
+}
+
+.od-invoice-btn {
+  width: 100%;
+  margin-top: 14px;
+  padding: 13px;
+  background: #ffffff;
+  border: 1px solid #ff6600;
+  color: #ff6600;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.od-invoice-btn:hover {
+  background: #ff6600;
+  color: #ffffff;
+}
+
+.od-offer-card {
+  padding: 18px;
+}
+
+.od-offer-card p {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #555555;
+}
+
+.od-shop-btn {
+  width: 78%;
+  margin: 18px auto 20px;
+  background: #ff6600;
+  color: #ffffff;
+  text-decoration: none;
+  padding: 14px;
+  display: flex;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.od-shop-btn:hover {
+  background: #e65c00;
+}
+
+@media (max-width: 1100px) {
+  .od-topbar {
+    padding: 0 16px;
+  }
+
+  .od-layout,
+  .od-shop-btn {
+    width: calc(100% - 28px);
+    margin: 18px auto 20px;
+  }
+}
+
+@media (max-width: 820px) {
+  .od-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .od-right {
+    order: 2;
+  }
+
+  .od-left {
+    order: 1;
+  }
+}
+
+@media (max-width: 520px) {
+  .od-topbar h1 {
+    font-size: 17px;
+  }
+
+  .od-help-btn {
+    display: none;
+  }
+
+  .od-layout {
+    margin-top: 12px;
+    gap: 12px;
+  }
+
+  .od-product-card,
+  .od-status-card,
+  .od-rate-section,
+  .od-section,
+  .od-offer-card {
+    padding: 14px;
+  }
+
+  .od-product-content h2 {
+    font-size: 15px;
+  }
+
+  .od-product-content img {
+    width: 74px;
+    height: 74px;
+  }
+
+  .od-stars {
+    gap: 9px;
+  }
+}

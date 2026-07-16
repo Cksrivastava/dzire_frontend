@@ -1,0 +1,284 @@
+.shipping-policy-page {
+  width: 100%;
+  background: #f3f3f1;
+  color: #222;
+  font-family: 'Inter';
+}
+
+/* HERO */
+.shipping-hero {
+  width: 100%;
+  height: 430px;
+  background-image: linear-gradient(rgba(35, 35, 35, 0.18),
+      rgba(35, 35, 35, 0.18)),
+    url("https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=1600&q=80");
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.shipping-hero-overlay {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.shipping-hero h1 {
+  margin: 0;
+  color: #fff;
+  font-size: 58px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* MAIN */
+.shipping-main-section {
+  padding: 58px 0 70px;
+  background: #f3f3f1;
+}
+
+.shipping-main-container {
+  width: 100%;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 42px;
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  gap: 56px;
+  align-items: start;
+}
+
+/* SIDEBAR */
+.shipping-sidebar {
+  position: sticky;
+  top: 120px;
+}
+
+.shipping-sidebar-block {
+  margin-bottom: 26px;
+}
+
+.shipping-sidebar-heading,
+.shipping-sidebar-collapsed h4 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 16px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #2a2a2a;
+  letter-spacing: 0.5px;
+}
+
+.shipping-sidebar-links {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 24px;
+}
+
+.shipping-sidebar-links li {
+  margin-bottom: 12px;
+}
+
+.shipping-sidebar-links li a {
+  text-decoration: none;
+  color: #555;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  transition: color 0.2s ease;
+}
+
+.shipping-sidebar-links li a:hover {
+  color: #000;
+}
+
+.shipping-sidebar-links .active-link a {
+  color: #111;
+  font-weight: 700;
+}
+
+.shipping-sidebar-collapsed {
+  margin-top: 24px;
+}
+
+/* CONTENT */
+.shipping-content {
+  width: 100%;
+}
+
+.shipping-content-block {
+  margin-bottom: 42px;
+}
+
+.shipping-content-block h2 {
+  margin: 0 0 14px;
+  font-size: 23px;
+  line-height: 1.2;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #222;
+  letter-spacing: 0.4px;
+}
+
+.shipping-content-block p {
+  margin: 0 0 12px;
+  color: #555;
+  font-size: 15px;
+  line-height: 1.8;
+  max-width: 900px;
+}
+
+.shipping-bullet-list {
+  margin-top: 10px;
+}
+
+.shipping-bullet-list p {
+  margin-bottom: 8px;
+}
+
+/* FOOTER LINKS SECTION */
+.shipping-footer-links-section {
+  background: #ececeb;
+  border-top: 1px solid #dfdfdf;
+  padding: 55px 0;
+}
+
+.shipping-footer-links-container {
+  width: 100%;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 42px;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  gap: 38px;
+}
+
+.shipping-footer-brand h3 {
+  margin: 0 0 16px;
+  font-size: 32px;
+  font-weight: 900;
+  color: #c82323;
+  letter-spacing: 1px;
+}
+
+.shipping-footer-brand p {
+  margin: 0;
+  max-width: 320px;
+  font-size: 14px;
+  line-height: 1.8;
+  color: #555;
+}
+
+.shipping-footer-col h4 {
+  margin: 0 0 16px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #222;
+  letter-spacing: 0.4px;
+}
+
+.shipping-footer-col a {
+  display: block;
+  text-decoration: none;
+  color: #555;
+  font-size: 14px;
+  margin-bottom: 10px;
+  transition: color 0.2s ease;
+}
+
+.shipping-footer-col a:hover {
+  color: #000;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1100px) {
+  .shipping-main-container {
+    grid-template-columns: 220px 1fr;
+    gap: 36px;
+    padding: 0 28px;
+  }
+
+  .shipping-footer-links-container {
+    grid-template-columns: 1fr 1fr;
+    padding: 0 28px;
+  }
+
+  .shipping-hero h1 {
+    font-size: 48px;
+  }
+}
+
+@media (max-width: 900px) {
+  .shipping-main-container {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .shipping-sidebar {
+    position: static;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 20px;
+  }
+
+  .shipping-sidebar-links {
+    padding-left: 0;
+  }
+
+  .shipping-hero {
+    height: 330px;
+  }
+
+  .shipping-hero h1 {
+    font-size: 40px;
+  }
+}
+
+@media (max-width: 600px) {
+  .shipping-hero {
+    height: 250px;
+  }
+
+  .shipping-hero h1 {
+    font-size: 30px;
+    letter-spacing: 1px;
+  }
+
+  .shipping-main-section {
+    padding: 36px 0 44px;
+  }
+
+  .shipping-main-container {
+    padding: 0 18px;
+  }
+
+  .shipping-content-block {
+    margin-bottom: 30px;
+  }
+
+  .shipping-content-block h2 {
+    font-size: 20px;
+  }
+
+  .shipping-content-block p {
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .shipping-footer-links-container {
+    grid-template-columns: 1fr;
+    padding: 0 18px;
+    gap: 26px;
+  }
+
+  .shipping-footer-brand h3 {
+    font-size: 28px;
+  }
+}

@@ -1,0 +1,570 @@
+/* Compare.css */
+
+.compare-page-wrapper {
+  background: #f8fafc;
+  min-height: 80vh;
+  padding: 30px 0 60px;
+}
+
+.compare-container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Breadcrumb */
+.compare-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #64748b;
+  margin-bottom: 24px;
+  font-weight: 500;
+}
+
+.compare-breadcrumb a {
+  color: #64748b;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.compare-breadcrumb a:hover {
+  color: #ff6600;
+}
+
+.compare-breadcrumb strong {
+  color: #1e293b;
+  font-weight: 600;
+}
+
+/* Header */
+.compare-header {
+  margin-bottom: 36px;
+}
+
+.compare-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.compare-share-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  color: #ff6600;
+  border: 1px solid #ffd2b3;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 8px rgba(255, 102, 0, 0.05);
+}
+
+.compare-share-btn:hover {
+  background: #ff6600;
+  color: #ffffff;
+  border-color: #ff6600;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 102, 0, 0.2);
+}
+
+.compare-share-btn svg {
+  stroke: currentColor;
+  transition: transform 0.25s ease;
+}
+
+.compare-share-btn:hover svg {
+  transform: scale(1.1);
+}
+
+/* Toast notification styling */
+.compare-toast-notification {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: #0f172a;
+  color: #ffffff;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 9999;
+  animation: slideInUp 0.3s cubic-bezier(0.16, 1, 0.3, 1), fadeOut 0.3s ease 2.7s forwards;
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.compare-title {
+  font-size: 32px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.compare-subtitle {
+  font-size: 16px;
+  color: #475569;
+  margin: 0;
+  max-width: 700px;
+  line-height: 1.5;
+}
+
+/* Empty State */
+.compare-empty-state {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+  padding: 60px 40px;
+  text-align: center;
+  max-width: 500px;
+  margin: 40px auto;
+  border: 1px solid #f1f5f9;
+}
+
+.empty-icon-wrap {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: #fff8f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+  border: 1px solid #ffe8df;
+}
+
+.empty-compare-icon {
+  color: #ff6600;
+  animation: spinSlow 12s linear infinite;
+}
+
+@keyframes spinSlow {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.compare-empty-state h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 12px 0;
+}
+
+.compare-empty-state p {
+  font-size: 15px;
+  color: #64748b;
+  margin: 0 0 30px 0;
+  line-height: 1.6;
+}
+
+.compare-empty-btn {
+  background: linear-gradient(135deg, #111111 0%, #2c3e66 100%);
+  color: #ffffff;
+  border: none;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 10px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.compare-empty-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(44, 62, 102, 0.25);
+  background: linear-gradient(135deg, #1a1a1a 0%, #1a2a4a 100%);
+}
+
+/* Comparison Table */
+.compare-table-wrapper {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+  overflow-x: auto;
+  border: 1px solid #e2e8f0;
+  scrollbar-width: thin;
+}
+
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+/* Header Columns */
+.compare-feature-header {
+  width: 150px;
+  background: #f8fafc;
+  border-right: 1px solid #e2e8f0;
+  border-bottom: 2px solid #e2e8f0;
+  padding: 24px 16px;
+  text-align: left;
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.compare-product-header {
+  width: 240px;
+  background: #ffffff;
+  border-right: 1px solid #f1f5f9;
+  border-bottom: 2px solid #e2e8f0;
+  padding: 20px;
+  vertical-align: top;
+  position: relative;
+}
+
+/* Top Product Card Inside Header */
+.compare-product-top-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+  text-align: left;
+}
+
+.remove-compare-btn {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.remove-compare-btn:hover {
+  background: #fee2e2;
+  color: #ef4444;
+  transform: scale(1.1);
+}
+
+.compare-img-container {
+  width: 100%;
+  height: 160px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  cursor: pointer;
+  border: 1px solid #f1f5f9;
+}
+
+.compare-product-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.compare-img-container:hover .compare-product-img {
+  transform: scale(1.08);
+}
+
+.compare-card-details {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.compare-card-brand {
+  font-size: 11px;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.compare-card-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 10px 0;
+  line-height: 1.4;
+  height: 38px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.compare-card-title:hover {
+  color: #ff6600;
+}
+
+.compare-card-price {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.compare-new-price {
+  font-size: 16px;
+  font-weight: 800;
+  color: #ff6600;
+}
+
+.compare-old-price {
+  font-size: 13px;
+  color: #94a3b8;
+  text-decoration: line-through;
+}
+
+.compare-add-cart-btn {
+  width: 100%;
+  background: #ff6600;
+  color: #ffffff;
+  border: none;
+  padding: 10px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  margin-top: auto;
+}
+
+.compare-add-cart-btn:hover {
+  background: #e05500;
+  box-shadow: 0 4px 12px rgba(255, 102, 0, 0.2);
+}
+
+/* Placeholder Columns */
+.compare-placeholder-header {
+  width: 240px;
+  background: #fafbfd;
+  border-right: 1px solid #f1f5f9;
+  border-bottom: 2px solid #e2e8f0;
+  padding: 20px;
+  vertical-align: middle;
+}
+
+.compare-placeholder-card {
+  border: 2px dashed #cbd5e1;
+  border-radius: 12px;
+  padding: 30px 16px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 270px;
+}
+
+.placeholder-rotate-icon {
+  color: #94a3b8;
+  margin-bottom: 12px;
+  opacity: 0.6;
+}
+
+.compare-placeholder-card p {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0 0 10px 0;
+  font-weight: 500;
+}
+
+.placeholder-add-link {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ff6600;
+  text-decoration: none;
+  padding: 6px 14px;
+  background: #fff8f5;
+  border: 1px solid #ffd2b3;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.placeholder-add-link:hover {
+  background: #ff6600;
+  color: #ffffff;
+  border-color: #ff6600;
+}
+
+/* Table Body Rows */
+.compare-table tbody tr {
+  border-bottom: 1px solid #f1f5f9;
+  transition: background-color 0.15s ease;
+}
+
+.compare-table tbody tr:hover {
+  background-color: #fafcfd;
+}
+
+.compare-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.feature-label {
+  background: #f8fafc;
+  font-weight: 700;
+  color: #475569;
+  font-size: 14px;
+  padding: 16px;
+  text-align: left;
+  border-right: 1px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.feature-value {
+  padding: 16px 20px;
+  font-size: 14px;
+  color: #334155;
+  font-weight: 500;
+  text-align: left;
+  border-right: 1px solid #f1f5f9;
+}
+
+.brand-value {
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.price-value {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.price-value .current-price {
+  font-weight: 700;
+  color: #ff6600;
+}
+
+.price-value .slashed-price {
+  font-size: 12px;
+  color: #94a3b8;
+  text-decoration: line-through;
+}
+
+.compare-rating-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.rating-score {
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.reviews-count {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.stock-value.in-stock {
+  color: #16a34a;
+  font-weight: 700;
+}
+
+.stock-value.in-stock::before {
+  content: "● ";
+  font-size: 10px;
+  vertical-align: middle;
+}
+
+.placeholder-value {
+  color: #cbd5e1;
+  text-align: left;
+}
+
+/* Actions Row styles */
+.action-value {
+  padding: 12px 20px;
+}
+
+.compare-remove-row-btn {
+  background: #fef2f2;
+  color: #ef4444;
+  border: 1px solid #fee2e2;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.compare-remove-row-btn:hover {
+  background: #ef4444;
+  color: #ffffff;
+  border-color: #ef4444;
+  transform: scale(0.97);
+}
+
+/* Responsive CSS */
+@media (max-width: 900px) {
+  .compare-title {
+    font-size: 26px;
+  }
+
+  .compare-container {
+    padding: 0 16px;
+  }
+}

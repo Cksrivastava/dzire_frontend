@@ -1,0 +1,471 @@
+/* Container and overall Section layout */
+.price-cards-section {
+  width: 100%;
+  background: #ffffff;
+  padding: 60px 0;
+  box-sizing: border-box;
+}
+
+.price-cards-container {
+  display: flex;
+  align-items: center;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 20px;
+  gap: 40px;
+  box-sizing: border-box;
+}
+
+/* Left side header styles */
+.price-cards-left {
+  flex: 0 0 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.budget-friendly-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #fff4ed;
+  border: 1px solid #ffe1d1;
+  color: #ff6000;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 6px 14px;
+  border-radius: 50px;
+  margin-bottom: 20px;
+}
+
+.tag-icon {
+  stroke-width: 2.5px;
+}
+
+.price-cards-left h2 {
+  font-size: 40px;
+  font-weight: 800;
+  line-height: 1.15;
+  color: #111111;
+  margin: 0 0 16px 0;
+  letter-spacing: -0.5px;
+  font-family: 'Rubik', sans-serif !important;
+}
+
+.price-cards-left .budget-highlight-text {
+  color: #ff6000;
+  font-family: 'Rubik', sans-serif !important;
+}
+.price-cards-left p.price-cards-subtitle {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #666666;
+  margin: 0;
+  font-weight: 500 !important;
+}
+
+/* Vertical Divider */
+.price-cards-divider {
+  width: 1px;
+  height: 160px;
+  background-color: #ececec;
+  flex-shrink: 0;
+}
+
+.price-cards-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+/* Card Styling */
+.budget-price-card {
+  position: relative;
+  background: #fbfbfa;
+  border: 1px solid #eaeaea;
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 250px;
+  box-sizing: border-box;
+  overflow: hidden;
+  cursor: grab;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.4s ease,
+    background-color 0.4s ease;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.budget-price-card:active {
+  cursor: grabbing;
+}
+
+/* Card entrance animation when visible */
+.price-cards-grid.animate-cards .budget-price-card {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.price-cards-grid.animate-cards .budget-price-card:nth-child(1) {
+  transition-delay: 0.1s;
+}
+
+.price-cards-grid.animate-cards .budget-price-card:nth-child(2) {
+  transition-delay: 0.2s;
+}
+
+.price-cards-grid.animate-cards .budget-price-card:nth-child(3) {
+  transition-delay: 0.3s;
+}
+
+.price-cards-grid.animate-cards .budget-price-card:nth-child(4) {
+  transition-delay: 0.4s;
+}
+
+/* Subtle glow effect on card hover */
+.budget-price-card::before {
+  content: "";
+  position: absolute;
+  bottom: -20px;
+  right: -20px;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, rgba(255, 96, 0, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
+  z-index: 1;
+  pointer-events: none;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.budget-price-card:hover::before {
+  opacity: 1;
+}
+
+/* Card Hover effect: All cards turn white, get orange border and orange glow shadow instantly */
+.budget-price-card:hover,
+.budget-price-card:hover * {
+  transition-delay: 0s !important;
+}
+
+.budget-price-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 16px 36px rgba(255, 96, 0, 0.1), 0 4px 14px rgba(255, 96, 0, 0.04);
+  border-color: #ff6000;
+  background: #ffffff;
+}
+
+/* Card Content Structure */
+.budget-card-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+  flex-grow: 1;
+}
+
+/* Badges inside cards */
+.budget-badge-pill {
+  align-self: flex-start;
+  background-color: #fff4ed;
+  color: #ff6000;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  margin-bottom: 24px;
+  text-transform: uppercase;
+}
+
+/* Titles and labels */
+.budget-card-title {
+  color: #777777;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  margin-bottom: 2px;
+  text-transform: uppercase;
+}
+
+.budget-card-below {
+  color: #b5b5b5;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+/* Price block */
+.budget-price-container {
+  display: flex;
+  align-items: flex-start;
+  line-height: 1;
+  margin-bottom: 24px;
+}
+
+.budget-currency-symbol {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111111;
+  margin-top: 4px;
+  margin-right: 2px;
+  transition: color 0.3s ease;
+}
+
+.budget-price-card:hover .budget-currency-symbol {
+  color: #ff6000;
+}
+
+.budget-price-value {
+  font-size: 48px;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  color: #111111;
+  transition: color 0.3s ease;
+}
+
+.budget-price-card:hover .budget-price-value {
+  color: #ff6000;
+}
+
+/* Buttons */
+.budget-action-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  border-radius: 8px;
+  cursor: inherit;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+/* Outline button style (normal cards) */
+.btn-outline {
+  background-color: #faf9f8;
+  border: 1px solid #e5e5e3;
+  color: #111111;
+}
+
+.btn-outline:hover {
+  background-color: #111111;
+  border-color: #111111;
+  color: #ffffff;
+}
+
+/* Card hover forces button to fill orange */
+.budget-price-card:hover .btn-outline {
+  background-color: #ff6000;
+  border-color: #ff6000;
+  color: #ffffff;
+}
+
+.budget-price-card:hover .btn-outline:hover {
+  background-color: #e05300;
+  border-color: #e05300;
+}
+
+/* Solid button style (trending card) */
+.btn-solid {
+  background-color: #ff6000;
+  border: 1px solid #ff6000;
+  color: #ffffff;
+}
+
+.btn-solid:hover {
+  background-color: #e05300;
+  border-color: #e05300;
+}
+
+/* Arrow micro-animation */
+.btn-arrow-icon {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.budget-price-card:hover .btn-arrow-icon {
+  transform: translateX(4px);
+}
+
+/* Responsive Styles */
+
+/* Laptops / Smaller Desktops */
+@media (max-width: 1100px) {
+  .price-cards-container {
+    gap: 30px;
+  }
+
+  .price-cards-left {
+    flex: 0 0 220px;
+  }
+
+  .price-cards-left h2 {
+    font-size: 32px;
+  }
+
+  .budget-price-value {
+    font-size: 40px;
+  }
+
+  .budget-currency-symbol {
+    font-size: 18px;
+  }
+}
+
+/* Tablets (landscape and portrait) */
+@media (max-width: 992px) {
+  .price-cards-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 30px;
+    padding: 0 30px;
+  }
+
+  .price-cards-left {
+    flex: none;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .price-cards-left h2 {
+    font-size: 36px;
+    margin-bottom: 12px;
+  }
+
+  .price-cards-left h2 br {
+    display: none;
+    /* Keep heading single line on mobile/tablet */
+  }
+
+  .price-cards-divider {
+    width: 100%;
+    height: 1px;
+    margin: 0;
+  }
+
+  .price-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+    width: 100%;
+  }
+}
+
+/* Mobile Screens */
+@media (max-width: 576px) {
+  .price-cards-section {
+    padding: 40px 0;
+  }
+
+  .price-cards-container {
+    padding: 0 16px;
+    gap: 20px;
+  }
+
+  .budget-friendly-badge {
+    padding: 4px 12px;
+    margin-bottom: 12px;
+  }
+
+  .price-cards-left h2 {
+    font-size: 28px;
+    margin-bottom: 8px;
+  }
+
+  .price-cards-subtitle {
+    font-size: 13px;
+  }
+
+  .price-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .budget-price-card {
+    padding: 16px;
+    min-height: 220px;
+    border-radius: 12px;
+  }
+
+  .budget-badge-pill {
+    margin-bottom: 16px;
+  }
+
+  .budget-price-container {
+    margin-bottom: 16px;
+  }
+
+  .budget-price-value {
+    font-size: 32px;
+  }
+
+  .budget-currency-symbol {
+    font-size: 16px;
+  }
+
+  .budget-action-btn {
+    padding: 10px 12px;
+  }
+}
+
+@media (max-width: 380px) {
+  .price-cards-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+  }
+
+  .budget-price-card {
+    padding: 12px !important;
+    min-height: 180px !important;
+    border-radius: 10px !important;
+  }
+
+  .budget-badge-pill {
+    font-size: 8.5px !important;
+    padding: 3px 6px !important;
+    margin-bottom: 8px !important;
+  }
+
+  .budget-card-title {
+    font-size: 11px !important;
+  }
+
+  .budget-card-below {
+    font-size: 8px !important;
+  }
+
+  .budget-price-container {
+    margin-bottom: 8px !important;
+  }
+
+  .budget-price-value {
+    font-size: 22px !important;
+  }
+
+  .budget-currency-symbol {
+    font-size: 12px !important;
+  }
+
+  .budget-action-btn {
+    padding: 6px 8px !important;
+    font-size: 9.5px !important;
+  }
+
+  .budget-action-btn svg {
+    width: 12px !important;
+    height: 12px !important;
+  }
+}

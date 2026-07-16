@@ -1,0 +1,218 @@
+.return-request-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  background-color: #f6f7f9;
+  font-family: 'Inter';
+  color: #111111;
+}
+
+.return-header {
+  margin-bottom: 30px;
+}
+
+.return-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+}
+
+.return-header p {
+  color: #667085;
+  margin: 0;
+  font-size: 15px;
+}
+
+.return-section {
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e7eb;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.return-section-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 20px 0;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.return-product-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.return-product-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background-color: #fafafa;
+}
+
+.return-checkbox {
+  width: 20px;
+  height: 20px;
+  accent-color: #ff6600;
+  cursor: pointer;
+}
+
+.return-product-img {
+  width: 60px;
+  height: 60px;
+  background-color: #e5e7eb;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.return-product-info {
+  flex: 1;
+}
+
+.return-product-info h4 {
+  margin: 0 0 4px 0;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.return-product-info p {
+  margin: 0;
+  font-size: 13px;
+  color: #667085;
+}
+
+.return-reason-box {
+  margin-top: 16px;
+  padding: 16px;
+  background-color: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  border-left: 4px solid #ff6600;
+}
+
+.return-form-group {
+  margin-bottom: 16px;
+}
+
+.return-form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #344054;
+}
+
+.return-form-group select,
+.return-form-group textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  font-family: inherit;
+}
+
+.return-form-group select:focus,
+.return-form-group textarea:focus {
+  border-color: #ff6600;
+}
+
+.return-defective-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  color: #f04438;
+  font-weight: 500;
+  background-color: #fef3f2;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #fda29b;
+}
+
+.refund-method-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.refund-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.refund-option:hover {
+  border-color: #ff6600;
+  background-color: #fffaf7;
+}
+
+.refund-option input[type="radio"] {
+  margin-top: 4px;
+  accent-color: #ff6600;
+}
+
+.refund-option-text h4 {
+  margin: 0 0 4px 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.refund-option-text p {
+  margin: 0;
+  font-size: 13px;
+  color: #667085;
+}
+
+.return-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.btn-cancel {
+  padding: 12px 24px;
+  background-color: white;
+  color: #111111;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-submit {
+  padding: 12px 24px;
+  background-color: #ff6600;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-submit:hover {
+  background-color: #e65c00;
+}
+
+@media (max-width: 768px) {
+  .return-product-item {
+    align-items: flex-start;
+  }
+}

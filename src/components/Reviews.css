@@ -1,0 +1,609 @@
+/* Reviews.css */
+
+.reviews-section {
+  background-color: #ffffff;
+  border-top: 1px solid #eef2f6;
+  border-bottom: 1px solid #eef2f6;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  width: 100%;
+  padding: 20px 0 10px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.reviews-container {
+  max-width: 1300px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 20px;
+  /* Restored standard left padding to align with other page containers */
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  /* minmax prevents grid from expanding due to overflowing flex track */
+  gap: 24px;
+  box-sizing: border-box;
+  align-items: start;
+}
+
+/* Left Scorecard card */
+.reviews-scorecard {
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.scorecard-logo-container {
+  margin-bottom: 6px;
+}
+
+.scorecard-logo {
+  height: 56px;
+  width: auto;
+  object-fit: contain;
+}
+
+.scorecard-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+}
+
+.scorecard-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 10px auto 14px auto !important;
+  line-height: 1.4;
+  text-align: center !important;
+  width: 100% !important;
+  display: block !important;
+}
+
+.scorecard-stars {
+  display: flex;
+  gap: 3px;
+  margin-bottom: 4px;
+  justify-content: center;
+}
+
+.star-icon {
+  font-size: 16px;
+  color: #d1cbc0;
+}
+
+.star-icon.fill {
+  color: #fbbc04;
+  /* Official Google Star Yellow */
+}
+
+.scorecard-count {
+  font-size: 13px;
+  color: #5f6368;
+  margin: 0 0 12px 0;
+  font-weight: 500;
+}
+
+.write-review-btn {
+  display: inline-block;
+  padding: 8px 18px;
+  border: none;
+  border-radius: 6px;
+  background-color: #ff6600;
+  color: #ffffff;
+  font-size: 13.5px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.write-review-btn:hover {
+  background-color: #e65c00;
+  color: #ffffff;
+}
+
+/* Right Side Slider */
+.reviews-slider-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.reviews-slider-viewport {
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE/Edge */
+}
+
+.reviews-slider-viewport::-webkit-scrollbar {
+  display: none;
+  /* Chrome/Safari */
+}
+
+.reviews-slider-track {
+  display: flex;
+  gap: 12px;
+  width: max-content;
+  padding-right: 16px;
+  /* Ensure last card doesn't hit the very edge */
+}
+
+/* Review Cards */
+.review-card {
+  flex: 0 0 220px;
+  /* Fixed width ensures flawless sliding regardless of container size */
+  scroll-snap-align: start;
+  background-color: #f5f5f5;
+  border-radius: 12px;
+  padding: 12px 16px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  height: 145px;
+  justify-content: space-between;
+}
+
+/* Card User details */
+.review-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-avatar-initial {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.user-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #1a1e2b;
+  margin: 0;
+}
+
+.review-date {
+  font-size: 10px;
+  color: #70757a;
+  margin-top: 2px;
+}
+
+.google-icon-wrapper {
+  background: #ffffff;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+/* Star Row inside card */
+.review-card-stars-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+
+.stars-list {
+  display: flex;
+  gap: 2px;
+}
+
+.card-star-icon {
+  font-size: 13px;
+  color: #fbbc04;
+}
+
+/* Review Text */
+.review-text-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.review-text {
+  font-size: 12px;
+  color: #3c4043;
+  line-height: 1.4;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.read-more-link {
+  font-size: 11px;
+  color: #70757a;
+  cursor: pointer;
+  margin-top: 2px;
+  font-weight: 500;
+}
+
+.read-more-link:hover {
+  color: #111111;
+  text-decoration: underline;
+}
+
+/* Slider Nav Arrows */
+.slider-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1px solid #dadce0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #5f6368;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.2s ease;
+}
+
+.slider-arrow:hover {
+  background-color: #f8f9fa;
+  color: #111111;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+}
+
+.slider-arrow.disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.slider-arrow.prev {
+  left: -16px;
+}
+
+.slider-arrow.next {
+  right: -16px;
+}
+
+/* Trustindex footer badge */
+.trust-index-footer {
+  max-width: 1300px;
+  width: 100%;
+  margin: 16px auto 0;
+  padding: 0 20px;
+  display: flex;
+  justify-content: flex-end;
+  box-sizing: border-box;
+}
+
+.trust-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background-color: #0b663b;
+  color: #ffffff;
+  padding: 7px 14px;
+  border-radius: 4px;
+  font-size: 11.5px;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 2px 6px rgba(11, 102, 59, 0.15);
+  transition: background-color 0.2s ease;
+}
+
+.trust-badge span {
+  font-weight: 400;
+  opacity: 0.9;
+}
+
+.trust-badge:hover {
+  background-color: #084d2c;
+}
+
+.info-icon {
+  margin-left: 2px;
+  opacity: 0.8;
+}
+
+/* Responsive breakdowns */
+@media (max-width: 1200px) and (min-width: 951px) {
+  .review-card {
+    flex: 0 0 210px;
+  }
+}
+
+@media (max-width: 950px) and (min-width: 651px) {
+  .review-card {
+    flex: 0 0 230px;
+  }
+}
+
+@media (max-width: 950px) {
+  .reviews-container {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    padding: 0 20px;
+    /* Essential left padding for mobile view */
+  }
+
+  .reviews-scorecard {
+    width: 100%;
+    display: flex;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    padding: 0;
+    gap: 0 !important;
+  }
+
+  .scorecard-logo-container {
+    flex-shrink: 0;
+    margin-bottom: 6px !important;
+    width: 110px !important;
+  }
+
+  .scorecard-logo {
+    width: 100%;
+    height: auto;
+  }
+
+  .scorecard-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center !important;
+    text-align: center !important;
+    width: 100% !important;
+  }
+
+  .scorecard-title {
+    font-size: 16px;
+    margin-top: 0 !important;
+    margin-bottom: 6px !important;
+    text-align: center !important;
+    width: 100% !important;
+    display: block !important;
+  }
+
+  .scorecard-stars {
+    margin-bottom: 4px !important;
+    justify-content: center !important;
+  }
+
+  .scorecard-count {
+    margin-bottom: 12px !important;
+  }
+
+  .trust-index-footer {
+    justify-content: center;
+    margin-top: 20px;
+  }
+}
+
+@media (max-width: 650px) {
+  .review-card {
+    flex: 0 0 82vw;
+    /* Shows 1 card fully and a nice preview of the next card on phones */
+  }
+
+  .reviews-container {
+    padding: 0 16px;
+  }
+
+  .scorecard-title {
+    font-size: 15px;
+    margin-top: 0 !important;
+    margin-bottom: 6px !important;
+    text-align: center !important;
+    width: 100% !important;
+    display: block !important;
+  }
+
+  .slider-arrow {
+    display: none;
+    /* Mobile users naturally swipe/scroll, hiding arrows saves space */
+  }
+}
+
+/* Brands Slider Section */
+.brands-slider-section {
+  width: 100%;
+  max-width: 1300px;
+  margin: 15px auto 5px;
+  padding: 0 20px;
+  border-top: 1px solid #eef2f6;
+  padding-top: 15px;
+}
+
+.brands-slider-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.brands-viewport {
+  overflow: hidden;
+  width: 100%;
+}
+
+.brands-track {
+  display: flex;
+  padding-bottom: 5px;
+  align-items: center;
+  width: max-content;
+}
+
+.brands-track.marquee-animation {
+  display: flex;
+  padding-bottom: 5px;
+  align-items: center;
+  width: max-content;
+  animation: seamlessMarquee 25s linear infinite;
+}
+
+.brands-slider-container:hover .brands-track.marquee-animation {
+  animation-play-state: paused;
+}
+
+@keyframes seamlessMarquee {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.brand-slide-item {
+  width: 150px;
+  /* Reduced item width to pack logos closer together */
+  margin: 0;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90px;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 5px;
+  box-sizing: border-box;
+  transition: transform 0.2s ease;
+}
+
+.brand-slide-item:hover {
+  transform: scale(1.08);
+  /* Lift effect on hover */
+}
+
+.brand-slide-item img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* Brands Slider Container */
+.brands-slider-container {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+/* Brands Responsive Breakdowns */
+@media (max-width: 1024px) {
+  .brand-slide-item {
+    width: 100px;
+    height: 75px;
+    margin: 0;
+  }
+}
+
+@media (max-width: 767px) {
+  .brand-slide-item {
+    width: 80px;
+    height: 60px;
+    padding: 2px;
+    margin: 0;
+  }
+
+  .brands-slider-section {
+    padding: 0 16px;
+    padding-top: 15px;
+  }
+}
+
+.reviews-section .reviews-section-heading {
+  font-family: "Rubik", sans-serif !important;
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  color: #111111 !important;
+  margin: 0 auto 20px;
+  text-align: center;
+  letter-spacing: -0.2px;
+  display: block;
+  width: max-content;
+  max-width: 100%;
+}
+
+.reviews-section-heading::after {
+  content: "";
+  display: block;
+  width: 80px;
+  height: 3px;
+  background: #ff6600;
+  margin: 8px auto 0;
+  border-radius: 2px;
+}
+
+.brands-slider-section .brands-section-title {
+  font-family: "Rubik", sans-serif !important;
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  color: #111111 !important;
+  text-align: center;
+  margin: 0 auto 20px;
+  letter-spacing: -0.2px;
+  display: block;
+  width: max-content;
+  max-width: 100%;
+}
+
+.brands-section-title::after {
+  content: "";
+  display: block;
+  width: 80px;
+  height: 3px;
+  background: #ff6600;
+  margin: 8px auto 0;
+  border-radius: 2px;
+}

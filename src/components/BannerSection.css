@@ -1,0 +1,193 @@
+.banner-section {
+  width: 100%;
+  max-width: 1300px;
+  margin: 20px auto;
+  box-sizing: border-box;
+  padding: 15px 0 0px;
+  background: #ffffff;
+}
+
+.banner-slider {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+.banner-track {
+  display: flex;
+  transition: transform 0.6s ease-in-out;
+}
+
+.banner-slide {
+  min-width: 100%;
+  height: 280px;
+  position: relative;
+}
+
+.banner-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 16px;
+}
+
+/* overlay text */
+.banner-overlay {
+  position: absolute;
+  bottom: 30px;
+  left: 40px;
+  color: #ffffff;
+  z-index: 2;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.banner-overlay h2 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.banner-overlay p {
+  font-size: 14px;
+}
+
+/* arrows */
+.banner-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  font-size: 20px;
+  z-index: 3;
+}
+
+/* Default positions (desktop) */
+.prev-btn {
+  left: 10px;
+}
+
+.next-btn {
+  right: 35px;
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+  .banner-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+  }
+
+  .prev-btn {
+    left: 8px;
+  }
+
+  .next-btn {
+    right: 8px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .banner-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+  }
+
+  .prev-btn {
+    left: 5px;
+  }
+
+  .next-btn {
+    right: 5px;
+  }
+}
+
+/* dots */
+.banner-dots {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  z-index: 10;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.dot.active {
+  background: #ff6600;
+  transform: scale(1.1);
+  width: 20px;
+  border-radius: 5px;
+}
+
+@media (max-width: 768px) {
+  .banner-section {
+    padding: 15px 0 0px;
+  }
+
+  .banner-slider {
+    touch-action: pan-y;
+  }
+
+  .banner-slide {
+    height: clamp(120px, 30vw, 160px);
+  }
+
+  .banner-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .banner-overlay {
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+    top: auto;
+    transform: none;
+    max-width: 260px;
+  }
+
+  .banner-overlay h2 {
+    font-size: 20px;
+    line-height: 1.2;
+  }
+
+  .banner-overlay p {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .banner-dots {
+    bottom: 8px;
+    gap: 6px;
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+  }
+
+  .dot.active {
+    width: 12px;
+  }
+}
