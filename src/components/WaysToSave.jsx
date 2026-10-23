@@ -1,64 +1,76 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./WaysToSave.css";
+import { getSectionSettings, SECTION_SETTINGS_EVENT } from "../services/sectionSettings";
 
 const WaysToSave = () => {
+  const navigate = useNavigate();
+  const [config, setConfig] = useState(() => getSectionSettings().waysToSave);
+
+  useEffect(() => {
+    const handleUpdate = (e) => {
+      if (e.detail?.waysToSave) {
+        setConfig(e.detail.waysToSave);
+      } else {
+        setConfig(getSectionSettings().waysToSave);
+      }
+    };
+    window.addEventListener(SECTION_SETTINGS_EVENT, handleUpdate);
+    window.addEventListener("storage", handleUpdate);
+    return () => {
+      window.removeEventListener(SECTION_SETTINGS_EVENT, handleUpdate);
+      window.removeEventListener("storage", handleUpdate);
+    };
+  }, []);
+
+  const {
+    title = "Outdoor adventures, offbeat escapes, and curated journeys for the explorer in you.",
+    cards = [],
+  } = config || {};
+
   return (
     <section className="ways-to-save-section">
-      <h2 className="ways-to-save-title">Outdoor adventures, offbeat escapes, and curated journeys for the explorer in you.</h2>
+      <h2 className="ways-to-save-title">
+        {title}
+      </h2>
       <div className="ways-to-save-grid">
-        <div className="save-card">
-          <div className="save-card-image-wrapper">
-            <img
-              src="https://images.unsplash.com/photo-1530541930197-ff16ac917b0e?auto=format&fit=crop&w=800&q=80"
-              alt="The gear you love, for less"
-              className="save-card-image"
-            />
+        {(cards || []).map((card, index) => (
+          <div className="save-card" key={card.id || index}>
+            <div className="save-card-image-wrapper">
+              <img
+                src={card.image || "https://images.unsplash.com/photo-1530541930197-ff16ac917b0e?auto=format&fit=crop&w=800&q=80"}
+                alt={card.heading || "Adventure gear"}
+                className="save-card-image"
+                onError={(e) => {
+                  e.target.src = "https://images.unsplash.com/photo-1530541930197-ff16ac917b0e?auto=format&fit=crop&w=800&q=80";
+                }}
+              />
+            </div>
+            <div className="save-card-content">
+              {card.tag && <span className="save-card-tag">{card.tag}</span>}
+              <h3 className="save-card-heading">{card.heading}</h3>
+              <p className="save-card-desc">{card.desc}</p>
+              {card.btnText && (
+                <button
+                  className="save-card-btn"
+                  onClick={() => {
+                    if (card.btnLink) {
+                      if (card.btnLink.startsWith("http")) {
+                        window.open(card.btnLink, "_blank");
+                      } else {
+                        navigate(card.btnLink);
+                      }
+                    } else {
+                      navigate("/shop");
+                    }
+                  }}
+                >
+                  {card.btnText}
+                </button>
+              )}
+            </div>
           </div>
-          <div className="save-card-content">
-            <span className="save-card-tag">Save More on Outlet</span>
-            <h3 className="save-card-heading">The gear you love, for less</h3>
-            <p className="save-card-desc">
-              Save on expertly picked clothing and gear with up to 40% off at REI Outlet.
-            </p>
-            <button className="save-card-btn">Shop REI Outlet</button>
-          </div>
-        </div>
-
-        <div className="save-card">
-          <div className="save-card-image-wrapper">
-            <img
-              src="https://images.unsplash.com/photo-1502680390469-be75c86b636f?auto=format&fit=crop&w=800&q=80"
-              alt="Make a splash"
-              className="save-card-image"
-            />
-          </div>
-          <div className="save-card-content">
-            <span className="save-card-tag">Bundle & Save 15% on Accessories</span>
-            <h3 className="save-card-heading">Make a splash</h3>
-            <p className="save-card-desc">
-              Save 15% on full-price paddles and PFDs with your kayak or stand up paddle board purchase.
-            </p>
-            <button className="save-card-btn">Shop watersports</button>
-          </div>
-        </div>
-
-        <div className="save-card">
-          <div className="save-card-image-wrapper">
-            <img
-              src="https://images.unsplash.com/photo-1478131148067-21f180d070d6?auto=format&fit=crop&w=800&q=80"
-              alt="Rent Gear & Save"
-              className="save-card-image"
-            />
-          </div>
-          <div className="save-card-content">
-            <span className="save-card-tag">Rent Premium Outdoor Gear</span>
-            <h3 className="save-card-heading">Rent instead of buying</h3>
-            <p className="save-card-desc">
-              Get top-brand tents, sleeping bags, and backpacks for rent at a fraction of retail prices.
-            </p>
-            <button className="save-card-btn">Explore Rentals</button>
-          </div>
-        </div>
+        ))}
       </div>
     </section>
   );

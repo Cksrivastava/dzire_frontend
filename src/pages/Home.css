@@ -1,0 +1,156 @@
+/* =============================================================
+   HOME PAGE — UNIFIED SECTION SPACING
+   Single source of truth for all vertical spacing.
+   ============================================================= */
+
+/* ── Container ── */
+.home-page-sections {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* ── Desktop: 40px gap between every direct-child section ── */
+.home-page-sections > * + * {
+  margin-top: 40px;
+}
+
+/* ── Resets: prevent component-level margins from conflicting ── */
+
+/* Hero — no top gap */
+.home-page-sections > .hero-slider-container {
+  margin-top: 0 !important;
+}
+
+/* CategorySection */
+.home-page-sections .categories {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 20px;
+}
+
+/* ProductSection wrapper */
+.home-page-sections .product-sections-wrapper {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 20px;
+}
+
+/* New-arrivals band */
+.home-page-sections .new-arrivals-bg-wrapper {
+  margin-top: 0 !important;
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+}
+
+/* EventSection */
+.home-page-sections .event-section {
+  margin-top: 0 !important;
+}
+
+/* BlogSection */
+.home-page-sections .blog-section {
+  margin-top: 0 !important;
+  padding-top: 15px !important;
+  padding-bottom: 15px !important;
+}
+
+/* BannerSection */
+.home-page-sections .banner-section {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* Categories → Outdoor Collection */
+.home-page-sections .categories + .product-sections-wrapper {
+  margin-top: 40px !important;
+}
+
+/* Desktop section-divider */
+.home-page-sections .section-divider {
+  margin: 20px 0 !important;
+}
+
+/* Trending Gear bottom (desktop) */
+.home-page-sections .popular-section {
+  margin-bottom: 8px;
+}
+
+/* WaysToSave */
+.home-page-sections .ways-to-save-section {
+  margin-top: 0 !important;
+}
+
+/* PriceCardsSection */
+.home-page-sections .price-cards-section {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* =============================================================
+   MOBILE & TABLET  (≤ 768px)
+   Equal 24px spacing between ALL sections from
+   "Shop your Outdoor Collection" to "From the Blog"
+   ============================================================= */
+@media (max-width: 768px) {
+
+  /* ── Base: 24px between every direct-child section ── */
+  .home-page-sections > * + * {
+    margin-top: 24px;
+  }
+
+  /* CategorySection: no extra padding on mobile */
+  .home-page-sections .categories {
+    padding-top: 0;
+  }
+
+  /* Categories → Outdoor Collection: same 24px */
+  .home-page-sections .categories + .product-sections-wrapper {
+    margin-top: 24px !important;
+  }
+
+  /* ProductSection: no extra top padding, margin handles gap */
+  .home-page-sections .product-sections-wrapper {
+    padding-top: 0;
+  }
+
+  /* Internal section-dividers = 12px each side → 24px total gap */
+  .home-page-sections .section-divider {
+    margin: 12px 0 !important;
+  }
+
+  /* Trending Gear: no extra bottom, divider + margin handles gap */
+  .home-page-sections .popular-section {
+    margin-bottom: 0 !important;
+  }
+
+  /* New-arrivals: standard 24px above, no extra padding */
+  .home-page-sections .new-arrivals-bg-wrapper {
+    margin-top: 24px !important;
+    padding-top: 12px !important;
+    padding-bottom: 12px !important;
+  }
+
+  /* EventSection: margin-top from * + * handles gap */
+  .home-page-sections .event-section {
+    margin-top: 24px !important;
+  }
+
+  /* Blog section: standard gap above, small internal padding */
+  .home-page-sections .blog-section {
+    margin-top: 24px !important;
+    padding-top: 15px !important;
+    padding-bottom: 15px !important;
+  }
+
+  /* event-view-all button */
+  .home-page-sections .event-view-all {
+    margin-bottom: 0 !important;
+  }
+
+  /* price cards */
+  .home-page-sections .price-cards-section {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+}

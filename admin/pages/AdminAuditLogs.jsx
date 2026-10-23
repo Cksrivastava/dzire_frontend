@@ -3,16 +3,9 @@ import AdminLayout from "./AdminLayout";
 import { History, Search, RefreshCw, SlidersHorizontal, Shield, Calendar, UserCheck } from "lucide-react";
 import { Button, Input } from "../AdminShims";
 import { AdminPanel } from "../components/AdminUi";
+import ExportDropdown from "../components/ExportDropdown";
 
-const initialLogs = [
-  { id: 1, timestamp: "2026-06-15 11:20:14", user: "Admin User", role: "Super Admin", action: "Price Updated", target: "Traditional CTR OD4 Shoes", details: "Changed selling price from 1399 to 1499 Rs" },
-  { id: 2, timestamp: "2026-06-15 10:45:00", user: "Inventory Mgr", role: "Inventory Manager", action: "Stock Adjustment", target: "Verge 45L Backpack", details: "Manually adjusted sellable stock from 10 to 15 units" },
-  { id: 3, timestamp: "2026-06-15 09:12:30", user: "Cashier POS", role: "Cashier", action: "POS Refund Created", target: "Order #DZ-1002", details: "Initiated partial refund of 799 Rs back to Store Credit wallet" },
-  { id: 4, timestamp: "2026-06-14 17:34:11", user: "Admin User", role: "Super Admin", action: "Credit Adjustments", target: "Customer ID 1092", details: "Manually awarded welcome bonus of 50 loyalty points" },
-  { id: 5, timestamp: "2026-06-14 16:22:45", user: "Marketing Mgr", role: "Marketing Manager", action: "Coupon Created", target: "MONSOON500", details: "Added coupon code with 500 Rs flat discount and minimum spend 5000 Rs" },
-  { id: 6, timestamp: "2026-06-14 14:10:02", user: "Content Editor", role: "Content Manager", action: "Homepage Section Updated", target: "Hero Banners Slider", details: "Updated carousel banners sort order and scheduled visibility rules" },
-  { id: 7, timestamp: "2026-06-13 11:05:50", user: "Accountant Pro", role: "Accountant", action: "GST Report Downloaded", target: "Financial May 2026", details: "Exported HSN and GST registers for monthly compliance submission" }
-];
+const initialLogs = [];
 
 const AdminAuditLogs = () => {
   const [logs, setLogs] = useState(initialLogs);
@@ -22,15 +15,15 @@ const AdminAuditLogs = () => {
 
   const filteredLogs = logs.filter(log => {
     const query = searchQuery.trim().toLowerCase();
-    const matchesSearch = !query || 
-      log.user.toLowerCase().includes(query) || 
-      log.action.toLowerCase().includes(query) || 
-      log.target.toLowerCase().includes(query) || 
+    const matchesSearch = !query ||
+      log.user.toLowerCase().includes(query) ||
+      log.action.toLowerCase().includes(query) ||
+      log.target.toLowerCase().includes(query) ||
       log.details.toLowerCase().includes(query);
-    
+
     const matchesAction = actionFilter === "all" || log.action.includes(actionFilter) || (actionFilter === "Inventory" && log.action.includes("Stock"));
     const matchesRole = roleFilter === "all" || log.role === roleFilter;
-    
+
     return matchesSearch && matchesAction && matchesRole;
   });
 
@@ -43,7 +36,20 @@ const AdminAuditLogs = () => {
             <h1>Audit Logs & Activity</h1>
             <p>Track all platform operations, catalog changes, price updates, manual stock adjustments, cash refunds, and admin activities.</p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex items-center gap-3">
+            <ExportDropdown
+              fileName="Audit_Logs_Report"
+              title="System Audit & Security Activity Logs"
+              headers={['Timestamp', 'User', 'Role', 'Action', 'Target Element', 'Details']}
+              rows={filteredLogs.map((l) => [
+                l.timestamp,
+                l.user,
+                l.role,
+                l.action,
+                l.target,
+                l.details
+              ])}
+            />
             <button onClick={() => alert("Audit log data refreshed from security vault.")} className="admin-primary-button" style={{ background: '#ff6600' }}>
               <RefreshCw size={18} /> Refresh Log Vault
             </button>
@@ -55,17 +61,17 @@ const AdminAuditLogs = () => {
           <div className="grid gap-3 xl:grid-cols-[1.5fr_220px_220px]">
             <div className="relative">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-              <Input 
-                value={searchQuery} 
-                onChange={(e) => setSearchQuery(e.target.value)} 
-                placeholder="Search log logs by user, action, target item, or change details..." 
-                className="h-11 border-slate-200 bg-white pl-9 text-slate-900 placeholder:text-slate-400" 
+              <Input
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search log logs by user, action, target item, or change details..."
+                className="h-11 border-slate-200 bg-white pl-9 text-slate-900 placeholder:text-slate-400"
               />
             </div>
 
-            <select 
-              value={actionFilter} 
-              onChange={e => setActionFilter(e.target.value)} 
+            <select
+              value={actionFilter}
+              onChange={e => setActionFilter(e.target.value)}
               className="h-11 rounded-2xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none"
             >
               <option value="all">All Actions</option>
@@ -76,9 +82,9 @@ const AdminAuditLogs = () => {
               <option value="Coupon">Coupons</option>
             </select>
 
-            <select 
-              value={roleFilter} 
-              onChange={e => setRoleFilter(e.target.value)} 
+            <select
+              value={roleFilter}
+              onChange={e => setRoleFilter(e.target.value)}
               className="h-11 rounded-2xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none"
             >
               <option value="all">All Roles</option>
@@ -131,13 +137,12 @@ const AdminAuditLogs = () => {
                       </span>
                     </td>
                     <td className="py-4 px-2">
-                      <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-                        log.action.includes("Price") ? "bg-[#fff7f1] text-[#ff6600]" :
-                        log.action.includes("Stock") || log.action.includes("Inventory") ? "bg-amber-50 text-amber-700" :
-                        log.action.includes("Refund") ? "bg-rose-50 text-rose-700" :
-                        log.action.includes("Credit") ? "bg-emerald-50 text-emerald-700" :
-                        "bg-slate-100 text-slate-700"
-                      }`}>
+                      <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${log.action.includes("Price") ? "bg-[#fff7f1] text-[#ff6600]" :
+                          log.action.includes("Stock") || log.action.includes("Inventory") ? "bg-amber-50 text-amber-700" :
+                            log.action.includes("Refund") ? "bg-rose-50 text-rose-700" :
+                              log.action.includes("Credit") ? "bg-emerald-50 text-emerald-700" :
+                                "bg-slate-100 text-slate-700"
+                        }`}>
                         {log.action}
                       </span>
                     </td>

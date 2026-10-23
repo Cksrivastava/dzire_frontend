@@ -1,41 +1,44 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ArrowRight, Tag } from "lucide-react";
 import "./PriceCardsSection.css";
-
-const priceCards = [
-  {
-    id: 1,
-    badge: "BEST VALUE",
-    title: "STARTER PICKS",
-    price: "499",
-    isTrending: false,
-  },
-  {
-    id: 2,
-    badge: "TRENDING",
-    title: "POPULAR GEAR",
-    price: "999",
-    isTrending: true,
-  },
-  {
-    id: 3,
-    badge: "TOP RATED",
-    title: "PRO ESSENTIALS",
-    price: "1,499",
-    isTrending: false,
-  },
-  {
-    id: 4,
-    badge: "EDITOR'S CHOICE",
-    title: "PREMIUM RANGE",
-    price: "1,999",
-    isTrending: false,
-  },
-];
+import { getSectionSettings, SECTION_SETTINGS_EVENT } from "../services/sectionSettings";
 
 const PriceCardsSection = () => {
+  const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef(null);
+
+  const [budgetConfig, setBudgetConfig] = useState(() => getSectionSettings().budget);
+
+  useEffect(() => {
+    const handleUpdate = (e) => {
+      if (e.detail?.budget) {
+        setBudgetConfig(e.detail.budget);
+      } else {
+        setBudgetConfig(getSectionSettings().budget);
+      }
+    };
+    window.addEventListener(SECTION_SETTINGS_EVENT, handleUpdate);
+    window.addEventListener("storage", handleUpdate);
+    return () => {
+      window.removeEventListener(SECTION_SETTINGS_EVENT, handleUpdate);
+      window.removeEventListener("storage", handleUpdate);
+    };
+  }, []);
+
+  const {
+    badge = "BUDGET FRIENDLY",
+    titleLine1 = "Gear for",
+    titleLine2 = "Every Budget!",
+    subtitle = "Quality products at prices that don't break the bank.",
+    cards = [],
+  } = budgetConfig || {};
+
+  const handleShopPrice = (priceStr) => {
+    const num = String(priceStr).replace(/[^0-9]/g, "");
+    navigate(`/shop?maxPrice=${num}`);
+  };
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -65,28 +68,34 @@ const PriceCardsSection = () => {
         
         {/* Left Side: Header info */}
         <div className="price-cards-left">
-          <div className="budget-friendly-badge">
-            <Tag size={13} className="tag-icon" />
-            <span>BUDGET FRIENDLY</span>
-          </div>
+          {badge && (
+            <div className="budget-friendly-badge">
+              <Tag size={13} className="tag-icon" />
+              <span>{badge}</span>
+            </div>
+          )}
           <h2>
-            Gear for <br />
-            <span className="budget-highlight-text">Every Budget!</span>
+            {titleLine1 || "Gear for"} <br />
+            <span className="budget-highlight-text">{titleLine2 || "Every Budget!"}</span>
           </h2>
-          <p className="price-cards-subtitle">
-            Quality products at prices that don't break the bank.
-          </p>
+          {subtitle && (
+            <p className="price-cards-subtitle">
+              {subtitle}
+            </p>
+          )}
         </div>
 
         {/* Vertical Divider */}
         <div className="price-cards-divider"></div>
 
-        {/* Right Side: Grid of 4 Cards */}
+        {/* Right Side: Grid of Cards */}
         <div className={`price-cards-grid ${isVisible ? "animate-cards" : ""}`}>
-          {priceCards.map((item) => (
+          {(cards || []).map((item) => (
             <div 
               className="budget-price-card" 
               key={item.id}
+              onClick={() => handleShopPrice(item.price)}
+              style={{ cursor: "pointer" }}
             >
               <div className="budget-card-content">
                 <div className="budget-badge-pill">{item.badge}</div>
@@ -99,8 +108,14 @@ const PriceCardsSection = () => {
                   <span className="budget-price-value">{item.price}</span>
                 </div>
 
-                <button className="budget-action-btn btn-outline">
-                  <span>SHOP NOW</span>
+                <button 
+                  className="budget-action-btn btn-outline"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleShopPrice(item.price);
+                  }}
+                >
+                  <span>{item.btnText || "SHOP NOW"}</span>
                   <ArrowRight size={15} className="btn-arrow-icon" />
                 </button>
               </div>

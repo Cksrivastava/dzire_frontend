@@ -1,50 +1,30 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import AdminLayout from "./AdminLayout";
-import { useSearchParams } from "react-router-dom";
-import { Gift, ArrowRightLeft, DollarSign, Download, Upload, Plus, AlertCircle, RefreshCw, Calendar, Users, BarChart3, Settings } from "lucide-react";
+import { Gift, ArrowRightLeft, DollarSign, Download, Upload, Plus, AlertCircle, RefreshCw } from "lucide-react";
 import { Button, Input } from "../AdminShims";
 import { AdminPanel, AdminSectionHeading, AdminMetricCard, AdminStatusBadge } from "../components/AdminUi";
+import ExportDropdown from "../components/ExportDropdown";
 
-const initialWallets = [
-  { id: 1, name: "Aarav Mehta", email: "aarav@example.com", earned: 550, redeemed: 150, reversed: 0, available: 400 },
-  { id: 2, name: "Priya Sharma", email: "priya@example.com", earned: 1200, redeemed: 450, reversed: 100, available: 650 },
-  { id: 3, name: "Rahul Verma", email: "rahul@example.com", earned: 250, redeemed: 50, reversed: 0, available: 200 },
-  { id: 4, name: "Neha Patel", email: "neha@example.com", earned: 900, redeemed: 0, reversed: 50, available: 850 },
-];
+const initialWallets = [];
 
-const mockLogs = [
-  { id: 101, name: "Aarav Mehta", email: "aarav@example.com", type: "Earned", amount: 250, reason: "Order #DZ-1001 Payment Success", date: "2026-06-14" },
-  { id: 102, name: "Priya Sharma", email: "priya@example.com", type: "Redeemed", amount: 150, reason: "Order #DZ-9984 Applied Credits", date: "2026-06-13" },
-  { id: 103, name: "Neha Patel", email: "neha@example.com", type: "Reversed", amount: 50, reason: "Return Order #DZ-9921 Refund Reversal", date: "2026-06-12" },
-  { id: 104, name: "Priya Sharma", email: "priya@example.com", type: "Earned", amount: 500, reason: "Double Credits Promotion Campaign", date: "2026-06-10" },
-];
-
-const S = {
-  card: { background: 'white', padding: '20px', borderRadius: '12px', border: '1px solid #e5e7eb', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' },
-  panel: { background: 'white', borderRadius: '12px', border: '1px solid #e5e7eb', overflow: 'hidden' },
-  th: { padding: '12px 20px', fontWeight: '600', textAlign: 'left', background: '#f9fafb', fontSize: '12px', color: '#667085', textTransform: 'uppercase' },
-  td: { padding: '16px 20px', fontSize: '14px', borderTop: '1px solid #e5e7eb' },
-  label: { display: 'block', marginBottom: '6px', fontSize: '13px', fontWeight: '500', color: '#374151' },
-  inp: { width: '100%', padding: '8px 12px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', boxSizing: 'border-box' },
-  saveBtn: { padding: '10px 20px', background: '#ff6600', color: 'white', border: 'none', borderRadius: '6px', fontWeight: '600', cursor: 'pointer', marginTop: '16px' },
-  badge: (bg, col) => ({ padding: '3px 10px', borderRadius: '20px', fontSize: '12px', fontWeight: '500', background: bg, color: col, display: 'inline-block' }),
-};
+const mockLogs = [];
 
 const AdminLoyalty = () => {
-  const [searchParams] = useSearchParams();
-  const activeSub = searchParams.get("sub") || "Credits Overview";
-
   const [spendRule, setSpendRule] = useState(1000);
   const [pointsRule, setPointsRule] = useState(50);
   const [maxRedemptionPercent, setMaxRedemptionPercent] = useState(10);
 
   const [wallets, setWallets] = useState(initialWallets);
   const [logs, setLogs] = useState(mockLogs);
+  const [activeTab, setActiveTab] = useState("rules"); // "rules", "wallets", "transactions", "promotions"
 
   // Award credits form
   const [awardEmail, setAwardEmail] = useState("");
   const [awardAmount, setAwardAmount] = useState("");
   const [awardReason, setAwardReason] = useState("Loyalty Bonus");
+
+  // Excel/CSV import mockup
+  const [importFile, setImportFile] = useState(null);
 
   const handleUpdateRules = (e) => {
     e.preventDefault();
@@ -81,7 +61,6 @@ const AdminLoyalty = () => {
     setLogs([{
       id: Date.now(),
       name: match ? match.name : awardEmail.split("@")[0],
-      email: awardEmail,
       type: "Earned",
       amount,
       reason: awardReason,
@@ -93,313 +72,362 @@ const AdminLoyalty = () => {
     setAwardAmount("");
   };
 
-  const renderSubContent = () => {
-    switch (activeSub) {
-      case "Credits Overview":
-      default:
-        return (
-          <div className="space-y-6">
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "16px" }}>
-              <div style={S.card}>
-                <p style={{ margin: "0 0 8px", fontSize: "14px", color: "#667085" }}>Total Wallets</p>
-                <h2 style={{ margin: 0, fontSize: "28px", fontWeight: "700" }}>{wallets.length}</h2>
-              </div>
-              <div style={S.card}>
-                <p style={{ margin: "0 0 8px", fontSize: "14px", color: "#667085" }}>Total Earned Credits</p>
-                <h2 style={{ margin: 0, fontSize: "28px", fontWeight: "700", color: "#10b981" }}>2,900</h2>
-              </div>
-              <div style={S.card}>
-                <p style={{ margin: "0 0 8px", fontSize: "14px", color: "#667085" }}>Redeemed Credits</p>
-                <h2 style={{ margin: 0, fontSize: "28px", fontWeight: "700", color: "#6366f1" }}>650</h2>
-              </div>
-              <div style={S.card}>
-                <p style={{ margin: "0 0 8px", fontSize: "14px", color: "#667085" }}>Available Balance</p>
-                <h2 style={{ margin: 0, fontSize: "28px", fontWeight: "700", color: "#ff6600" }}>2,100</h2>
-              </div>
-            </div>
-
-            <div style={S.panel}>
-              <div style={{ padding: "16px 20px", borderBottom: "1px solid #e5e7eb", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <strong>Customer Credit Wallets</strong>
-                <button onClick={() => alert("Excel Exported")} style={{ padding: "8px 16px", background: "white", border: "1px solid #d1d5db", borderRadius: "6px", fontSize: "14px", cursor: "pointer" }}>
-                  Export CSV
-                </button>
-              </div>
-              <table style={S.table}>
-                <thead>
-                  <tr style={{ background: "#f9fafb" }}>
-                    <th style={S.th}>Customer</th>
-                    <th style={S.th}>Earned</th>
-                    <th style={S.th}>Redeemed</th>
-                    <th style={S.th}>Reversed</th>
-                    <th style={S.th}>Available</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {wallets.map(w => (
-                    <tr key={w.id}>
-                      <td style={S.td}>
-                        <strong>{w.name}</strong>
-                        <p style={{ margin: 0, fontSize: "12px", color: "#667085" }}>{w.email}</p>
-                      </td>
-                      <td style={{ ...S.td, color: "#10b981", fontWeight: "600" }}>{w.earned} pts</td>
-                      <td style={{ ...S.td, color: "#6366f1" }}>{w.redeemed} pts</td>
-                      <td style={{ ...S.td, color: "#f04438" }}>{w.reversed} pts</td>
-                      <td style={{ ...S.td, fontWeight: "700", color: "#ff6600" }}>{w.available} pts</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        );
-
-      case "Credit Ledger":
-      case "Earned Credits":
-      case "Redeemed Credits":
-      case "Reversed Credits": {
-        const typeFilter = activeSub === "Earned Credits" ? "Earned"
-          : activeSub === "Redeemed Credits" ? "Redeemed"
-          : activeSub === "Reversed Credits" ? "Reversed"
-          : null;
-
-        const filteredLogs = typeFilter ? logs.filter(l => l.type === typeFilter) : logs;
-
-        return (
-          <div style={S.panel}>
-            <div style={{ padding: "16px 20px", borderBottom: "1px solid #e5e7eb" }}>
-              <strong>{activeSub} Transaction Logs</strong>
-            </div>
-            <table style={S.table}>
-              <thead>
-                <tr>
-                  <th style={S.th}>Date</th>
-                  <th style={S.th}>Customer</th>
-                  <th style={S.th}>Type</th>
-                  <th style={S.th}>Amount</th>
-                  <th style={S.th}>Reason</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredLogs.map(l => {
-                  const isEarned = l.type === "Earned";
-                  const isRedeemed = l.type === "Redeemed";
-                  const badgeBg = isEarned ? "#e3fcef" : isRedeemed ? "#eff8ff" : "#fef3f2";
-                  const badgeCol = isEarned ? "#12b76a" : isRedeemed ? "#175cd3" : "#f04438";
-
-                  return (
-                    <tr key={l.id}>
-                      <td style={{ ...S.td, color: "#667085" }}>{l.date}</td>
-                      <td style={S.td}>
-                        <strong>{l.name}</strong>
-                        <p style={{ margin: 0, fontSize: "12px", color: "#667085" }}>{l.email}</p>
-                      </td>
-                      <td style={S.td}>
-                        <span style={S.badge(badgeBg, badgeCol)}>{l.type}</span>
-                      </td>
-                      <td style={{ ...S.td, fontWeight: "700", color: isEarned ? "#10b981" : "#f04438" }}>
-                        {isEarned ? "+" : "-"}{l.amount} Pts
-                      </td>
-                      <td style={{ ...S.td, color: "#374151" }}>{l.reason}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        );
-      }
-
-      case "Manual Credit Adjustment":
-        return (
-          <div style={{ ...S.formCard, maxWidth: "560px" }}>
-            <h3 style={{ margin: "0 0 20px", fontSize: "16px", fontWeight: "600" }}>Award / Deduct Loyalty Credits</h3>
-            <form onSubmit={handleAwardPoints}>
-              <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-                <div>
-                  <label style={S.label}>Customer Email</label>
-                  <input type="email" value={awardEmail} onChange={e => setAwardEmail(e.target.value)} placeholder="customer@example.com" style={S.inp} required />
-                </div>
-                <div>
-                  <label style={S.label}>Points Amount</label>
-                  <input type="number" value={awardAmount} onChange={e => setAwardAmount(e.target.value)} placeholder="e.g. 100 or -50 for deduction" style={S.inp} required />
-                </div>
-                <div>
-                  <label style={S.label}>Adjustment Reason</label>
-                  <input type="text" value={awardReason} onChange={e => setAwardReason(e.target.value)} placeholder="e.g. Birthday Bonus / Return Correction" style={S.inp} required />
-                </div>
-                <button type="submit" style={S.saveBtn}>Apply Adjustment</button>
-              </div>
-            </form>
-          </div>
-        );
-
-      case "Credit Rules":
-        return (
-          <div style={{ ...S.formCard, maxWidth: "560px" }}>
-            <h3 style={{ margin: "0 0 20px", fontSize: "16px", fontWeight: "600" }}>Configure Loyalty Calculations</h3>
-            <form onSubmit={handleUpdateRules}>
-              <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-                <div>
-                  <label style={S.label}>Spend Milestone (Rs)</label>
-                  <input type="number" value={spendRule} onChange={e => setSpendRule(Number(e.target.value))} style={S.inp} required />
-                </div>
-                <div>
-                  <label style={S.label}>Credits Earned Per Milestone</label>
-                  <input type="number" value={pointsRule} onChange={e => setPointsRule(Number(e.target.value))} style={S.inp} required />
-                </div>
-                <div>
-                  <label style={S.label}>Maximum Cart Redemption (%)</label>
-                  <input type="number" value={maxRedemptionPercent} onChange={e => setMaxRedemptionPercent(Number(e.target.value))} style={S.inp} required />
-                </div>
-                <button type="submit" style={S.saveBtn}>Save Calculations</button>
-              </div>
-            </form>
-          </div>
-        );
-
-      case "Credit Promotions":
-        return (
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px" }}>
-            <div style={S.card}>
-              <h3 style={{ margin: "0 0 16px", fontSize: "16px", fontWeight: "600" }}>Multiplier Promotions</h3>
-              <div style={{ background: "#fff7f1", border: "1px solid #ffe0cc", p: "16px", borderRadius: "10px", padding: "16px", marginBottom: "16px" }}>
-                <span style={S.badge("#ff6600", "white")}>Active Campaign</span>
-                <h4 style={{ margin: "10px 0 4px", fontSize: "16px" }}>Monsoon Double Credits</h4>
-                <p style={{ margin: 0, fontSize: "12px", color: "#667085" }}>2.0x credits rewards multiplier on Footwear category purchase.</p>
-              </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-                <div>
-                  <label style={S.label}>Target Category</label>
-                  <select style={S.inp}><option>Footwear</option><option>Bags</option><option>All Products</option></select>
-                </div>
-                <div>
-                  <label style={S.label}>Multiplier Factor</label>
-                  <select style={S.inp}><option>2.0x (Double)</option><option>3.0x (Triple)</option><option>1.5x</option></select>
-                </div>
-                <button onClick={() => alert("Promo added")} style={S.saveBtn}>Create Promotion</button>
-              </div>
-            </div>
-            <div style={S.card}>
-              <h3 style={{ margin: "0 0 16px", fontSize: "16px", fontWeight: "600" }}>Milestone Bonus Rules</h3>
-              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                {[
-                  { name: "New User Welcome Bonus", desc: "Award 50 points on sign up", active: true },
-                  { name: "VIP Order Milestone", desc: "Award 500 points on completing 5 orders", active: true },
-                  { name: "Birthday Month Special", desc: "Award 100 points during birthday month", active: false }
-                ].map((rule, idx) => (
-                  <div key={idx} style={{ padding: "12px", border: "1px solid #e5e7eb", borderRadius: "8px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <div>
-                      <strong style={{ fontSize: "13px" }}>{rule.name}</strong>
-                      <p style={{ margin: 0, fontSize: "12px", color: "#667085" }}>{rule.desc}</p>
-                    </div>
-                    <span style={S.badge(rule.active ? "#e3fcef" : "#f3f4f6", rule.active ? "#12b76a" : "#667085")}>{rule.active ? "Active" : "Disabled"}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        );
-
-      case "Credit Reports":
-        return (
-          <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "16px" }}>
-              {[
-                { label: "Points Liability", val: "₹1,05,000", sub: "Based on available credits balance" },
-                { label: "Redemption Conversion Rate", val: "18.4%", sub: "Percentage of checkout transactions applying points" },
-                { label: "Average Value Applied", val: "₹210", sub: "Per checkout transaction" },
-              ].map((k, i) => (
-                <div key={i} style={S.card}>
-                  <span style={{ fontSize: "13px", color: "#667085" }}>{k.label}</span>
-                  <h2 style={{ margin: "6px 0 4px", fontSize: "24px", fontWeight: "700" }}>{k.val}</h2>
-                  <span style={{ fontSize: "12px", color: "#94a3b8" }}>{k.sub}</span>
-                </div>
-              ))}
-            </div>
-            <div style={S.panel}>
-              <div style={{ padding: "16px 20px", borderBottom: "1px solid #e5e7eb", display: "flex", justifyContent: "space-between" }}>
-                <strong>Loyalty Valuation Report List</strong>
-                <button onClick={() => alert("Generating full loyalty report...")} style={{ padding: "8px 16px", background: "#ff6600", color: "white", border: "none", borderRadius: "6px", fontSize: "13px", cursor: "pointer" }}>
-                  Generate Custom PDF
-                </button>
-              </div>
-              <div style={{ padding: "20px", display: "flex", flexDirection: "column", gap: "10px" }}>
-                {["Q2 Loyalty Redemption Summary.csv", "FY26 Available Liability Valuation.xlsx", "Weekly Point Earn Report.csv"].map((r, i) => (
-                  <div key={i} style={{ padding: "12px 16px", border: "1px solid #e5e7eb", borderRadius: "8px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <span style={{ fontSize: "14px" }}>{r}</span>
-                    <button style={{ color: "#ff6600", background: "none", border: "none", fontWeight: "600", cursor: "pointer" }}>Download</button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        );
-
-      case "Credit Expiry Management":
-        return (
-          <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-            <div style={S.card}>
-              <h3 style={{ margin: "0 0 12px", fontSize: "16px", fontWeight: "600" }}>Loyalty Points Validity Terms</h3>
-              <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-                <div>
-                  <label style={S.label}>Points Validity Period</label>
-                  <select style={S.inp}><option>12 Months from Earning Date</option><option>6 Months</option><option>No Expiry (Lifetime)</option></select>
-                </div>
-                <div>
-                  <label style={S.label}>Alert Customers Before Expiry</label>
-                  <select style={S.inp}><option>30 Days Before Expiry</option><option>15 Days Before Expiry</option><option>Do Not Alert</option></select>
-                </div>
-                <button onClick={() => alert("Expiry rules updated")} style={S.saveBtn}>Save validity rules</button>
-              </div>
-            </div>
-
-            <div style={S.panel}>
-              <div style={{ padding: "16px 20px", borderBottom: "1px solid #e5e7eb" }}>
-                <strong>Points Expiring Soon (Next 30 Days)</strong>
-              </div>
-              <table style={S.table}>
-                <thead>
-                  <tr>
-                    <th style={S.th}>Customer</th>
-                    <th style={S.th}>Points Expiring</th>
-                    <th style={S.th}>Expiry Date</th>
-                    <th style={S.th}>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {[
-                    { name: "Aarav Mehta", points: 120, date: "15 Jul 2026" },
-                    { name: "Rahul Verma", points: 80, date: "24 Jul 2026" }
-                  ].map((p, idx) => (
-                    <tr key={idx}>
-                      <td style={S.td}><strong>{p.name}</strong></td>
-                      <td style={{ ...S.td, color: "#f04438", fontWeight: "600" }}>{p.points} Pts</td>
-                      <td style={{ ...S.td, color: "#667085" }}>{p.date}</td>
-                      <td style={S.td}>
-                        <button onClick={() => alert("Notification reminder sent")} style={{ padding: "6px 12px", border: "1px solid #ffe0cc", color: "#ff6600", borderRadius: "6px", background: "none", cursor: "pointer", fontSize: "12px", fontWeight: "600" }}>Notify Customer</button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        );
-    }
+  const handleExport = () => {
+    alert("Exporting Loyalty Wallets as CSV...\nDownloaded successfully!");
   };
 
   return (
     <AdminLayout>
       <div className="space-y-6">
-        <section className="admin-hero" style={{ marginBottom: "24px" }}>
+        <section className="admin-hero" style={{ marginBottom: '24px' }}>
           <div>
-            <h1>{activeSub}</h1>
-            <p>Track and manage Dzire credits customer wallets and calculation rules</p>
+            <span className="admin-eyebrow">Commerce / Loyalty</span>
+            <h1>Dzire Credits & Loyalty</h1>
+            <p>Configure points rules, manage customer wallets, award bonus credits, and track points redemption logs.</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <ExportDropdown
+              fileName="Loyalty_Wallets_Report"
+              title="Dzire Credits & Loyalty Wallets Register"
+              headers={['Customer Name', 'Email', 'Total Earned', 'Total Redeemed', 'Reversed', 'Available Balance']}
+              rows={wallets.map((w) => [
+                w.name,
+                w.email,
+                `${w.earned} Pts`,
+                `${w.redeemed} Pts`,
+                `${w.reversed} Pts`,
+                `${w.available} Pts`
+              ])}
+            />
           </div>
         </section>
 
-        {renderSubContent()}
+        {/* Metric Overview cards */}
+        <section className="grid gap-4 xl:grid-cols-4">
+          <div className="rounded-[26px] border border-[#ffe0cc] bg-white p-5 shadow-sm">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-400">Total Credits Issued</p>
+                <p className="mt-3 text-3xl font-bold text-slate-900">2,850 Pts</p>
+              </div>
+              <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-50 text-amber-600">
+                <Gift size={22} />
+              </span>
+            </div>
+            <p className="mt-4 text-xs text-slate-500">Value: 2,850 Rs (1 Credit = 1 Rs)</p>
+          </div>
+
+          <div className="rounded-[26px] border border-[#ffe0cc] bg-white p-5 shadow-sm">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-400">Total Redeemed</p>
+                <p className="mt-3 text-3xl font-bold text-slate-900">650 Pts</p>
+              </div>
+              <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
+                <ArrowRightLeft size={22} />
+              </span>
+            </div>
+            <p className="mt-4 text-xs text-slate-500">Applied on purchases</p>
+          </div>
+
+          <div className="rounded-[26px] border border-[#ffe0cc] bg-white p-5 shadow-sm">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-400">Active Wallets</p>
+                <p className="mt-3 text-3xl font-bold text-slate-900">{wallets.length}</p>
+              </div>
+              <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+                <Gift size={22} />
+              </span>
+            </div>
+            <p className="mt-4 text-xs text-slate-500">With active credit balances</p>
+          </div>
+
+          <div className="rounded-[26px] border border-[#ffe0cc] bg-white p-5 shadow-sm">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-400">Avg wallet balance</p>
+                <p className="mt-3 text-3xl font-bold text-slate-900">525 Pts</p>
+              </div>
+              <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-rose-50 text-rose-600">
+                <DollarSign size={22} />
+              </span>
+            </div>
+            <p className="mt-4 text-xs text-slate-500">Points ready to use</p>
+          </div>
+        </section>
+
+        {/* Navigation Tabs */}
+        <div className="flex border-b border-slate-200 gap-6">
+          {[
+            { id: "rules", label: "Loyalty & Redemption Rules" },
+            { id: "wallets", label: "Customer Wallets" },
+            { id: "transactions", label: "Credit History Logs" },
+            { id: "promotions", label: "Promotions & Multipliers" },
+          ].map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              style={{
+                paddingBottom: '12px',
+                fontSize: '15px',
+                fontWeight: '600',
+                color: activeTab === tab.id ? '#ff6600' : '#000000',
+                borderBottom: activeTab === tab.id ? '2.5px solid #ff6600' : 'none',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer'
+              }}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Tab 1: Rules */}
+        {activeTab === "rules" && (
+          <div className="grid gap-6 xl:grid-cols-2">
+            <AdminPanel className="p-6">
+              <h2 className="text-xl font-bold text-slate-900 mb-2">Configure Base Earning Rules</h2>
+              <p className="text-sm text-slate-500 mb-6">Define points earning values for every online payment or offline POS created bill.</p>
+
+              <form onSubmit={handleUpdateRules} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-semibold uppercase tracking-[0.1em] text-slate-500 mb-1">Earning Spend Requirement (Rs)</label>
+                  <Input type="number" value={spendRule} onChange={e => setSpendRule(e.target.value)} />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold uppercase tracking-[0.1em] text-slate-500 mb-1">Credits Awarded (Points)</label>
+                  <Input type="number" value={pointsRule} onChange={e => setPointsRule(e.target.value)} />
+                  <span className="text-xs text-slate-400 mt-1 block">Current rate: Spend Rs {spendRule} = Earn {pointsRule} Credits (1 point = 1 Rs)</span>
+                </div>
+                <div style={{ padding: '10px 0' }}>
+                  <Button type="submit" className="h-11 rounded-xl bg-[#ff6600] text-white">Save Earning Rules</Button>
+                </div>
+              </form>
+            </AdminPanel>
+
+            <AdminPanel className="p-6">
+              <h2 className="text-xl font-bold text-slate-900 mb-2">Redemption & Safety Thresholds</h2>
+              <p className="text-sm text-slate-500 mb-6">Control how customers apply credits to their checkout carts on their next purchase.</p>
+
+              <form onSubmit={handleUpdateRules} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-semibold uppercase tracking-[0.1em] text-slate-500 mb-1">Max Cart Value Redemption Limit (%)</label>
+                  <Input type="number" value={maxRedemptionPercent} onChange={e => setMaxRedemptionPercent(e.target.value)} max="100" min="0" />
+                </div>
+                <div className="bg-[#fff8eb] border border-[#ffe0cc] rounded-xl p-4 flex gap-3 text-amber-800">
+                  <AlertCircle size={20} className="shrink-0 mt-0.5" />
+                  <div className="text-xs leading-5">
+                    <strong>Rule active:</strong> Customers can redeem their points up to a maximum of <strong>{maxRedemptionPercent}%</strong> of their cart total value. Shipping charges are strictly excluded from the points deduction calculation.
+                  </div>
+                </div>
+                <div style={{ padding: '10px 0' }}>
+                  <Button type="submit" className="h-11 rounded-xl bg-[#ff6600] text-white">Save Redemption Settings</Button>
+                </div>
+              </form>
+            </AdminPanel>
+          </div>
+        )}
+
+        {/* Tab 2: Wallets */}
+        {activeTab === "wallets" && (
+          <div className="space-y-6">
+            <div className="grid gap-6 xl:grid-cols-[1.5fr_1fr]">
+              {/* Wallets Table */}
+              <AdminPanel className="p-5">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-bold text-slate-900">Active Customer Wallets</h3>
+                  <span className="text-xs font-semibold bg-slate-100 text-slate-600 px-3 py-1 rounded-full">Rule: 1 Point = 1 Rs</span>
+                </div>
+
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-sm">
+                    <thead>
+                      <tr className="border-b border-slate-200 text-slate-400 font-semibold">
+                        <th className="py-3 px-2">Customer</th>
+                        <th className="py-3 px-2">Points Earned</th>
+                        <th className="py-3 px-2">Redeemed</th>
+                        <th className="py-3 px-2">Reversed</th>
+                        <th className="py-3 px-2">Available Balance</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {wallets.map(w => (
+                        <tr key={w.id} className="border-b border-slate-100 hover:bg-slate-50">
+                          <td className="py-4 px-2">
+                            <p className="font-semibold text-slate-900">{w.name}</p>
+                            <span className="text-xs text-slate-500">{w.email}</span>
+                          </td>
+                          <td className="py-4 px-2 font-medium text-slate-700">{w.earned} Pts</td>
+                          <td className="py-4 px-2 text-slate-500">{w.redeemed} Pts</td>
+                          <td className="py-4 px-2 text-rose-600">{w.reversed} Pts</td>
+                          <td className="py-4 px-2"><strong className="text-[#ff6600]">{w.available} Pts</strong></td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </AdminPanel>
+
+              {/* Adjust Credits Side Panel */}
+              <div className="space-y-4">
+                <AdminPanel className="p-6">
+                  <h3 className="text-lg font-bold text-slate-900 mb-2">Award Bonus Points</h3>
+                  <p className="text-sm text-slate-500 mb-4">Directly award loyalty points to a customer's email.</p>
+
+                  <form onSubmit={handleAwardPoints} className="space-y-3">
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-500 mb-1">Customer Email</label>
+                      <Input type="email" placeholder="customer@example.com" value={awardEmail} onChange={e => setAwardEmail(e.target.value)} required />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-500 mb-1">Credits (Points)</label>
+                      <Input type="number" placeholder="e.g. 100" value={awardAmount} onChange={e => setAwardAmount(e.target.value)} required />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-500 mb-1">Earning Reason</label>
+                      <Input type="text" placeholder="e.g. Campaign Promotion" value={awardReason} onChange={e => setAwardReason(e.target.value)} />
+                    </div>
+                    <Button type="submit" className="w-full h-11 bg-[#ff6600] text-white rounded-xl">
+                      <Plus size={16} /> Award Credits
+                    </Button>
+                  </form>
+                </AdminPanel>
+
+                <AdminPanel className="p-6">
+                  <h3 className="text-lg font-bold text-slate-900 mb-2">Bulk Adjust Credits</h3>
+                  <p className="text-sm text-slate-500 mb-4">Import bulk credit points adjustments or bonus awards via Excel/CSV.</p>
+
+                  <div className="border-2 border-dashed border-slate-200 rounded-xl p-6 text-center cursor-pointer hover:border-[#ff6600] transition">
+                    <Upload size={28} className="mx-auto text-slate-400 mb-2" />
+                    <span className="text-xs font-bold text-slate-700 block">Click to upload .xlsx or .csv</span>
+                    <span className="text-[10px] text-slate-400 mt-1 block">Format: Email, Points, Reason, Action (Award/Reverse)</span>
+                  </div>
+                </AdminPanel>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Tab 3: Transactions */}
+        {activeTab === "transactions" && (
+          <AdminPanel className="p-5">
+            <h3 className="text-lg font-bold text-slate-900 mb-4">Credit Earning & Reversal Logs</h3>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead>
+                  <tr className="border-b border-slate-200 text-slate-400 font-semibold">
+                    <th className="py-3 px-2">Date</th>
+                    <th className="py-3 px-2">Customer</th>
+                    <th className="py-3 px-2">Activity Type</th>
+                    <th className="py-3 px-2">Points Amount</th>
+                    <th className="py-3 px-2">Earning/Reversal Reason</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {logs.map(log => (
+                    <tr key={log.id} className="border-b border-slate-100 hover:bg-slate-50">
+                      <td className="py-4 px-2 text-slate-500 font-medium">{log.date}</td>
+                      <td className="py-4 px-2 font-semibold text-slate-900">{log.name}</td>
+                      <td className="py-4 px-2">
+                        <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${log.type === "Earned" ? "bg-emerald-50 text-emerald-700 border border-emerald-200" :
+                          log.type === "Redeemed" ? "bg-blue-50 text-blue-700 border border-blue-200" :
+                            "bg-rose-50 text-rose-700 border border-rose-200"
+                          }`}>
+                          {log.type}
+                        </span>
+                      </td>
+                      <td className="py-4 px-2 font-bold text-slate-700">
+                        {log.type === "Earned" ? "+" : "-"}{log.amount} Pts
+                      </td>
+                      <td className="py-4 px-2 text-slate-600 font-medium">{log.reason}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </AdminPanel>
+        )}
+
+        {/* Tab 4: Promotions */}
+        {activeTab === "promotions" && (
+          <div className="grid gap-6 xl:grid-cols-2">
+            <AdminPanel className="p-6">
+              <h3 className="text-lg font-bold text-slate-900 mb-2">Double Earning Campaigns</h3>
+              <p className="text-sm text-slate-500 mb-4">Set point multipliers for dynamic marketing campaigns.</p>
+
+              <div className="bg-gradient-to-r from-[#ffe8d6] to-[#fff5ee] border border-[#ffe0cc] rounded-2xl p-6 mb-6">
+                <span className="bg-[#ff6600] text-white text-[10px] font-bold uppercase tracking-[0.1em] px-2.5 py-1 rounded-full">Active Campaign</span>
+                <h4 className="text-xl font-bold text-[#ff6600] mt-3">Monsoon Double Credits</h4>
+                <p className="text-xs text-amber-800 mt-2 font-medium">Awarding 2x Points multiplier (Spend Rs 1,000 = Earn 100 Credits) on all Foot-wear category products purchased.</p>
+                <div className="mt-4 flex gap-2">
+                  <button className="h-9 px-3 rounded-lg text-xs font-bold text-rose-600 bg-white border border-rose-200 hover:bg-rose-50 transition">Disable Promo</button>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <h4 className="text-sm font-bold text-slate-900">Create New Multiplier Rule</h4>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-400 mb-1">Target Category/Product</label>
+                    <select className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm">
+                      <option>All Products</option>
+                      <option>Foot-wear Category</option>
+                      <option>Rucksack Bags</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-400 mb-1">Credit Multiplier</label>
+                    <select className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm">
+                      <option>1.5x Credits</option>
+                      <option>2.0x (Double Credits)</option>
+                      <option>3.0x (Triple Credits)</option>
+                    </select>
+                  </div>
+                </div>
+                <Button className="h-10 bg-[#ff6600] text-white rounded-lg">Create Campaign</Button>
+              </div>
+            </AdminPanel>
+
+            <AdminPanel className="p-6">
+              <h3 className="text-lg font-bold text-slate-900 mb-2">Bonus Credits & Milestones</h3>
+              <p className="text-sm text-slate-500 mb-4">Automatically award bonus points to repeat VIP customers.</p>
+
+              <div className="space-y-4">
+                <div className="border border-slate-100 rounded-xl p-4 flex justify-between items-center bg-slate-50">
+                  <div>
+                    <h4 className="text-sm font-bold text-slate-900">New Registration Welcome Bonus</h4>
+                    <p className="text-xs text-slate-500 mt-1">Award 50 welcome credits upon email verification</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-1 rounded">Active</span>
+                  </div>
+                </div>
+
+                <div className="border border-slate-100 rounded-xl p-4 flex justify-between items-center bg-slate-50">
+                  <div>
+                    <h4 className="text-sm font-bold text-slate-900">VIP Order Count Milestone</h4>
+                    <p className="text-xs text-slate-500 mt-1">Award 500 bonus credits on completing 5 orders</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-1 rounded">Active</span>
+                  </div>
+                </div>
+
+                <div className="border border-slate-100 rounded-xl p-4 flex justify-between items-center bg-slate-50">
+                  <div>
+                    <h4 className="text-sm font-bold text-slate-900">Birthday Month Bonus</h4>
+                    <p className="text-xs text-slate-500 mt-1">Award 100 credits during birthday month</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded">Inactive</span>
+                  </div>
+                </div>
+              </div>
+            </AdminPanel>
+          </div>
+        )}
       </div>
     </AdminLayout>
   );

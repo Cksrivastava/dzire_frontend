@@ -621,14 +621,6 @@
   background-color: #ff6600;
 }
 
-/* Ensure table header text is visible (white) across admin pages. */
-.admin-shell thead th,
-.admin-content thead th,
-.admin-page-container table thead th,
-.admin-table-scroll thead th {
-  color: white !important;
-}
-
 /* Dashboard overrides to match AdminDashboard.css */
 .admin-content {
   background-color: var(--admin-bg) !important;
@@ -864,7 +856,7 @@
 }
 
 .admin-content input::placeholder {
-  color: #64748b;
+  color: #94a3b8;
 }
 
 .admin-content input:focus,

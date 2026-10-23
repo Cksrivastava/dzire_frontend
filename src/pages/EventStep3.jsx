@@ -7,11 +7,18 @@ import "./EventRegister.css";
 
 const EventStep3 = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { id, slug } = useParams();
+  const eventIdentifier = slug || id;
   const location = useLocation();
 
   const event =
-    location.state?.event || allEvents.find((item) => item.id === Number(id));
+    location.state?.event ||
+    allEvents.find(
+      (item) =>
+        String(item.slug) === String(eventIdentifier) ||
+        String(item.id) === String(eventIdentifier) ||
+        String(item._id) === String(eventIdentifier)
+    );
 
   const [agreed, setAgreed] = useState(false);
   
@@ -34,7 +41,7 @@ const EventStep3 = () => {
       <main className="register-page">
         <div className="register-container">
 
-          <Link to={`/event/${event.id}`} className="continue-link">
+          <Link to={`/event/${event.slug || event.id || eventIdentifier}`} className="continue-link">
             ‹ Continue Browsing
           </Link>
 
@@ -100,7 +107,7 @@ const EventStep3 = () => {
               <button
                 className={`continue-btn ${!agreed ? "disabled" : ""}`}
                 onClick={() =>
-                  agreed && navigate(`/event-step-4/${id}`, { state: { event } })
+                  agreed && navigate(`/event-step-4/${event.slug || event.id || eventIdentifier}`, { state: { event } })
                 }
                 disabled={!agreed}
               >

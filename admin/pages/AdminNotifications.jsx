@@ -1,240 +1,205 @@
 import React, { useState } from "react";
 import AdminLayout from "./AdminLayout";
-import { useSearchParams } from "react-router-dom";
-import { Bell, AlertTriangle, Mail, Send, Radio, History, CheckCircle2, ShieldAlert, Smartphone, MessageSquare, Settings, Eye } from "lucide-react";
+import { Bell, AlertTriangle, Mail, Send, Radio, History, CheckCircle2, ShieldAlert } from "lucide-react";
 import { Button, Input, Textarea, Switch } from "../AdminShims";
 import { AdminPanel } from "../components/AdminUi";
 
-const initialAlerts = [
-  { id: 1, type: "Low Stock Alert", title: "Verge 45L Backpack - Only 2 units left", time: "10 mins ago", severity: "high" },
-  { id: 2, type: "Failed Payment", title: "Razorpay Checkout attempt failed for customer Rahul Verma (Rs 4500)", time: "1 hour ago", severity: "medium" },
-  { id: 3, type: "Pending Return", title: "Return request DZ-1002-R1 awaiting inspection approval", time: "3 hours ago", severity: "medium" },
-  { id: 4, type: "Expiring Coupon", title: "Discount coupon MONSOON500 is expiring in 48 hours", time: "1 day ago", severity: "low" },
-  { id: 5, type: "Expiring Credits", title: "Loyalty points for customer Aarav Mehta will expire on 2026-06-30", time: "2 days ago", severity: "low" }
-];
+const initialAlerts = [];
 
-const initialActivity = [
-  { id: 101, user: "Admin User", action: "Updated price of CTR OD4 High-Ankle Shoes from 1399 Rs to 1499 Rs", time: "2026-06-15 11:20:14" },
-  { id: 102, user: "Inventory Mgr", action: "Adjusted Verge 45L Backpack stock count (+5 units)", time: "2026-06-15 10:45:00" },
-  { id: 103, user: "Aarav Mehta", action: "Placed online order #DZ-1001 via Razorpay (Paid 4,500 Rs)", time: "2026-06-15 10:12:30" },
-  { id: 104, user: "System Scheduler", action: "Auto-awarded welcome bonus points to Priya Sharma", time: "2026-06-15 09:00:00" },
-  { id: 105, user: "Store POS Cashier", action: "Initiated return refund for POS Bill #POS-8890", time: "2026-06-14 17:10:02" },
-  { id: 106, user: "Vendor Tripole", action: "Received Purchase Order PO-2026-012 with 50 bags", time: "2026-06-14 11:45:50" }
-];
-
-const mockLogs = [
-  { id: 201, recipient: "amit.sharma@example.com", type: "Email", status: "Delivered", date: "09 Jul 12:45 PM", template: "Order Invoice Confirmed" },
-  { id: 202, recipient: "+91 98765 43210", type: "SMS/WhatsApp", status: "Delivered", date: "09 Jul 12:45 PM", template: "Order Shipment Dispatch" },
-  { id: 203, recipient: "priya.patel@example.com", type: "Email", status: "Failed", date: "09 Jul 11:30 AM", template: "Cart Abandonment Reminder" },
-];
-
-const S = {
-  card: { background: 'white', padding: '24px', borderRadius: '12px', border: '1px solid #e5e7eb', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' },
-  panel: { background: 'white', borderRadius: '12px', border: '1px solid #e5e7eb', overflow: 'hidden' },
-  th: { padding: '12px 20px', fontWeight: '600', textAlign: 'left', background: '#f9fafb', fontSize: '12px', color: '#667085', textTransform: 'uppercase' },
-  td: { padding: '16px 20px', fontSize: '14px', borderTop: '1px solid #e5e7eb' },
-  label: { display: 'block', marginBottom: '6px', fontSize: '13px', fontWeight: '500', color: '#374151' },
-  inp: { width: '100%', padding: '9px 12px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', boxSizing: 'border-box' },
-  saveBtn: { padding: '10px 20px', background: '#ff6600', color: 'white', border: 'none', borderRadius: '6px', fontWeight: '600', cursor: 'pointer', marginTop: '16px' },
-  badge: (bg, col) => ({ padding: '3px 10px', borderRadius: '20px', fontSize: '12px', fontWeight: '500', background: bg, color: col, display: 'inline-block' }),
-};
+const initialActivity = [];
 
 const AdminNotifications = () => {
-  const [searchParams] = useSearchParams();
-  const activeSub = searchParams.get("sub") || "System Alerts";
-
+  const [activeTab, setActiveTab] = useState("alerts"); // "alerts", "templates", "activity"
   const [alerts, setAlerts] = useState(initialAlerts);
   const [activities, setActivities] = useState(initialActivity);
 
-  // Configuration toggles
+  // Notifications toggles
   const [sendOrderEmail, setSendOrderEmail] = useState(true);
   const [sendOrderWhatsapp, setSendOrderWhatsapp] = useState(true);
   const [sendRestockAlert, setSendRestockAlert] = useState(true);
 
-  // Templates
+  // Template editor
   const [emailSubject, setEmailSubject] = useState("Your Dzire Store Order #{{order_number}} is confirmed!");
   const [emailBody, setEmailBody] = useState("Hello {{customer_name}},\n\nThank you for shopping at Dzire! Your order of Rs {{total_price}} has been successfully paid and packed.\n\nTracking link: {{tracking_url}}");
 
-  const renderSubContent = () => {
-    switch (activeSub) {
-      case "System Alerts":
-      default:
-        return (
-          <div className="space-y-4">
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <h3 className="text-lg font-bold text-slate-900">Active System Warnings</h3>
-              <button onClick={() => setAlerts([])} style={{ background: "none", border: "none", color: "#ff6600", fontWeight: "600", cursor: "pointer" }}>Clear All Alerts</button>
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-              {alerts.map(a => {
-                const isHigh = a.severity === "high";
-                const isMed = a.severity === "medium";
-                const borderCol = isHigh ? "#fecaca" : isMed ? "#fed7aa" : "#e5e7eb";
-                const bgCol = isHigh ? "#fef2f2" : isMed ? "#fff7ed" : "white";
-
-                return (
-                  <div key={a.id} style={{ ...S.card, borderColor: borderCol, background: bgCol, display: 'flex', gap: '14px', alignItems: 'flex-start' }}>
-                    <span style={{ fontSize: "20px" }}>{isHigh ? "🚨" : isMed ? "⚠️" : "ℹ️"}</span>
-                    <div>
-                      <strong style={{ display: "block", fontSize: "14px" }}>{a.type}</strong>
-                      <p style={{ margin: "4px 0", fontSize: "13px", color: "#374151" }}>{a.title}</p>
-                      <span style={{ fontSize: "11px", color: "#9ca3af" }}>{a.time}</span>
-                    </div>
-                  </div>
-                );
-              })}
-              {alerts.length === 0 && <p style={{ textAlign: "center", color: "#9ca3af" }}>No active alerts</p>}
-            </div>
-          </div>
-        );
-
-      case "Email Notifications":
-        return (
-          <div style={{ ...S.card, maxWidth: "560px" }}>
-            <h3 style={{ margin: "0 0 16px 0", fontSize: "16px", fontWeight: "600" }}>SMTP E-mail server Configuration</h3>
-            <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-              <div>
-                <label style={S.label}>Sender Email Name</label>
-                <input type="text" defaultValue="Dzire Store Notifications" style={S.inp} />
-              </div>
-              <div>
-                <label style={S.label}>SMTP Host Server</label>
-                <input type="text" defaultValue="smtp.sendgrid.net" style={S.inp} />
-              </div>
-              <div>
-                <label style={S.label}>SMTP Port</label>
-                <input type="number" defaultValue={587} style={S.inp} />
-              </div>
-              <button onClick={() => alert("SMTP Saved")} style={S.saveBtn}>Save Email Settings</button>
-            </div>
-          </div>
-        );
-
-      case "SMS Notifications":
-      case "Push Notifications": {
-        const isSMS = activeSub.includes("SMS");
-        return (
-          <div style={{ ...S.card, maxWidth: "560px" }}>
-            <h3 style={{ margin: "0 0 16px 0", fontSize: "16px", fontWeight: "600" }}>{activeSub} Gateway</h3>
-            <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-              <div>
-                <label style={S.label}>{isSMS ? 'Twilio Auth SID' : 'OneSignal App ID'}</label>
-                <input type="text" defaultValue="AC8902834091a1z5" style={S.inp} />
-              </div>
-              <div>
-                <label style={S.label}>API Auth Token</label>
-                <input type="password" defaultValue="••••••••••••••••" style={S.inp} />
-              </div>
-              <button onClick={() => alert("Gateway configuration updated successfully!")} style={S.saveBtn}>Save configuration</button>
-            </div>
-          </div>
-        );
-      }
-
-      case "Customer Alerts":
-        return (
-          <div style={S.panel}>
-            <div style={{ padding: "16px 20px", borderBottom: "1px solid #e5e7eb" }}><strong>Restock Notifications Requested</strong></div>
-            <table style={S.table}>
-              <thead>
-                <tr>{['Product', 'SKU', 'Customer Email', 'Requested Date', 'Status'].map(h => <th key={h} style={S.th}>{h}</th>)}</tr>
-              </thead>
-              <tbody>
-                {[
-                  { prod: 'Premium Backpack (Orange)', sku: 'BAG-PREM-ORG', email: 'amit.sharma@example.com', date: '08 Jul 2026', status: 'Pending Restock' },
-                  { prod: 'Trekking Shoes', sku: 'SHOE-TRK-001', email: 'priya@example.com', date: '02 Jul 2026', status: 'Sent Reminder' }
-                ].map((c, i) => (
-                  <tr key={i}>
-                    <td style={S.td}><strong>{c.prod}</strong></td>
-                    <td style={{ ...S.td, fontFamily: 'monospace' }}>{c.sku}</td>
-                    <td style={S.td}>{c.email}</td>
-                    <td style={S.td}>{c.date}</td>
-                    <td style={S.td}>
-                      <span style={S.badge(c.status.includes('Pending') ? '#fef0c7' : '#e3fcef', c.status.includes('Pending') ? '#b54708' : '#12b76a')}>{c.status}</span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        );
-
-      case "Notification Templates":
-        return (
-          <div style={{ ...S.card, maxWidth: "600px" }}>
-            <h3 style={{ margin: "0 0 16px 0", fontSize: "16px", fontWeight: "600" }}>Automated Order Invoice Email template</h3>
-            <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-              <div>
-                <label style={S.label}>Email Subject Header</label>
-                <input type="text" value={emailSubject} onChange={e => setEmailSubject(e.target.value)} style={S.inp} />
-              </div>
-              <div>
-                <label style={S.label}>Body Template Markup</label>
-                <textarea value={emailBody} onChange={e => setEmailBody(e.target.value)} style={{ ...S.inp, minHeight: '150px', resize: 'vertical' }} />
-              </div>
-              <button onClick={handleSaveTemplates} style={S.saveBtn}>Save Notification Template</button>
-            </div>
-          </div>
-        );
-
-      case "Notification Logs":
-        return (
-          <div style={S.panel}>
-            <div style={{ padding: "16px 20px", borderBottom: "1px solid #e5e7eb" }}><strong>Communication Outbox logs</strong></div>
-            <table style={S.table}>
-              <thead>
-                <tr>{['Recipient', 'Type', 'Template Name', 'Sent Time', 'Status'].map(h => <th key={h} style={S.th}>{h}</th>)}</tr>
-              </thead>
-              <tbody>
-                {mockLogs.map(l => (
-                  <tr key={l.id}>
-                    <td style={S.td}><strong>{l.recipient}</strong></td>
-                    <td style={S.td}>{l.type}</td>
-                    <td style={S.td}>{l.template}</td>
-                    <td style={{ ...S.td, color: '#667085' }}>{l.date}</td>
-                    <td style={S.td}>
-                      <span style={S.badge(l.status === 'Delivered' ? '#e3fcef' : '#fef3f2', l.status === 'Delivered' ? '#12b76a' : '#f04438')}>{l.status}</span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        );
-
-      case "Notification Settings":
-        return (
-          <div style={{ ...S.card, maxWidth: "560px" }}>
-            <h3 style={{ margin: "0 0 20px 0", fontSize: "16px", fontWeight: "600" }}>System Alerts preferences</h3>
-            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-              {[
-                { label: "Send email receipt on checkout completed", val: sendOrderEmail, set: setSendOrderEmail },
-                { label: "Send whatsapp shipment notification", val: sendOrderWhatsapp, set: setSendOrderWhatsapp },
-                { label: "Notify manager when items fall below alert qty", val: sendRestockAlert, set: setSendRestockAlert }
-              ].map((opt, idx) => (
-                <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 16px', border: '1px solid #e5e7eb', borderRadius: '8px' }}>
-                  <span style={{ fontSize: '14px', color: '#374151' }}>{opt.label}</span>
-                  <input type="checkbox" checked={opt.val} onChange={e => opt.set(e.target.checked)} style={{ width: '18px', height: '18px', cursor: 'pointer' }} />
-                </div>
-              ))}
-              <button onClick={() => alert('Settings updated')} style={S.saveBtn}>Save Settings</button>
-            </div>
-          </div>
-        );
-    }
+  const handleSaveTemplates = () => {
+    alert("Customer notification templates successfully updated!");
   };
 
   return (
     <AdminLayout>
-      <div className="admin-page-container">
-        <section className="admin-hero" style={{ marginBottom: "24px" }}>
+      <div className="space-y-6">
+        <section className="admin-hero" style={{ marginBottom: '24px' }}>
           <div>
-            <h1>{activeSub}</h1>
-            <p>Write custom automated templates, toggle channels configurations, and check outgoing system warnings</p>
+            <span className="admin-eyebrow">System / Alerts</span>
+            <h1>Notifications & Activity Feed</h1>
+            <p>Track critical inventory warnings, monitor failed payments, write automated email/WhatsApp message templates, and view the global activity stream.</p>
+          </div>
+          <div className="flex gap-2">
+            <button onClick={() => alert("Activity feed synced with server alerts.")} className="admin-primary-button" style={{ background: '#ff6600' }}>
+              <Radio size={18} /> Sync Alert Hub
+            </button>
           </div>
         </section>
 
-        {renderSubContent()}
+        {/* Navigation Tabs */}
+        <div className="flex border-b border-slate-200 gap-6">
+          {[
+            { id: "alerts", label: "Critical Alerts & Warnings" },
+            { id: "templates", label: "Customer Message Templates" },
+            { id: "activity", label: "Global Activity Feed" },
+          ].map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              style={{
+                paddingBottom: '12px',
+                fontSize: '15px',
+                fontWeight: '600',
+                color: activeTab === tab.id ? '#ff6600' : '#000000',
+                borderBottom: activeTab === tab.id ? '2.5px solid #ff6600' : 'none',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer'
+              }}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Tab 1: Alerts */}
+        {activeTab === "alerts" && (
+          <div className="space-y-4">
+            <div className="flex justify-between items-center px-2">
+              <h3 className="text-lg font-bold text-slate-900">System Warning Alerts</h3>
+              <button onClick={() => setAlerts([])} className="text-xs font-bold text-[#ff6600] border-none bg-none cursor-pointer">Clear All Alerts</button>
+            </div>
+
+            <div className="space-y-3">
+              {alerts.map(alert => (
+                <div
+                  key={alert.id}
+                  className="rounded-2xl border p-4 flex gap-4 bg-white shadow-sm items-start"
+                  style={{
+                    borderColor: alert.severity === "high" ? "#ffd8d8" : alert.severity === "medium" ? "#ffe0cc" : "#e2e8f5"
+                  }}
+                >
+                  <span className={`inline-flex h-9 w-9 rounded-xl items-center justify-center shrink-0 ${alert.severity === "high" ? "bg-rose-50 text-rose-600" :
+                    alert.severity === "medium" ? "bg-amber-50 text-amber-600" :
+                      "bg-blue-50 text-blue-600"
+                    }`}>
+                    <AlertTriangle size={18} />
+                  </span>
+                  <div className="flex-1">
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">{alert.type}</span>
+                      <span className="text-xs text-slate-400 font-medium">{alert.time}</span>
+                    </div>
+                    <h4 className="text-sm font-bold text-slate-900 mt-1">{alert.title}</h4>
+                  </div>
+                </div>
+              ))}
+              {alerts.length === 0 && (
+                <div className="text-center py-12 bg-white rounded-2xl border border-slate-100">
+                  <CheckCircle2 size={36} className="mx-auto text-emerald-500 mb-2" />
+                  <h4 className="text-base font-bold text-slate-900">All Systems Normal</h4>
+                  <p className="text-xs text-slate-500 mt-1">No pending warnings or stock alerts to address.</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Tab 2: Templates */}
+        {activeTab === "templates" && (
+          <div className="grid gap-6 xl:grid-cols-[280px_1fr]">
+            <AdminPanel className="p-5 space-y-4">
+              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Trigger Events</h4>
+              <div className="space-y-2">
+                {[
+                  { label: "Order Confirmed", active: true },
+                  { label: "Order Shipped", active: false },
+                  { label: "Order Delivered", active: false },
+                  { label: "Return Request Received", active: false },
+                  { label: "Return Refund Approved", active: false },
+                  { label: "Back in Stock Alert", active: false }
+                ].map(item => (
+                  <button
+                    key={item.label}
+                    className="w-full text-left p-3 text-sm font-semibold rounded-lg hover:bg-slate-50 transition"
+                    style={{ color: item.active ? "#ff6600" : "#555555", background: item.active ? "#fff7f1" : "transparent" }}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            </AdminPanel>
+
+            <div className="space-y-6">
+              {/* Message Channels */}
+              <AdminPanel className="p-6 space-y-4">
+                <h3 className="text-base font-bold text-slate-900">Communication Channels</h3>
+                <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100">
+                  <div>
+                    <h4 className="text-sm font-bold text-slate-900">Send Email Notification</h4>
+                    <p className="text-xs text-slate-500 mt-1">Auto-send confirmation emails via Mailgun when payments succeed.</p>
+                  </div>
+                  <Switch checked={sendOrderEmail} onCheckedChange={setSendOrderEmail} />
+                </div>
+                <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100">
+                  <div>
+                    <h4 className="text-sm font-bold text-slate-900">Send WhatsApp Notification</h4>
+                    <p className="text-xs text-slate-500 mt-1">Auto-send updates to customer's mobile via WhatsApp API.</p>
+                  </div>
+                  <Switch checked={sendOrderWhatsapp} onCheckedChange={setSendOrderWhatsapp} />
+                </div>
+              </AdminPanel>
+
+              {/* Template Text Editor */}
+              <AdminPanel className="p-6 space-y-4">
+                <h3 className="text-base font-bold text-slate-900">Email Confirmation Template</h3>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-500 mb-1">Subject Line</label>
+                  <Input value={emailSubject} onChange={e => setEmailSubject(e.target.value)} />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-500 mb-1">Body HTML / Plain Text</label>
+                  <Textarea rows="6" value={emailBody} onChange={e => setEmailBody(e.target.value)} className="font-mono text-xs leading-5" />
+                </div>
+                <Button onClick={handleSaveTemplates} className="h-11 bg-[#ff6600] text-white rounded-xl">Save Templates</Button>
+              </AdminPanel>
+            </div>
+          </div>
+        )}
+
+        {/* Tab 3: Global Activity Feed */}
+        {activeTab === "activity" && (
+          <AdminPanel className="p-5">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <History className="h-5 w-5 text-[#ff6600]" /> Chronological Activity Feed
+              </h3>
+              <span className="text-xs font-semibold bg-slate-100 text-slate-600 px-3 py-1 rounded-full">Real-time Stream</span>
+            </div>
+
+            <div className="relative border-l border-slate-100 ml-4 pl-6 space-y-6">
+              {activities.map(act => (
+                <div key={act.id} className="relative">
+                  {/* Timeline dot */}
+                  <span className="absolute -left-[30px] top-1 h-3.5 w-3.5 rounded-full border-2 border-white bg-[#ff6600] shadow-sm" />
+
+                  <div>
+                    <span className="text-xs font-mono text-slate-400 block mb-1">{act.time}</span>
+                    <p className="text-sm font-semibold text-slate-900">
+                      {act.user}: <span className="font-normal text-slate-600">{act.action}</span>
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </AdminPanel>
+        )}
       </div>
     </AdminLayout>
   );

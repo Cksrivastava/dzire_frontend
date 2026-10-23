@@ -1,10 +1,7 @@
 import { cn, Button, Input, formatCurrency, AuthShell, toast, apiUrl, getAuthHeaders, getAuthToken, getAuthUser, useAuth, getProductImage, getAudienceMeta, PRODUCT_AUDIENCES, parsePriceInput, PRICE_INPUT_HINT } from "../AdminShims";
 import { useDeferredValue, useEffect, useMemo, useState } from "react";
 import { RefreshCcw } from "lucide-react";
-import { useSearchParams } from "react-router-dom";
-
-
-
+import ExportDropdown from "../components/ExportDropdown";
 import AdminLayout from "./AdminLayout";
 const inventoryFilters = [
 	{
@@ -273,8 +270,6 @@ const adminBrandsStyles = `
 }
 `;
 const AdminBrands = () => {
-	const [searchParams, setSearchParams] = useSearchParams();
-	const activeSub = searchParams.get("sub") || "All Brands";
 	const [brands, setBrands] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState("");
@@ -345,213 +340,112 @@ const AdminBrands = () => {
 		inventoryFilter,
 		sortBy
 	]);
-	const renderOriginalContent = () => (
-		<section className="admin-brands-panel border border-[#dfe7f3] bg-white">
-			<div className="admin-brands-filters grid gap-3 border-b border-[#e7edf7] p-4 xl:grid-cols-[1.5fr_0.7fr_0.7fr_0.7fr_auto]">
-				<Input value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} placeholder="Search brand or product" className="h-10 rounded-md border-[#d6dfed] bg-white text-slate-900 placeholder:text-slate-400" />
-
-				<select value={alphabetFilter} onChange={(event) => setAlphabetFilter(event.target.value)} className="h-10 rounded-md border border-[#d6dfed] bg-white px-3 text-sm text-slate-700 outline-none">
-					<option value="all">All letters</option>
-					{alphabetFilters.filter((letter) => letter !== "all").map((letter) => <option key={letter} value={letter}>
-								{letter}
-							</option>)}
-				</select>
-
-				<select value={inventoryFilter} onChange={(event) => setInventoryFilter(event.target.value)} className="h-10 rounded-md border border-[#d6dfed] bg-white px-3 text-sm text-slate-700 outline-none">
-					{inventoryFilters.map((filter) => <option key={filter.value} value={filter.value}>
-							{filter.label}
-						</option>)}
-				</select>
-
-				<select value={sortBy} onChange={(event) => setSortBy(event.target.value)} className="h-10 rounded-md border border-[#d6dfed] bg-white px-3 text-sm text-slate-700 outline-none">
-					{sortOptions.map((option) => <option key={option.value} value={option.value}>
-							{option.label}
-						</option>)}
-				</select>
-
-				<div className="flex items-center justify-end text-sm text-slate-500">
-					{loading ? "Loading..." : `${filteredBrands.length} brands`}
-				</div>
-			</div>
-
-			{error ? <div className="border-b border-[#f3d2d2] bg-[#fff7f7] px-4 py-3 text-sm text-rose-700">{error}</div> : null}
-
-			{loading ? <div className="px-4 py-8 text-sm text-slate-500">Loading brands...</div> : filteredBrands.length === 0 ? <div className="px-4 py-8 text-sm text-slate-500">No brands found for the selected filters.</div> : <div className="admin-table-scroll admin-brands-table-wrap overflow-x-auto">
-					<table className="admin-brands-table min-w-[1200px] w-full text-left text-sm text-slate-700">
-						<thead className="bg-[#f8fafc] text-xs uppercase tracking-[0.12em] text-slate-500">
-							<tr>
-								<th className="px-4 py-3 font-semibold">Sr No</th>
-								<th className="px-4 py-3 font-semibold">Brand</th>
-								<th className="px-4 py-3 font-semibold">Products</th>
-								<th className="px-4 py-3 font-semibold">In Stock</th>
-								<th className="px-4 py-3 font-semibold">Stock Units</th>
-								<th className="px-4 py-3 font-semibold">Price Range</th>
-								<th className="px-4 py-3 font-semibold">Average</th>
-								<th className="px-4 py-3 font-semibold">Audience</th>
-								<th className="px-4 py-3 font-semibold">Catalog Mix</th>
-								<th className="px-4 py-3 font-semibold">Latest Products</th>
-								<th className="px-4 py-3 font-semibold">Status</th>
-								<th className="px-4 py-3 font-semibold">Updated</th>
-							</tr>
-						</thead>
-
-						<tbody>
-							{filteredBrands.map((brand, index) => {
-					const status = getStatusMeta(brand);
-					return <tr key={brand.brand} className="border-t border-[#e7edf7] align-top">
-									<td className="px-4 py-3 text-slate-500">{index + 1}</td>
-									<td className="px-4 py-3 font-medium text-slate-900">{brand.brand}</td>
-									<td className="px-4 py-3">{brand.product_count}</td>
-									<td className="px-4 py-3">{brand.in_stock_products}</td>
-									<td className="px-4 py-3">{brand.total_stock_units}</td>
-									<td className="px-4 py-3">
-										{formatCurrency(brand.min_price)} - {formatCurrency(brand.max_price)}
-									</td>
-									<td className="px-4 py-3">{formatCurrency(brand.average_price)}</td>
-									<td className="px-4 py-3">{getAudienceSummary(brand)}</td>
-									<td className="px-4 py-3">{getCatalogMixSummary(brand)}</td>
-									<td className="px-4 py-3 text-slate-600">{getFeaturedNames(brand)}</td>
-									<td className={`px-4 py-3 font-medium ${status.className}`}>{status.label}</td>
-									<td className="px-4 py-3">{formatDate(brand.latest_updated_at)}</td>
-								</tr>;
-				})}
-						</tbody>
-					</table>
-				</div>}
-		</section>
-	);
-
-	const renderBrandsSubContent = () => {
-		switch (activeSub) {
-			case "Add / Edit Brand":
-				return (
-					<div style={{ background: 'white', padding: '24px', borderRadius: '12px', border: '1px solid #e5e7eb', maxWidth: '500px' }}>
-						<h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600' }}>Add New Brand</h3>
-						<div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-							<div>
-								<label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', fontWeight: '500' }}>Brand Name</label>
-								<input type="text" placeholder="e.g. Nike" style={{ width: '100%', padding: '8px', border: '1px solid #d1d5db', borderRadius: '6px' }} />
-							</div>
-							<div>
-								<label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', fontWeight: '500' }}>Official Website</label>
-								<input type="text" placeholder="e.g. https://nike.com" style={{ width: '100%', padding: '8px', border: '1px solid #d1d5db', borderRadius: '6px' }} />
-							</div>
-							<button onClick={() => alert('Brand registered!')} style={{ padding: '10px', background: '#ff6600', color: 'white', border: 'none', borderRadius: '6px', fontWeight: '600', cursor: 'pointer' }}>
-								Save Brand
-							</button>
-						</div>
-					</div>
-				);
-			case "Brand Logo":
-				return (
-					<div style={{ background: 'white', padding: '24px', borderRadius: '12px', border: '1px solid #e5e7eb', maxWidth: '500px' }}>
-						<h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600' }}>Brand Logo Upload</h3>
-						<div style={{ border: '2px dashed #ff6600', padding: '40px', borderRadius: '8px', textAlign: 'center', cursor: 'pointer' }}>
-							<p style={{ margin: 0, color: '#ff6600', fontWeight: '600' }}>Click to Upload Brand Logo</p>
-							<p style={{ margin: '4px 0 0 0', fontSize: '12px', color: '#667085' }}>Recommended format: PNG / SVG, square aspect ratio</p>
-						</div>
-					</div>
-				);
-			case "Brand Description":
-				return (
-					<div style={{ background: 'white', padding: '24px', borderRadius: '12px', border: '1px solid #e5e7eb', maxWidth: '600px' }}>
-						<h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600' }}>Brand Description / Profile</h3>
-						<textarea placeholder="Provide details about the brand's history, catalog focus..." style={{ width: '100%', padding: '12px', border: '1px solid #d1d5db', borderRadius: '6px', minHeight: '120px' }} />
-						<button onClick={() => alert('Brand Profile saved')} style={{ marginTop: '16px', padding: '10px 20px', background: '#ff6600', color: 'white', border: 'none', borderRadius: '6px', fontWeight: '600', cursor: 'pointer' }}>
-							Save Bio
-						</button>
-					</div>
-				);
-			case "Brand SEO":
-				return (
-					<div style={{ background: 'white', padding: '24px', borderRadius: '12px', border: '1px solid #e5e7eb', maxWidth: '500px' }}>
-						<h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600' }}>SEO Meta Data</h3>
-						<div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-							<input type="text" placeholder="Meta Title" style={{ width: '100%', padding: '8px', border: '1px solid #d1d5db', borderRadius: '6px' }} />
-							<textarea placeholder="Meta Description" style={{ width: '100%', padding: '8px', border: '1px solid #d1d5db', borderRadius: '6px' }} />
-							<button onClick={() => alert('SEO Saved')} style={{ padding: '10px', background: '#ff6600', color: 'white', border: 'none', borderRadius: '6px', fontWeight: '600', cursor: 'pointer' }}>
-								Save Meta Tags
-							</button>
-						</div>
-					</div>
-				);
-			case "Brand Products":
-				return (
-					<div style={{ background: 'white', padding: '24px', borderRadius: '12px', border: '1px solid #e5e7eb' }}>
-						<h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600' }}>Linked Catalog Items</h3>
-						<table style={{ width: '100%', borderCollapse: 'collapse' }}>
-							<thead>
-								<tr style={{ background: '#f9fafb', textAlign: 'left', fontSize: '12px', color: '#667085', textTransform: 'uppercase' }}>
-									<th style={{ padding: '12px 16px' }}>Product</th>
-									<th style={{ padding: '12px 16px' }}>SKU</th>
-									<th style={{ padding: '12px 16px' }}>Stock</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr style={{ borderTop: '1px solid #e5e7eb', fontSize: '14px' }}>
-									<td style={{ padding: '16px 16px' }}>Hiker Pro Backpack</td>
-									<td style={{ padding: '16px 16px', color: '#667085' }}>BP-HK-PRO</td>
-									<td style={{ padding: '16px 16px' }}>32 units</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				);
-			case "Display Settings":
-				return (
-					<div style={{ background: 'white', padding: '24px', borderRadius: '12px', border: '1px solid #e5e7eb', maxWidth: '500px' }}>
-						<h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600' }}>Brand Display Settings</h3>
-						<div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-							<label style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-								<input type="checkbox" defaultChecked />
-								Show in Homepage Brands Slider
-							</label>
-							<label style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-								<input type="checkbox" />
-								Mark as Featured Brand
-							</label>
-							<button onClick={() => alert('Display updated')} style={{ padding: '10px', background: '#ff6600', color: 'white', border: 'none', borderRadius: '6px', fontWeight: '600', cursor: 'pointer' }}>
-								Save Settings
-							</button>
-						</div>
-					</div>
-				);
-			case "Bulk Actions":
-				return (
-					<div style={{ background: 'white', padding: '24px', borderRadius: '12px', border: '1px solid #e5e7eb' }}>
-						<h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600' }}>Bulk Brand Actions</h3>
-						<button onClick={() => alert('Brands Exported')} style={{ padding: '8px 16px', background: '#ff6600', color: 'white', border: 'none', borderRadius: '6px', fontWeight: '600', cursor: 'pointer' }}>
-							Export All Brands Catalog (CSV)
-						</button>
-					</div>
-				);
-			case "All Brands":
-			default:
-				return renderOriginalContent();
-		}
-	};
-
 	return <AdminLayout>
-		<style>{adminBrandsStyles}</style>
-		<div className="admin-brands-page space-y-6">
+      <style>{adminBrandsStyles}</style>
+      <section className="admin-brands-page space-y-0">
 
-			<section className="admin-hero">
-				<div>
-					<h1>{activeSub}</h1>
-					<p>
-						Performance insights and inventory status per brand
-					</p>
-				</div>
-				{activeSub === "All Brands" && (
-					<button className="admin-primary-button" type="button" onClick={() => window.location.reload()}>
-						<RefreshCcw size={18} />
-						Refresh Data
-					</button>
-				)}
-			</section>
 
-			{renderBrandsSubContent()}
-		</div>
-	</AdminLayout>;
+		<section className="admin-hero">
+        <div>
+          <h1>Brands & Catalog</h1>
+          <p>
+            Performance insights and inventory status per brand
+          </p>
+        </div>
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+          <ExportDropdown
+            fileName="Brands_Catalog_Report"
+            title="Brands & Catalog Inventory Performance"
+            headers={['Brand Name', 'Total Products', 'Total Stock Units', 'Avg Price', 'Inventory Health']}
+            rows={filteredBrands.map((b) => [
+              b.brand || '',
+              String(b.product_count || 0),
+              String(b.total_stock || 0),
+              `₹${Math.round(b.avg_price || 0)}`,
+              b.out_of_stock_products > 0 ? 'Has Out of Stock' : b.low_stock_products > 0 ? 'Low Stock Alert' : 'Healthy'
+            ])}
+          />
+          <button className="admin-primary-button" type="button" onClick={() => window.location.reload()}>
+            <RefreshCcw size={18} />
+            Refresh Data
+          </button>
+        </div>
+      </section>	
+
+        <section className="admin-brands-panel border border-[#dfe7f3] bg-white">
+          <div className="admin-brands-filters grid gap-3 border-b border-[#e7edf7] p-4 xl:grid-cols-[1.5fr_0.7fr_0.7fr_0.7fr_auto]">
+            <Input value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} placeholder="Search brand or product" className="h-10 rounded-md border-[#d6dfed] bg-white text-slate-900 placeholder:text-slate-400" />
+
+            <select value={alphabetFilter} onChange={(event) => setAlphabetFilter(event.target.value)} className="h-10 rounded-md border border-[#d6dfed] bg-white px-3 text-sm text-slate-700 outline-none">
+              <option value="all">All letters</option>
+              {alphabetFilters.filter((letter) => letter !== "all").map((letter) => <option key={letter} value={letter}>
+                    {letter}
+                  </option>)}
+            </select>
+
+            <select value={inventoryFilter} onChange={(event) => setInventoryFilter(event.target.value)} className="h-10 rounded-md border border-[#d6dfed] bg-white px-3 text-sm text-slate-700 outline-none">
+              {inventoryFilters.map((filter) => <option key={filter.value} value={filter.value}>
+                  {filter.label}
+                </option>)}
+            </select>
+
+            <select value={sortBy} onChange={(event) => setSortBy(event.target.value)} className="h-10 rounded-md border border-[#d6dfed] bg-white px-3 text-sm text-slate-700 outline-none">
+              {sortOptions.map((option) => <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>)}
+            </select>
+
+            <div className="flex items-center justify-end text-sm text-slate-500">
+              {loading ? "Loading..." : `${filteredBrands.length} brands`}
+            </div>
+          </div>
+
+          {error ? <div className="border-b border-[#f3d2d2] bg-[#fff7f7] px-4 py-3 text-sm text-rose-700">{error}</div> : null}
+
+          {loading ? <div className="px-4 py-8 text-sm text-slate-500">Loading brands...</div> : filteredBrands.length === 0 ? <div className="px-4 py-8 text-sm text-slate-500">No brands found for the selected filters.</div> : <div className="admin-table-scroll admin-brands-table-wrap overflow-x-auto">
+              <table className="admin-brands-table min-w-[1200px] w-full text-left text-sm text-slate-700">
+                <thead className="bg-[#f8fafc] text-xs uppercase tracking-[0.12em] text-slate-500">
+                  <tr>
+                    <th className="px-4 py-3 font-semibold">Sr No</th>
+                    <th className="px-4 py-3 font-semibold">Brand</th>
+                    <th className="px-4 py-3 font-semibold">Products</th>
+                    <th className="px-4 py-3 font-semibold">In Stock</th>
+                    <th className="px-4 py-3 font-semibold">Stock Units</th>
+                    <th className="px-4 py-3 font-semibold">Price Range</th>
+                    <th className="px-4 py-3 font-semibold">Average</th>
+                    <th className="px-4 py-3 font-semibold">Audience</th>
+                    <th className="px-4 py-3 font-semibold">Catalog Mix</th>
+                    <th className="px-4 py-3 font-semibold">Latest Products</th>
+                    <th className="px-4 py-3 font-semibold">Status</th>
+                    <th className="px-4 py-3 font-semibold">Updated</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {filteredBrands.map((brand, index) => {
+		const status = getStatusMeta(brand);
+		return <tr key={brand.brand} className="border-t border-[#e7edf7] align-top">
+                        <td className="px-4 py-3 text-slate-500">{index + 1}</td>
+                        <td className="px-4 py-3 font-medium text-slate-900">{brand.brand}</td>
+                        <td className="px-4 py-3">{brand.product_count}</td>
+                        <td className="px-4 py-3">{brand.in_stock_products}</td>
+                        <td className="px-4 py-3">{brand.total_stock_units}</td>
+                        <td className="px-4 py-3">
+                          {formatCurrency(brand.min_price)} - {formatCurrency(brand.max_price)}
+                        </td>
+                        <td className="px-4 py-3">{formatCurrency(brand.average_price)}</td>
+                        <td className="px-4 py-3">{getAudienceSummary(brand)}</td>
+                        <td className="px-4 py-3">{getCatalogMixSummary(brand)}</td>
+                        <td className="px-4 py-3 text-slate-600">{getFeaturedNames(brand)}</td>
+                        <td className={`px-4 py-3 font-medium ${status.className}`}>{status.label}</td>
+                        <td className="px-4 py-3">{formatDate(brand.latest_updated_at)}</td>
+                      </tr>;
+	})}
+                </tbody>
+              </table>
+            </div>}
+        </section>
+      </section>
+    </AdminLayout>;
 };
 export default AdminBrands;

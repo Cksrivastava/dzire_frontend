@@ -7,11 +7,18 @@ import "./EventRegister.css";
 
 const EventStep2 = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { id, slug } = useParams();
+  const eventIdentifier = slug || id;
   const location = useLocation();
 
   const event =
-    location.state?.event || allEvents.find((item) => item.id === Number(id));
+    location.state?.event ||
+    allEvents.find(
+      (item) =>
+        String(item.slug) === String(eventIdentifier) ||
+        String(item.id) === String(eventIdentifier) ||
+        String(item._id) === String(eventIdentifier)
+    );
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -37,8 +44,7 @@ const EventStep2 = () => {
     formData.firstName.trim() !== "" &&
     formData.lastName.trim() !== "" &&
     validateEmail(formData.email) &&
-    formData.phone.trim() !== "" &&
-    formData.isMember;
+    formData.phone.trim() !== "";
 
   if (!event) {
     return (
@@ -59,7 +65,7 @@ const EventStep2 = () => {
       <main className="register-page">
         <div className="register-container">
 
-          <Link to={`/event/${event.id}`} className="continue-link">
+          <Link to={`/event/${event.slug || event.id || eventIdentifier}`} className="continue-link">
             ‹ Continue Browsing
           </Link>
 
@@ -157,7 +163,7 @@ const EventStep2 = () => {
               <button
                 className={`continue-btn ${!isFormValid ? "disabled" : ""}`}
                 onClick={() =>
-                  isFormValid && navigate(`/event-step-3/${id}`, { state: { event } })
+                  isFormValid && navigate(`/event-step-3/${event.slug || event.id || eventIdentifier}`, { state: { event } })
                 }
                 disabled={!isFormValid}
               >

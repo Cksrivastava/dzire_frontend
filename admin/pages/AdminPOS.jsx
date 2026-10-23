@@ -1,464 +1,773 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import AdminLayout from './AdminLayout';
-import { useSearchParams } from 'react-router-dom';
-import { Search, ScanLine, ShoppingCart, Trash2, Printer, RefreshCcw, X, CreditCard, Gift, Ticket, History, ArrowRightLeft, ArrowLeftRight } from 'lucide-react';
-
-const products = [
-  { id: 1, name: 'Premium Backpack', sku: 'BAG-PREM-01', barcode: '890100000001', price: 2499, stock: 45 },
-  { id: 2, name: 'Trekking Shoes', sku: 'SHOE-TRK-02', barcode: '890100000002', price: 3299, stock: 45 },
-  { id: 3, name: 'Camping Tent', sku: 'TENT-CAMP-03', barcode: '890100000003', price: 8500, stock: 45 },
-  { id: 4, name: 'Water Bottle 1L', sku: 'BOT-1L-04', barcode: '890100000004', price: 450, stock: 45 },
-  { id: 5, name: 'Hiking Poles', sku: 'POLE-HIKE-05', barcode: '890100000005', price: 1200, stock: 45 },
-  { id: 6, name: 'Flashlight LED', sku: 'LIGHT-LED-06', barcode: '890100000006', price: 899, stock: 45 }
-];
-
-const S = {
-  card: { background: 'white', padding: '24px', borderRadius: '12px', border: '1px solid #e5e7eb', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' },
-  panel: { background: 'white', borderRadius: '12px', border: '1px solid #e5e7eb', overflow: 'hidden' },
-  th: { padding: '12px 20px', fontWeight: '600', textAlign: 'left', background: '#f9fafb', fontSize: '12px', color: '#667085', textTransform: 'uppercase' },
-  td: { padding: '16px 20px', fontSize: '14px', borderTop: '1px solid #e5e7eb' },
-  label: { display: 'block', marginBottom: '6px', fontSize: '13px', fontWeight: '500', color: '#374151' },
-  inp: { width: '100%', padding: '9px 12px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', boxSizing: 'border-box' },
-  saveBtn: { padding: '10px 20px', background: '#ff6600', color: 'white', border: 'none', borderRadius: '6px', fontWeight: '600', cursor: 'pointer', marginTop: '16px' },
-  badge: (bg, col) => ({ padding: '3px 10px', borderRadius: '20px', fontSize: '12px', fontWeight: '500', background: bg, color: col, display: 'inline-block' }),
-};
+import { ArrowLeft, Keyboard, Calendar, ScanBarcode, PlusCircle, X, User, CheckCircle2 } from 'lucide-react';
+import AdminAddCustomerModal from '../components/AdminAddCustomerModal';
+import AdminInventoryItemModal from '../components/AdminInventoryItemModal';
+import AdminInvoiceItemsTable from '../components/AdminInvoiceItemsTable';
+import AdminChangeBankModal from '../components/AdminChangeBankModal';
+import './AdminDashboard.css';
 
 const AdminPOS = () => {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const activeSub = searchParams.get('sub') || 'POS Dashboard';
+  const editInvoiceId = searchParams.get('id');
 
-  const [cart, setCart] = useState([
-    { id: 101, name: 'Premium Hiking Backpack', price: 2499, qty: 1 }
-  ]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [barcodeQuery, setBarcodeQuery] = useState('');
-  const [barcodeError, setBarcodeError] = useState('');
-  const [showBarcodePopup, setShowBarcodePopup] = useState(false);
-  const [paymentMode, setPaymentMode] = useState('Cash');
-  const [generatedBill, setGeneratedBill] = useState(null);
-  const [billCounter, setBillCounter] = useState(1001);
+  const [showCustomerModal, setShowCustomerModal] = useState(false);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const [showInventoryModal, setShowInventoryModal] = useState(false);
+  const [invoiceItems, setInvoiceItems] = useState([]);
+  const [showBankModal, setShowBankModal] = useState(false);
+  const [showBankDetails, setShowBankDetails] = useState(true);
+  const [bankDetails, setBankDetails] = useState({
+    accountHolder: 'DZIRE WORLD',
+    accountNumber: '42956880869',
+    ifsc: 'SBIN0001110',
+    bankName: 'State Bank of India, DECCAN GYMKHANA (PUNE)'
+  });
 
-  // Additional states for sub-options
-  const [appliedCoupon, setAppliedCoupon] = useState('');
-  const [appliedCredits, setAppliedCredits] = useState(0);
+  const [isCashSale, setIsCashSale] = useState(false);
+  const [invoicePrefix, setInvoicePrefix] = useState('DZR/2026/');
+  const [invoiceNumber, setInvoiceNumber] = useState(() => Math.floor(100 + Math.random() * 900).toString());
+  const [invoiceDate, setInvoiceDate] = useState(() => {
+    const d = new Date();
+    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  });
+  const [paymentTerms, setPaymentTerms] = useState('30');
+  const [dueDate, setDueDate] = useState(() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 30);
+    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  });
 
-  const filteredProducts = useMemo(() => {
-    const query = searchQuery.trim().toLowerCase();
-    if (!query) return products;
-    return products.filter((product) => (
-      [product.name, product.sku, product.barcode].some((value) => value.toLowerCase().includes(query))
-    ));
-  }, [searchQuery]);
+  const [additionalCharges, setAdditionalCharges] = useState(0);
+  const [customDiscount, setCustomDiscount] = useState(0);
+  const [showNotes, setShowNotes] = useState(false);
+  const [notesText, setNotesText] = useState('');
+  const [showTerms, setShowTerms] = useState(false);
+  const [termsText, setTermsText] = useState('');
+  const [showPaymentQR, setShowPaymentQR] = useState(false);
 
-  const addToCart = (product) => {
-    const exists = cart.find(item => item.id === product.id);
-    if (exists) {
-      setCart(cart.map(item => item.id === product.id ? { ...item, qty: item.qty + 1 } : item));
+  const [isFullyPaid, setIsFullyPaid] = useState(false);
+  const [receivedAmount, setReceivedAmount] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('Cash');
+  const [autoRoundOff, setAutoRoundOff] = useState(true);
+  const [toastMessage, setToastMessage] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
+
+  const showToast = (msg) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(''), 3000);
+  };
+
+  // Load existing invoice if id param is provided
+  useEffect(() => {
+    if (!editInvoiceId) return;
+
+    const loadInvoice = async () => {
+      try {
+        const res = await fetch(`/api/admin/pos/invoices/${encodeURIComponent(editInvoiceId)}`);
+        let data = null;
+        if (res.ok) {
+          const json = await res.json();
+          data = json.invoice;
+        }
+        if (!data) {
+          const saved = localStorage.getItem('dzire_admin_pos_invoices');
+          if (saved) {
+            const list = JSON.parse(saved);
+            data = list.find(i => i.id === editInvoiceId);
+          }
+        }
+        if (data) {
+          if (data.customer) {
+            setSelectedCustomer({
+              name: data.customer,
+              phone: data.mobile || '',
+              email: data.email || '',
+              address: data.address || ''
+            });
+          }
+          if (Array.isArray(data.items) && data.items.length > 0) {
+            setInvoiceItems(data.items);
+          }
+          if (data.prefix) setInvoicePrefix(data.prefix);
+          if (data.invoiceNo) setInvoiceNumber(data.invoiceNo);
+          if (data.invoiceDate) setInvoiceDate(data.invoiceDate);
+          if (data.paymentTerms) setPaymentTerms(data.paymentTerms);
+          if (data.dueDate) setDueDate(data.dueDate);
+          if (data.isCashSale !== undefined) setIsCashSale(data.isCashSale);
+          if (data.mode) setPaymentMethod(data.mode);
+          if (data.receivedAmount !== undefined) setReceivedAmount(String(data.receivedAmount));
+          if (data.status === 'Paid') setIsFullyPaid(true);
+          if (data.notes) {
+            setNotesText(data.notes);
+            setShowNotes(true);
+          }
+          if (data.terms) {
+            setTermsText(data.terms);
+            setShowTerms(true);
+          }
+          if (data.bankDetails) setBankDetails(data.bankDetails);
+        }
+      } catch (e) {
+        console.warn('Failed to load invoice for editing:', e);
+      }
+    };
+
+    loadInvoice();
+  }, [editInvoiceId]);
+
+  const handleAddItemFromInventory = (product) => {
+    setInvoiceItems(prev => {
+      const existingIndex = prev.findIndex(item => item.id === product.id);
+      if (existingIndex > -1) {
+        const updated = [...prev];
+        const currentItem = updated[existingIndex];
+        const newQty = (currentItem.qty || 1) + 1;
+        const price = currentItem.price || 0;
+        const discount = currentItem.discount || 0;
+        const taxable = Math.max(0, (price * newQty) - discount);
+        const taxRate = currentItem.taxRate !== undefined ? currentItem.taxRate : 5;
+        const taxAmount = parseFloat((taxable * (taxRate / 100)).toFixed(2));
+        const amount = parseFloat((taxable + taxAmount).toFixed(2));
+
+        updated[existingIndex] = {
+          ...currentItem,
+          qty: newQty,
+          taxAmount,
+          amount
+        };
+        return updated;
+      }
+
+      const price = product.price || 0;
+      const qty = 1;
+      const discount = 0;
+      const taxRate = 5;
+      const taxable = price * qty;
+      const taxAmount = parseFloat((taxable * (taxRate / 100)).toFixed(2));
+      const amount = parseFloat((taxable + taxAmount).toFixed(2));
+
+      return [
+        ...prev,
+        {
+          id: product.id,
+          name: product.name,
+          sku: product.sku || `SKU-${product.id}`,
+          description: '',
+          hsn: product.hsn || '65010090',
+          batchNo: '',
+          expDate: '',
+          mfgDate: '',
+          mrp: product.mrp || product.price,
+          qty: 1,
+          unit: 'PCS',
+          price: product.price,
+          discount: 0,
+          discountPercent: 0,
+          taxRate: 5,
+          taxAmount: taxAmount,
+          amount: amount
+        }
+      ];
+    });
+  };
+
+  const handleUpdateItem = (index, updatedItem) => {
+    setInvoiceItems(prev => {
+      const updated = [...prev];
+      updated[index] = updatedItem;
+      return updated;
+    });
+  };
+
+  const handleRemoveItem = (index) => {
+    setInvoiceItems(prev => prev.filter((_, idx) => idx !== index));
+  };
+
+  const itemsDiscount = invoiceItems.reduce((sum, item) => sum + (Number(item.discount) || 0), 0);
+  const totalDiscount = itemsDiscount + (Number(customDiscount) || 0);
+  const totalTax = invoiceItems.reduce((sum, item) => sum + (Number(item.taxAmount) || 0), 0);
+  const subtotal = invoiceItems.reduce((sum, item) => sum + (Number(item.amount) || 0), 0);
+  const rawTotal = subtotal + (Number(additionalCharges) || 0) - (Number(customDiscount) || 0);
+  const totalAmount = autoRoundOff ? Math.round(rawTotal * 100) / 100 : rawTotal;
+
+  const handleFullyPaidToggle = (e) => {
+    const checked = e.target.checked;
+    setIsFullyPaid(checked);
+    if (checked) {
+      setReceivedAmount(totalAmount > 0 ? totalAmount.toFixed(2) : '0.00');
     } else {
-      setCart([...cart, { ...product, qty: 1 }]);
+      setReceivedAmount('');
     }
   };
 
-  const removeFromCart = (id) => {
-    setCart(cart.filter(item => item.id !== id));
-  };
+  const numReceived = parseFloat(receivedAmount) || 0;
+  const balanceAmount = Math.max(0, totalAmount - numReceived);
 
-  const subtotal = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
-  const discount = appliedCoupon === 'DISCOUNT10' ? Math.round(subtotal * 0.1) : 0;
-  const creditsValue = appliedCredits > 0 ? Math.min(appliedCredits, Math.round(subtotal * 0.1)) : 0;
-  const tax = Math.round((subtotal - discount - creditsValue) * 0.18);
-  const total = subtotal - discount - creditsValue + tax;
-
-  const handleBarcodeAdd = () => {
-    const query = barcodeQuery.trim().toLowerCase();
-    if (!query) {
-      setBarcodeError('Enter barcode or SKU.');
+  const handleSaveInvoice = async (saveAndNew = false) => {
+    if (invoiceItems.length === 0) {
+      showToast('Please add at least one item to the invoice.');
       return;
     }
-    const product = products.find((item) => (
-      item.barcode.toLowerCase() === query || item.sku.toLowerCase() === query || item.name.toLowerCase().includes(query)
-    ));
-    if (product) {
-      addToCart(product);
-      setBarcodeQuery('');
-      setBarcodeError('');
-      setShowBarcodePopup(false);
-    } else {
-      setBarcodeError('Product not found.');
-    }
-  };
 
-  const handleGenerateBill = () => {
-    const bill = {
-      billNo: `POS-${billCounter}`,
-      date: 'Generated now',
-      paymentMode,
-      items: cart,
-      subtotal,
-      discount,
-      creditsValue,
-      tax,
-      total
+    setIsSaving(true);
+    const invoiceId = editInvoiceId || `INV-2026-${invoiceNumber}`;
+    const invoicePayload = {
+      id: invoiceId,
+      customer: selectedCustomer?.name || (isCashSale ? 'Cash Customer' : 'Walk-in Customer'),
+      mobile: selectedCustomer?.phone || '',
+      email: selectedCustomer?.email || '',
+      address: selectedCustomer?.address || '',
+      dateTime: `${invoiceDate}, ${new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}`,
+      prefix: invoicePrefix,
+      invoiceNo: invoiceNumber,
+      invoiceDate: invoiceDate,
+      paymentTerms: paymentTerms,
+      dueDate: dueDate,
+      isCashSale: isCashSale,
+      items: invoiceItems,
+      itemsCount: invoiceItems.reduce((s, it) => s + (Number(it.qty) || 1), 0),
+      subtotal: subtotal,
+      totalDiscount: totalDiscount,
+      totalTax: totalTax,
+      totalAmount: totalAmount,
+      amount: `₹ ${totalAmount.toLocaleString('en-IN')}`,
+      mode: paymentMethod,
+      receivedAmount: numReceived,
+      balanceAmount: balanceAmount,
+      status: balanceAmount === 0 || isFullyPaid ? 'Paid' : 'Pending',
+      notes: notesText,
+      terms: termsText,
+      bankDetails: showBankDetails ? bankDetails : {}
     };
-    setGeneratedBill(bill);
-    setBillCounter((value) => value + 1);
-    setCart([]);
-  };
 
-  const renderSubContent = () => {
-    switch (activeSub) {
-      case 'POS Dashboard':
-      default:
-        return (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
-              {[
-                { label: 'POS Today Sales', val: '₹48,250', sub: '18 bills generated' },
-                { label: 'Cash Drawer', val: '₹14,500', sub: 'Opening: ₹5,000' },
-                { label: 'UPI / Card Sales', val: '₹33,750', sub: 'Digital payments' },
-                { label: 'Active Terminal', val: 'Term-01 (Active)', sub: 'Operator: Cashier Pooja' }
-              ].map((k, i) => (
-                <div key={i} style={S.card}>
-                  <span style={{ fontSize: '13px', color: '#667085' }}>{k.label}</span>
-                  <h2 style={{ margin: '6px 0 4px', fontSize: '24px', fontWeight: '700', color: '#ff6600' }}>{k.val}</h2>
-                  <span style={{ fontSize: '12px', color: '#94a3b8' }}>{k.sub}</span>
-                </div>
-              ))}
-            </div>
+    try {
+      const endpoint = editInvoiceId ? `/api/admin/pos/invoices/${encodeURIComponent(editInvoiceId)}` : '/api/admin/pos/invoices';
+      const method = editInvoiceId ? 'PUT' : 'POST';
 
-            <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px' }}>
-              <div style={S.panel}>
-                <div style={{ padding: '16px 20px', borderBottom: '1px solid #e5e7eb' }}><strong>Recent POS Bills</strong></div>
-                <table style={S.table}>
-                  <thead>
-                    <tr>{['Bill #', 'Time', 'Payment', 'Amount', 'Status'].map(h => <th key={h} style={S.th}>{h}</th>)}</tr>
-                  </thead>
-                  <tbody>
-                    {[
-                      { bill: 'POS-1004', time: '12:15 PM', pay: 'UPI', amt: '₹3,299', status: 'Completed' },
-                      { bill: 'POS-1003', time: '11:40 AM', pay: 'Cash', amt: '₹850', status: 'Completed' },
-                      { bill: 'POS-1002', time: '11:02 AM', pay: 'Card', amt: '₹12,400', status: 'Completed' }
-                    ].map((r, i) => (
-                      <tr key={i}>
-                        <td style={{ ...S.td, fontWeight: '700', color: '#ff6600' }}>{r.bill}</td>
-                        <td style={S.td}>{r.time}</td>
-                        <td style={S.td}>{r.pay}</td>
-                        <td style={{ ...S.td, fontWeight: '700' }}>{r.amt}</td>
-                        <td style={S.td}><span style={S.badge('#e3fcef', '#12b76a')}>{r.status}</span></td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+      const res = await fetch(endpoint, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(invoicePayload)
+      });
 
-              <div style={S.card}>
-                <h3 style={{ margin: '0 0 16px', fontSize: '16px', fontWeight: '600' }}>Quick POS Actions</h3>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                  <button onClick={() => alert('Opening cash drawer...')} style={{ padding: '12px', background: '#fafafa', border: '1px solid #e5e7eb', borderRadius: '8px', cursor: 'pointer', textAlign: 'left', fontWeight: '500' }}>🔓 Open Cash Drawer</button>
-                  <button onClick={() => alert('POS shift report print...')} style={{ padding: '12px', background: '#fafafa', border: '1px solid #e5e7eb', borderRadius: '8px', cursor: 'pointer', textAlign: 'left', fontWeight: '500' }}>🖨️ Print Shift Summary</button>
-                  <button onClick={() => alert('Drawer cash drop configured')} style={{ padding: '12px', background: '#fafafa', border: '1px solid #e5e7eb', borderRadius: '8px', cursor: 'pointer', textAlign: 'left', fontWeight: '500' }}>💰 Safe Drop (Cash Out)</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
+      // Update local storage backup
+      const saved = localStorage.getItem('dzire_admin_pos_invoices');
+      let list = saved ? JSON.parse(saved) : [];
+      if (editInvoiceId) {
+        list = list.map(item => item.id === editInvoiceId ? { ...item, ...invoicePayload } : item);
+      } else {
+        list = [invoicePayload, ...list];
+      }
+      localStorage.setItem('dzire_admin_pos_invoices', JSON.stringify(list));
 
-      case 'New Bill (POS)':
-        return (
-          <div style={{ display: 'flex', gap: '24px', height: '100%', width: '100%' }}>
-            {/* Left side: Products Grid */}
-            <div style={{ flex: 2, display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                <div style={{ position: 'relative', flex: 1 }}>
-                  <Search size={16} style={{ position: 'absolute', left: '12px', top: '12px', color: '#667085' }} />
-                  <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search product name or SKU..." style={{ width: '100%', padding: '10px 12px 10px 36px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px' }} />
-                </div>
-                <button onClick={() => setShowBarcodePopup(true)} style={{ padding: '10px 16px', background: '#ff6600', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <ScanLine size={16} /> Scan Barcode
-                </button>
-              </div>
+      showToast(editInvoiceId ? 'Invoice updated successfully!' : 'Sales invoice created successfully!');
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', overflowY: 'auto', maxHeight: '420px' }}>
-                {filteredProducts.map((p) => (
-                  <div key={p.id} style={{ ...S.card, padding: '16px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', cursor: 'pointer' }} onClick={() => addToCart(p)}>
-                    <div>
-                      <strong style={{ display: 'block', fontSize: '14px', color: '#111' }}>{p.name}</strong>
-                      <span style={{ fontSize: '12px', color: '#667085', fontFamily: 'monospace' }}>{p.sku}</span>
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '16px' }}>
-                      <span style={{ fontSize: '15px', fontWeight: '700', color: '#ff6600' }}>₹{p.price}</span>
-                      <span style={{ fontSize: '11px', color: p.stock > 10 ? '#12b76a' : '#f04438' }}>Stock: {p.stock}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Right side: Shopping Cart & Checkout */}
-            <div style={{ flex: 1.2, background: 'white', borderLeft: '1px solid #e5e7eb', padding: '24px', display: 'flex', flexDirection: 'column', height: '100%', boxSizing: 'border-box' }}>
-              <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <ShoppingCart size={18} /> POS Checkout Cart ({cart.length} items)
-              </h3>
-              
-              <div style={{ flex: 1, overflowY: 'auto', marginBottom: '20px', minHeight: '180px' }}>
-                {cart.map((item) => (
-                  <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid #f3f4f6' }}>
-                    <div style={{ flex: 1, marginRight: '10px' }}>
-                      <p style={{ margin: '0 0 2px 0', fontSize: '13px', fontWeight: '500' }}>{item.name}</p>
-                      <p style={{ margin: 0, fontSize: '12px', color: '#ff6600', fontWeight: '600' }}>₹{item.price} × {item.qty}</p>
-                    </div>
-                    <button onClick={() => removeFromCart(item.id)} style={{ background: 'none', border: 'none', color: '#f04438', cursor: 'pointer' }}><Trash2 size={16} /></button>
-                  </div>
-                ))}
-                {cart.length === 0 && (
-                  <p style={{ color: '#667085', fontSize: '13px', textAlign: 'center', margin: '30px 0' }}>Cart is empty</p>
-                )}
-              </div>
-
-              <div style={{ borderTop: '1px solid #e5e7eb', paddingTop: '16px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px' }}><span>Subtotal:</span><strong>₹{subtotal}</strong></div>
-                {discount > 0 && <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: '#12b76a' }}><span>Discount (10%):</span><strong>−₹{discount}</strong></div>}
-                {creditsValue > 0 && <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: '#6366f1' }}><span>Dzire Credits:</span><strong>−₹{creditsValue}</strong></div>}
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px' }}><span>GST (18%):</span><strong>₹{tax}</strong></div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '16px', fontWeight: '700', borderTop: '1px dashed #e5e7eb', paddingTop: '10px', color: '#ff6600' }}><span>Grand Total:</span><span>₹{total}</span></div>
-
-                <div style={{ margin: '10px 0' }}>
-                  <label style={S.label}>Payment Method</label>
-                  <select value={paymentMode} onChange={e => setPaymentMode(e.target.value)} style={S.inp}>
-                    <option>Cash</option><option>UPI (PhonePe/GPay)</option><option>Credit/Debit Card</option><option>Split Payment</option>
-                  </select>
-                </div>
-
-                <button onClick={handleGenerateBill} disabled={cart.length === 0} style={{ padding: '12px', background: '#ff6600', color: 'white', border: 'none', borderRadius: '6px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                  <Printer size={16} /> Print &amp; Complete Bill
-                </button>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 'Barcode Scan':
-        return (
-          <div style={{ ...S.formCard, maxWidth: '500px' }}>
-            <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600' }}>Scanner Configuration</h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <div>
-                <label style={S.label}>POS Scanner Device</label>
-                <select style={S.inp}><option>Zebra DS2208 USB</option><option>Honeywell Voyager 1400g</option><option>Generic Bluetooth Scanner</option></select>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px', background: '#e3fcef', borderRadius: '8px' }}>
-                <span style={{ fontSize: '16px' }}>🟢</span>
-                <span style={{ fontSize: '13px', color: '#15803d', fontWeight: '500' }}>USB scanner connected and listening</span>
-              </div>
-              <button onClick={() => alert('Scanner test signal sent')} style={S.saveBtn}>Test Connection</button>
-            </div>
-          </div>
-        );
-
-      case 'Product Search':
-        return (
-          <div style={S.panel}>
-            <div style={{ padding: '16px 20px', borderBottom: '1px solid #e5e7eb' }}>
-              <input type="text" placeholder="Start typing SKU, Barcode, or Name..." style={S.inp} />
-            </div>
-            <table style={S.table}>
-              <thead>
-                <tr>{['Product', 'SKU', 'Barcode', 'Price', 'Available Stock'].map(h => <th key={h} style={S.th}>{h}</th>)}</tr>
-              </thead>
-              <tbody>
-                {products.map(p => (
-                  <tr key={p.id}>
-                    <td style={S.td}><strong>{p.name}</strong></td>
-                    <td style={{ ...S.td, fontFamily: 'monospace' }}>{p.sku}</td>
-                    <td style={{ ...S.td, fontFamily: 'monospace' }}>{p.barcode}</td>
-                    <td style={{ ...S.td, fontWeight: '600', color: '#ff6600' }}>₹{p.price}</td>
-                    <td style={S.td}><span style={S.badge('#e3fcef', '#12b76a')}>{p.stock} units</span></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        );
-
-      case 'Cart Management':
-        return (
-          <div style={S.panel}>
-            <div style={{ padding: '16px 20px', borderBottom: '1px solid #e5e7eb' }}><strong>Current Active Cart</strong></div>
-            <table style={S.table}>
-              <thead>
-                <tr>{['Item', 'Original Price', 'Quantity', 'Total Line Price'].map(h => <th key={h} style={S.th}>{h}</th>)}</tr>
-              </thead>
-              <tbody>
-                {cart.map((c, i) => (
-                  <tr key={i}>
-                    <td style={S.td}>{c.name}</td>
-                    <td style={S.td}>₹{c.price}</td>
-                    <td style={S.td}>{c.qty}</td>
-                    <td style={{ ...S.td, fontWeight: '700', color: '#ff6600' }}>₹{c.price * c.qty}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        );
-
-      case 'Apply Coupon':
-        return (
-          <div style={{ ...S.formCard, maxWidth: '500px' }}>
-            <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600' }}>Apply Discount Code</h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <div>
-                <label style={S.label}>Enter Coupon Code</label>
-                <input type="text" placeholder="e.g. DISCOUNT10" style={S.inp} onChange={e => setAppliedCoupon(e.target.value.toUpperCase())} />
-              </div>
-              <button onClick={() => { setAppliedCoupon('DISCOUNT10'); alert('Discount voucher WELCOME10/DISCOUNT10 applied successfully!'); }} style={S.saveBtn}>Apply Discount Code</button>
-            </div>
-          </div>
-        );
-
-      case 'Apply Dzire Credits':
-        return (
-          <div style={{ ...S.formCard, maxWidth: '500px' }}>
-            <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600' }}>Apply Loyalty Points</h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <div>
-                <label style={S.label}>Available Balance (Priya Sharma)</label>
-                <input type="text" value="650 Points (Max allowed redemption: 10% of cart value)" readOnly style={{ ...S.inp, background: '#f9fafb' }} />
-              </div>
-              <div>
-                <label style={S.label}>Credits to Redeem</label>
-                <input type="number" defaultValue={150} style={S.inp} onChange={e => setAppliedCredits(Number(e.target.value))} />
-              </div>
-              <button onClick={() => { setAppliedCredits(150); alert('Credits balance successfully applied to checkout'); }} style={S.saveBtn}>Apply Balance</button>
-            </div>
-          </div>
-        );
-
-      case 'Payment (Cash/UPI/Card)':
-        return (
-          <div style={{ ...S.formCard, maxWidth: '500px' }}>
-            <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600' }}>Complete Checkout Payment</h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <div>
-                <label style={S.label}>Total Amount Due</label>
-                <input type="text" value={`₹${total}`} readOnly style={{ ...S.inp, background: '#f9fafb', fontSize: '18px', fontWeight: '700', color: '#ff6600' }} />
-              </div>
-              <div>
-                <label style={S.label}>Select Gateway Mode</label>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
-                  {['Cash', 'UPI Gateway', 'Card Swipe'].map(m => (
-                    <button key={m} style={{ padding: '12px 6px', border: '1px solid #d1d5db', borderRadius: '6px', background: 'white', cursor: 'pointer', fontSize: '13px', fontWeight: '500' }}>{m}</button>
-                  ))}
-                </div>
-              </div>
-              <button onClick={() => alert('Payment completed!')} style={S.saveBtn}>Finalize Payment &amp; Print Receipt</button>
-            </div>
-          </div>
-        );
-
-      case 'Split Payments':
-        return (
-          <div style={{ ...S.formCard, maxWidth: '500px' }}>
-            <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600' }}>Split Bill Payment</h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <div>
-                <label style={S.label}>Cash Amount</label>
-                <input type="number" placeholder="₹0" style={S.inp} />
-              </div>
-              <div>
-                <label style={S.label}>UPI Amount</label>
-                <input type="number" placeholder="₹0" style={S.inp} />
-              </div>
-              <div>
-                <label style={S.label}>Card Swipe Amount</label>
-                <input type="number" placeholder="₹0" style={S.inp} />
-              </div>
-              <button onClick={() => alert('Split payment saved')} style={S.saveBtn}>Submit Split Payments</button>
-            </div>
-          </div>
-        );
-
-      case 'POS Returns':
-      case 'POS Exchange':
-        return (
-          <div style={{ ...S.formCard, maxWidth: '500px' }}>
-            <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600' }}>POS Return / Exchange RMA</h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <div>
-                <label style={S.label}>Enter Bill Number</label>
-                <input type="text" placeholder="e.g. POS-1004" style={S.inp} />
-              </div>
-              <div>
-                <label style={S.label}>Return Reason</label>
-                <select style={S.inp}><option>Sizing Defect</option><option>Quality Issue</option><option>Wrong Product</option></select>
-              </div>
-              <button onClick={() => alert('RMA completed')} style={S.saveBtn}>{activeSub.includes('Return') ? 'Process Return Refund' : 'Initiate Exchange Bill'}</button>
-            </div>
-          </div>
-        );
-
-      case 'Sales History':
-        return (
-          <div style={S.panel}>
-            <div style={{ padding: '16px 20px', borderBottom: '1px solid #e5e7eb' }}>
-              <strong>Today's POS Sales Logs</strong>
-            </div>
-            <table style={S.table}>
-              <thead>
-                <tr>{['Bill Number', 'Time', 'Payment Gateway', 'Subtotal', 'Tax', 'Grand Total'].map(h => <th key={h} style={S.th}>{h}</th>)}</tr>
-              </thead>
-              <tbody>
-                {[
-                  { bill: 'POS-1004', time: '12:15 PM', gateway: 'PhonePe UPI', sub: '₹2,499', tax: '₹450', tot: '₹2,949' },
-                  { bill: 'POS-1003', time: '11:40 AM', gateway: 'Cash Drawer', sub: '₹720', tax: '₹130', tot: '₹850' },
-                  { bill: 'POS-1002', time: '11:02 AM', gateway: 'PineLabs Card Swipe', sub: '₹10,500', tax: '₹1,900', tot: '₹12,400' }
-                ].map((r, i) => (
-                  <tr key={i}>
-                    <td style={{ ...S.td, fontWeight: '700', color: '#ff6600' }}>{r.bill}</td>
-                    <td style={S.td}>{r.time}</td>
-                    <td style={S.td}>{r.gateway}</td>
-                    <td style={S.td}>{r.sub}</td>
-                    <td style={S.td}>{r.tax}</td>
-                    <td style={{ ...S.td, fontWeight: '700' }}>{r.tot}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        );
+      if (saveAndNew) {
+        // Reset form for new entry
+        setInvoiceItems([]);
+        setSelectedCustomer(null);
+        setInvoiceNumber(Math.floor(100 + Math.random() * 900).toString());
+        setReceivedAmount('');
+        setIsFullyPaid(false);
+        setNotesText('');
+        setShowNotes(false);
+      } else {
+        setTimeout(() => {
+          navigate('/admin/pos/sales-invoice');
+        }, 800);
+      }
+    } catch (err) {
+      console.warn('API error saving invoice, saved to local cache:', err);
+      showToast('Invoice saved locally.');
+      if (!saveAndNew) {
+        setTimeout(() => {
+          navigate('/admin/pos/sales-invoice');
+        }, 800);
+      }
+    } finally {
+      setIsSaving(false);
     }
   };
 
   return (
     <AdminLayout>
-      <div className="admin-page-container">
-        <section className="admin-hero" style={{ marginBottom: '24px' }}>
-          <div>
-            <h1>{activeSub}</h1>
-            <p>Generate customer checkout invoices, process split payments and return item exchanges</p>
+      <div style={{ background: '#f8fafc', minHeight: '100vh', padding: '16px', position: 'relative' }}>
+
+        {/* Toast Alert */}
+        {toastMessage && (
+          <div style={{
+            position: 'fixed',
+            top: '20px',
+            right: '20px',
+            background: '#16a34a',
+            color: '#fff',
+            padding: '12px 20px',
+            borderRadius: '8px',
+            fontSize: '14px',
+            fontWeight: '600',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            zIndex: 9999
+          }}>
+            <CheckCircle2 size={18} /> {toastMessage}
           </div>
-        </section>
+        )}
 
-        {renderSubContent()}
-      </div>
+        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px', overflow: 'hidden' }}>
 
-      {showBarcodePopup && (
-        <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
-          <div style={{ background: 'white', padding: '32px', borderRadius: '12px', width: '400px', position: 'relative' }}>
-            <button onClick={() => setShowBarcodePopup(false)} style={{ position: 'absolute', right: '20px', top: '20px', background: 'none', border: 'none', cursor: 'pointer' }}><X size={20} /></button>
-            <h2 style={{ margin: '0 0 8px 0', fontSize: '20px', fontWeight: '600' }}>Scan Product Barcode</h2>
-            <p style={{ color: '#667085', fontSize: '14px', marginBottom: '24px' }}>Enter product barcode sequence or SKU code manually</p>
-            
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <div>
-                <input type="text" value={barcodeQuery} onChange={e => setBarcodeQuery(e.target.value)} placeholder="e.g. 890100000001" style={{ width: '100%', padding: '10px', border: '1px solid #d1d5db', borderRadius: '6px' }} />
-                {barcodeError && <p style={{ color: '#f04438', fontSize: '12px', margin: '4px 0 0' }}>{barcodeError}</p>}
-              </div>
-              <button onClick={handleBarcodeAdd} style={{ padding: '12px', background: '#ff6600', color: 'white', border: 'none', borderRadius: '6px', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}>Add to Cart</button>
+          {/* Header */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 20px', borderBottom: '1px solid #e2e8f0' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <ArrowLeft size={20} color="#334155" style={{ cursor: 'pointer' }} onClick={() => navigate('/admin/pos/sales-invoice')} />
+              <h2 style={{ margin: 0, fontSize: '16px', fontWeight: '600', color: '#1e293b' }}>
+                {editInvoiceId ? `Edit Sales Invoice (${editInvoiceId})` : 'Create Sales Invoice'}
+              </h2>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <Keyboard size={20} color="#64748b" style={{ cursor: 'pointer' }} />
+              <button 
+                type="button"
+                onClick={() => handleSaveInvoice(true)}
+                disabled={isSaving}
+                style={{ background: '#fff', border: '1px solid #cbd5e1', padding: '6px 16px', borderRadius: '4px', fontSize: '13px', fontWeight: '500', color: '#64748b', cursor: 'pointer' }}
+              >
+                Save & New
+              </button>
+              <button 
+                type="button"
+                onClick={() => handleSaveInvoice(false)}
+                disabled={isSaving}
+                style={{ background: '#e0e7ff', border: 'none', padding: '6px 24px', borderRadius: '4px', fontSize: '13px', fontWeight: '600', color: '#4338ca', cursor: 'pointer' }}
+              >
+                {isSaving ? 'Saving...' : 'Save'}
+              </button>
             </div>
           </div>
+
+          {/* Top Section */}
+          <div style={{ display: 'flex', borderBottom: '1px solid #e2e8f0', flexWrap: 'wrap' }}>
+            {/* Left: Bill To */}
+            <div style={{ flex: '1 1 300px', padding: '16px 20px', borderRight: '1px solid #e2e8f0' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <p style={{ margin: 0, fontSize: '12px', fontWeight: '500', color: '#64748b' }}>Bill To</p>
+                {selectedCustomer && (
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <button
+                      type="button"
+                      onClick={() => setShowCustomerModal(true)}
+                      style={{ background: 'none', border: 'none', color: '#3b82f6', fontSize: '11.5px', fontWeight: '500', cursor: 'pointer', padding: 0 }}
+                    >
+                      Change
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedCustomer(null)}
+                      style={{ background: 'none', border: 'none', color: '#ef4444', fontSize: '11.5px', fontWeight: '500', cursor: 'pointer', padding: 0 }}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {!selectedCustomer ? (
+                <div
+                  onClick={() => setShowCustomerModal(true)}
+                  style={{
+                    border: '1px dashed #3b82f6',
+                    borderRadius: '6px',
+                    height: '80px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    background: '#f8fafc',
+                    width: '250px',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onMouseOver={(e) => (e.currentTarget.style.background = '#eff6ff')}
+                  onMouseOut={(e) => (e.currentTarget.style.background = '#f8fafc')}
+                >
+                  <span style={{ color: '#3b82f6', fontSize: '13px', fontWeight: '500' }}>+ Add Customer</span>
+                </div>
+              ) : (
+                <div
+                  style={{
+                    border: '1px solid #e2e8f0',
+                    borderRadius: '6px',
+                    padding: '10px 12px',
+                    background: '#f8fafc',
+                    width: '250px'
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <User size={14} color="#ff5722" />
+                    <span style={{ fontWeight: '600', fontSize: '13px', color: '#0f172a' }}>{selectedCustomer.name}</span>
+                  </div>
+                  {selectedCustomer.phone && (
+                    <div style={{ fontSize: '12px', color: '#475569', marginTop: '3px' }}>{selectedCustomer.phone}</div>
+                  )}
+                  {selectedCustomer.email && (
+                    <div style={{ fontSize: '11.5px', color: '#64748b', marginTop: '2px' }}>{selectedCustomer.email}</div>
+                  )}
+                  {selectedCustomer.address && (
+                    <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '2px' }}>{selectedCustomer.address}</div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Right: Invoice Meta */}
+            <div style={{ flex: '1 1 450px', padding: '16px 20px', position: 'relative' }}>
+              <div style={{ position: 'absolute', top: '16px', right: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <input 
+                  type="checkbox" 
+                  id="cashSale" 
+                  checked={isCashSale}
+                  onChange={(e) => setIsCashSale(e.target.checked)}
+                  style={{ cursor: 'pointer' }} 
+                />
+                <label htmlFor="cashSale" style={{ fontSize: '12px', color: '#64748b', cursor: 'pointer' }}>Set Cash Sale as default</label>
+              </div>
+
+              <div style={{ display: 'flex', gap: '16px', marginTop: '32px', flexWrap: 'wrap' }}>
+                <div style={{ flex: 1, minWidth: '100px' }}>
+                  <label style={{ display: 'block', fontSize: '11px', color: '#64748b', marginBottom: '4px' }}>Invoice Prefix:</label>
+                  <input 
+                    type="text" 
+                    value={invoicePrefix}
+                    onChange={(e) => setInvoicePrefix(e.target.value)}
+                    style={{ width: '100%', padding: '6px 8px', border: '1px solid #cbd5e1', borderRadius: '4px', fontSize: '12px', outline: 'none', background: '#f8fafc', boxSizing: 'border-box' }} 
+                  />
+                </div>
+                <div style={{ flex: 1, minWidth: '100px' }}>
+                  <label style={{ display: 'block', fontSize: '11px', color: '#64748b', marginBottom: '4px' }}>Invoice Number:</label>
+                  <input 
+                    type="text" 
+                    value={invoiceNumber}
+                    onChange={(e) => setInvoiceNumber(e.target.value)}
+                    style={{ width: '100%', padding: '6px 8px', border: '1px solid #cbd5e1', borderRadius: '4px', fontSize: '12px', outline: 'none', background: '#f8fafc', boxSizing: 'border-box' }} 
+                  />
+                </div>
+                <div style={{ flex: 1, minWidth: '120px' }}>
+                  <label style={{ display: 'block', fontSize: '11px', color: '#64748b', marginBottom: '4px' }}>Sales Invoice Date:</label>
+                  <div style={{ position: 'relative' }}>
+                    <input 
+                      type="text" 
+                      value={invoiceDate}
+                      onChange={(e) => setInvoiceDate(e.target.value)}
+                      style={{ width: '100%', padding: '6px 24px 6px 8px', border: '1px solid #cbd5e1', borderRadius: '4px', fontSize: '12px', outline: 'none', boxSizing: 'border-box' }} 
+                    />
+                    <Calendar size={12} color="#64748b" style={{ position: 'absolute', right: '8px', top: '8px' }} />
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: '16px', marginTop: '12px', alignItems: 'flex-end', flexWrap: 'wrap' }}>
+                <div style={{ width: '120px' }}>
+                  <label style={{ display: 'block', fontSize: '11px', color: '#64748b', marginBottom: '4px' }}>Payment Terms:</label>
+                  <div style={{ display: 'flex', alignItems: 'center', border: '1px solid #cbd5e1', borderRadius: '4px', overflow: 'hidden' }}>
+                    <input 
+                      type="text" 
+                      value={paymentTerms}
+                      onChange={(e) => setPaymentTerms(e.target.value)}
+                      style={{ width: '60%', padding: '6px 8px', border: 'none', fontSize: '12px', outline: 'none', textAlign: 'center', boxSizing: 'border-box' }} 
+                    />
+                    <span style={{ background: '#f8fafc', padding: '6px 8px', fontSize: '12px', color: '#64748b', borderLeft: '1px solid #cbd5e1', width: '40%', textAlign: 'center' }}>days</span>
+                  </div>
+                </div>
+                <div style={{ width: '140px' }}>
+                  <label style={{ display: 'block', fontSize: '11px', color: '#64748b', marginBottom: '4px' }}>Due Date:</label>
+                  <div style={{ position: 'relative' }}>
+                    <input 
+                      type="text" 
+                      value={dueDate}
+                      onChange={(e) => setDueDate(e.target.value)}
+                      style={{ width: '100%', padding: '6px 24px 6px 8px', border: '1px solid #cbd5e1', borderRadius: '4px', fontSize: '12px', outline: 'none', boxSizing: 'border-box' }} 
+                    />
+                    <Calendar size={12} color="#64748b" style={{ position: 'absolute', right: '8px', top: '8px' }} />
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          {/* Table Section with Editable Items */}
+          <AdminInvoiceItemsTable
+            items={invoiceItems}
+            onUpdateItem={handleUpdateItem}
+            onRemoveItem={handleRemoveItem}
+            onOpenInventoryModal={() => setShowInventoryModal(true)}
+          />
+
+          {/* Bottom Section */}
+          <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+            {/* Left Bottom */}
+            <div style={{ flex: '1 1 300px', padding: '20px', borderRight: '1px solid #e2e8f0' }}>
+              <div style={{ marginBottom: '24px' }}>
+                {showNotes ? (
+                  <div style={{ marginBottom: '14px', background: '#f8fafc', padding: '12px', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                      <label style={{ fontSize: '12px', fontWeight: '600', color: '#334155' }}>Notes / Remarks</label>
+                      <button 
+                        type="button" 
+                        onClick={() => { setShowNotes(false); setNotesText(''); }}
+                        style={{ background: 'none', border: 'none', color: '#ef4444', fontSize: '11px', fontWeight: '500', cursor: 'pointer', padding: 0 }}
+                      >
+                        Remove
+                      </button>
+                    </div>
+                    <textarea
+                      rows={2}
+                      placeholder="Add customer remarks or notes..."
+                      value={notesText}
+                      onChange={(e) => setNotesText(e.target.value)}
+                      style={{ width: '100%', padding: '8px 10px', fontSize: '12px', border: '1px solid #cbd5e1', borderRadius: '4px', outline: 'none', resize: 'vertical', boxSizing: 'border-box', background: '#fff' }}
+                    />
+                  </div>
+                ) : (
+                  <p 
+                    onClick={() => setShowNotes(true)}
+                    style={{ color: '#3b82f6', fontSize: '12px', fontWeight: '500', margin: '0 0 12px 0', cursor: 'pointer' }}
+                  >
+                    + Add Notes
+                  </p>
+                )}
+
+                {showTerms ? (
+                  <div style={{ marginBottom: '14px', background: '#f8fafc', padding: '12px', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                      <label style={{ fontSize: '12px', fontWeight: '600', color: '#334155' }}>Terms and Conditions</label>
+                      <button 
+                        type="button" 
+                        onClick={() => { setShowTerms(false); }}
+                        style={{ background: 'none', border: 'none', color: '#ef4444', fontSize: '11px', fontWeight: '500', cursor: 'pointer', padding: 0 }}
+                      >
+                        Remove
+                      </button>
+                    </div>
+                    <textarea
+                      rows={3}
+                      value={termsText}
+                      onChange={(e) => setTermsText(e.target.value)}
+                      style={{ width: '100%', padding: '8px 10px', fontSize: '12px', border: '1px solid #cbd5e1', borderRadius: '4px', outline: 'none', resize: 'vertical', boxSizing: 'border-box', background: '#fff' }}
+                    />
+                  </div>
+                ) : (
+                  <p 
+                    onClick={() => setShowTerms(true)}
+                    style={{ color: '#3b82f6', fontSize: '12px', fontWeight: '500', margin: '0', cursor: 'pointer' }}
+                  >
+                    + Add Terms and Conditions
+                  </p>
+                )}
+              </div>
+
+              {showBankDetails ? (
+                <div style={{ marginBottom: '24px' }}>
+                  <p style={{ fontSize: '13px', fontWeight: '600', color: '#1e293b', margin: '0 0 12px 0' }}>Bank Details</p>
+                  <div style={{ fontSize: '12px', color: '#64748b', lineHeight: '1.8' }}>
+                    <p style={{ margin: 0 }}>Account Number: <span style={{ fontWeight: '600', color: '#1e293b' }}>{bankDetails.accountNumber}</span></p>
+                    <p style={{ margin: 0 }}>IFSC Code: <span style={{ fontWeight: '600', color: '#1e293b' }}>{bankDetails.ifsc}</span></p>
+                    <p style={{ margin: 0 }}>Bank & Branch Name: <span style={{ fontWeight: '600', color: '#1e293b' }}>{bankDetails.bankName}</span></p>
+                    <p style={{ margin: 0 }}>Account Holder's Name: <span style={{ fontWeight: '600', color: '#1e293b' }}>{bankDetails.accountHolder}</span></p>
+                  </div>
+                  <div style={{ display: 'flex', gap: '24px', marginTop: '16px' }}>
+                    <span 
+                      onClick={() => setShowBankModal(true)} 
+                      style={{ color: '#3b82f6', fontSize: '12px', fontWeight: '500', cursor: 'pointer' }}
+                    >
+                      Change Bank Account
+                    </span>
+                    <span 
+                      onClick={() => setShowBankDetails(false)} 
+                      style={{ color: '#ef4444', fontSize: '12px', fontWeight: '500', cursor: 'pointer' }}
+                    >
+                      Remove Bank Account
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                <div style={{ marginBottom: '20px' }}>
+                  <p 
+                    onClick={() => setShowBankDetails(true)} 
+                    style={{ color: '#3b82f6', fontSize: '12px', fontWeight: '500', margin: '0', cursor: 'pointer' }}
+                  >
+                    + Add Bank Details
+                  </p>
+                </div>
+              )}
+
+              <div>
+                {showPaymentQR ? (
+                  <div style={{ background: '#f8fafc', padding: '12px', borderRadius: '6px', border: '1px solid #e2e8f0', display: 'inline-block' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                      <span style={{ fontSize: '12px', fontWeight: '600', color: '#1e293b' }}>UPI Dynamic QR</span>
+                      <button onClick={() => setShowPaymentQR(false)} style={{ background: 'none', border: 'none', color: '#ef4444', fontSize: '11px', cursor: 'pointer' }}>Close</button>
+                    </div>
+                    <img
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=upi://pay?pa=42956880869@sbi&pn=DZIRE%20WORLD&am=${totalAmount.toFixed(2)}`}
+                      alt="UPI QR"
+                      style={{ width: '120px', height: '120px', borderRadius: '4px' }}
+                    />
+                    <div style={{ fontSize: '10px', color: '#64748b', textAlign: 'center', marginTop: '4px' }}>Scan to Pay ₹{totalAmount.toFixed(2)}</div>
+                  </div>
+                ) : (
+                  <p 
+                    onClick={() => setShowPaymentQR(true)}
+                    style={{ color: '#3b82f6', fontSize: '12px', fontWeight: '500', margin: '0', cursor: 'pointer' }}
+                  >
+                    + Add Payment QR
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Right Bottom */}
+            <div style={{ flex: '1 1 450px', padding: '20px' }}>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                <span 
+                  onClick={() => {
+                    const promptVal = window.prompt('Enter additional charge amount in ₹:', additionalCharges.toString());
+                    if (promptVal !== null) setAdditionalCharges(parseFloat(promptVal) || 0);
+                  }}
+                  style={{ color: '#3b82f6', fontSize: '12px', fontWeight: '500', cursor: 'pointer' }}
+                >
+                  {additionalCharges > 0 ? 'Edit Additional Charges' : '+ Add Additional Charges'}
+                </span>
+                <span style={{ fontSize: '12px', fontWeight: '500', color: '#1e293b' }}>₹ {additionalCharges.toFixed(2)}</span>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
+                <span style={{ fontSize: '12px', color: '#64748b' }}>Taxable Amount</span>
+                <span style={{ fontSize: '12px', fontWeight: '500', color: '#1e293b' }}>₹ {(subtotal - totalTax).toFixed(2)}</span>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                <span 
+                  onClick={() => {
+                    const promptVal = window.prompt('Enter additional discount amount in ₹:', customDiscount.toString());
+                    if (promptVal !== null) setCustomDiscount(parseFloat(promptVal) || 0);
+                  }}
+                  style={{ color: '#3b82f6', fontSize: '12px', fontWeight: '500', cursor: 'pointer' }}
+                >
+                  {customDiscount > 0 ? 'Edit Discount' : '+ Add Discount'}
+                </span>
+                <span style={{ fontSize: '12px', fontWeight: '500', color: '#1e293b' }}>- ₹ {totalDiscount.toFixed(2)}</span>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+                <input
+                  type="checkbox"
+                  id="autoRound"
+                  checked={autoRoundOff}
+                  onChange={(e) => setAutoRoundOff(e.target.checked)}
+                  style={{ cursor: 'pointer' }}
+                />
+                <label htmlFor="autoRound" style={{ fontSize: '12px', color: '#1e293b', cursor: 'pointer' }}>Auto Round Off</label>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                <span style={{ fontSize: '14px', fontWeight: '600', color: '#1e293b' }}>Total Amount</span>
+                <div style={{ background: '#f8fafc', border: '1px solid #cbd5e1', padding: '8px 12px', borderRadius: '4px', width: '200px', textAlign: 'right', fontSize: '14px', fontWeight: '700', color: '#0f172a' }}>
+                  ₹ {totalAmount.toFixed(2)}
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                <label htmlFor="fullyPaid" style={{ fontSize: '11px', color: '#64748b', cursor: 'pointer' }}>Mark as fully paid</label>
+                <input
+                  type="checkbox"
+                  id="fullyPaid"
+                  checked={isFullyPaid}
+                  onChange={handleFullyPaidToggle}
+                  style={{ cursor: 'pointer' }}
+                />
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+                <span style={{ fontSize: '12px', color: '#64748b' }}>Amount Received</span>
+                <div style={{ display: 'flex', border: '1px solid #cbd5e1', borderRadius: '4px', overflow: 'hidden', width: '220px', background: '#fff' }}>
+                  <span style={{ background: '#f8fafc', padding: '8px 10px', fontSize: '12px', color: '#64748b', borderRight: '1px solid #cbd5e1' }}>₹</span>
+                  <input
+                    type="number"
+                    step="any"
+                    placeholder="0.00"
+                    value={receivedAmount}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setReceivedAmount(val);
+                      if (parseFloat(val) >= totalAmount && totalAmount > 0) {
+                        setIsFullyPaid(true);
+                      } else {
+                        setIsFullyPaid(false);
+                      }
+                    }}
+                    style={{ flex: 1, border: 'none', padding: '8px 10px', fontSize: '13px', fontWeight: '600', color: '#0f172a', outline: 'none', background: '#fff', boxSizing: 'border-box', minWidth: '0' }}
+                  />
+                  <select
+                    value={paymentMethod}
+                    onChange={(e) => setPaymentMethod(e.target.value)}
+                    style={{ padding: '8px', border: 'none', borderLeft: '1px solid #cbd5e1', fontSize: '12px', outline: 'none', background: '#f8fafc', color: '#475569', cursor: 'pointer' }}
+                  >
+                    <option value="Cash">Cash</option>
+                    <option value="UPI">UPI</option>
+                    <option value="Card">Card</option>
+                    <option value="Net Banking">Net Banking</option>
+                    <option value="Cheque">Cheque</option>
+                  </select>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
+                <span style={{ fontSize: '13px', fontWeight: '600', color: balanceAmount === 0 ? '#10b981' : '#f59e0b' }}>Balance Amount</span>
+                <span style={{ fontSize: '13px', fontWeight: '700', color: balanceAmount === 0 ? '#10b981' : '#f59e0b' }}>₹ {balanceAmount.toFixed(2)}</span>
+              </div>
+
+              <div style={{ textAlign: 'right' }}>
+                <p style={{ fontSize: '10px', color: '#64748b', margin: '0 0 8px 0' }}>Authorized signatory for <span style={{ fontWeight: '600', color: '#1e293b' }}>Dzire {'>'} Outdoor Equipment Store</span></p>
+                <div style={{ display: 'inline-block' }}>
+                  {/* Dzire Logo representation */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
+                    <span style={{ fontSize: '24px', fontWeight: '800', letterSpacing: '-1px', color: '#000' }}>dzire</span>
+                    <span style={{ color: '#f97316', fontSize: '24px', fontWeight: '800' }}>{'>'}{'>'}</span>
+                  </div>
+                  <div style={{ fontSize: '7px', fontWeight: '700', color: '#f97316', marginTop: '-4px', textAlign: 'right' }}>OUTDOOR EQUIPMENT STORE</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
         </div>
-      )}
+      </div>
+
+      <AdminAddCustomerModal
+        isOpen={showCustomerModal}
+        onClose={() => setShowCustomerModal(false)}
+        onSave={(cust) => setSelectedCustomer(cust)}
+        initialData={selectedCustomer}
+      />
+
+      <AdminInventoryItemModal
+        isOpen={showInventoryModal}
+        onClose={() => setShowInventoryModal(false)}
+        onSelectItem={handleAddItemFromInventory}
+      />
+
+      <AdminChangeBankModal
+        isOpen={showBankModal}
+        onClose={() => setShowBankModal(false)}
+        currentBank={bankDetails}
+        onSave={(updatedBank) => setBankDetails(updatedBank)}
+      />
     </AdminLayout>
   );
 };

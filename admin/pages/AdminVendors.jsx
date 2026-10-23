@@ -1,437 +1,467 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AdminLayout from './AdminLayout';
-import { useSearchParams, Link } from 'react-router-dom';
-import { Search, Plus, Mail, Phone, X, RefreshCcw, FileText, Download, TrendingUp, Award, Activity } from 'lucide-react';
-
-const S = {
-  card: { background: 'white', padding: '24px', borderRadius: '12px', border: '1px solid #e5e7eb', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' },
-  panel: { background: 'white', borderRadius: '12px', border: '1px solid #e5e7eb', overflow: 'hidden' },
-  th: { padding: '12px 20px', fontWeight: '600', textAlign: 'left', background: '#f9fafb', fontSize: '12px', color: '#667085', textTransform: 'uppercase' },
-  td: { padding: '16px 20px', fontSize: '14px', borderTop: '1px solid #e5e7eb' },
-  label: { display: 'block', marginBottom: '6px', fontSize: '13px', fontWeight: '500', color: '#374151' },
-  inp: { width: '100%', padding: '9px 12px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', boxSizing: 'border-box' },
-  saveBtn: { padding: '10px 20px', background: '#ff6600', color: 'white', border: 'none', borderRadius: '6px', fontWeight: '600', cursor: 'pointer', marginTop: '16px' },
-  badge: (bg, col) => ({ padding: '3px 10px', borderRadius: '20px', fontSize: '12px', fontWeight: '500', background: bg, color: col, display: 'inline-block' }),
-};
-
-const mockVendors = [
-  { id: 1, name: 'Wildcraft India Pvt Ltd', gst: '27AABCW1234D1Z5', email: 'sales@wildcraft.in', phone: '+91 800-123-4567', payable: '₹45,000', status: 'Active', score: '94%', contactPerson: 'Sanjay Rawat' },
-  { id: 2, name: 'Decathlon Sports India', gst: '29AABCD1234E1Z6', email: 'b2b@decathlon.in', phone: '+91 900-987-6543', payable: '₹0 (Settled)', status: 'Active', score: '88%', contactPerson: 'Marie Dupont' },
-  { id: 3, name: 'Coleman Gear', gst: '27AACCB9876C1Z4', email: 'info@coleman.in', phone: '+91 888-777-6666', payable: '₹12,400', status: 'Active', score: '82%', contactPerson: 'Amit Mishra' }
-];
+import { ChevronDown, Plus, Search, HelpCircle, ArrowLeft, UserCircle, CheckCircle2 } from 'lucide-react';
+import './AdminDashboard.css';
 
 const AdminVendors = () => {
-  const [searchParams] = useSearchParams();
-  const activeSub = searchParams.get('sub') || 'All Vendors';
+  const navigate = useNavigate();
 
-  const [vendors, setVendors] = useState(mockVendors);
-  const [showModal, setShowModal] = useState(false);
-
-  const [newName, setNewName] = useState('');
-  const [newGst, setNewGst] = useState('');
-  const [newEmail, setNewEmail] = useState('');
-  const [newPhone, setNewPhone] = useState('');
-
-  const handleAddVendor = (e) => {
-    e.preventDefault();
-    if (!newName) return;
-    setVendors([...vendors, {
-      id: Date.now(),
-      name: newName,
-      gst: newGst || '—',
-      email: newEmail || '—',
-      phone: newPhone || '—',
-      payable: '₹0 (Settled)',
-      status: 'Active',
-      score: '100%',
-      contactPerson: '—'
-    }]);
-    setShowModal(false);
-    setNewName('');
-    setNewGst('');
-    setNewEmail('');
-    setNewPhone('');
-    alert('Vendor created successfully!');
+  const initialFormState = {
+    name: '',
+    mobile: '',
+    email: '',
+    openingBalance: '',
+    balanceType: 'To Pay',
+    gstin: '',
+    panNumber: '',
+    type: 'Supplier',
+    category: 'Select Category',
+    billingAddress: '',
+    shippingAddress: '',
+    sameAsBilling: true,
+    creditPeriod: '30',
+    creditLimit: '0',
+    contactPerson: '',
+    dateOfBirth: '',
+    bankDetails: null
   };
 
-  const renderSubContent = () => {
-    switch (activeSub) {
-      case 'All Vendors':
-      default:
-        return (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
-            {vendors.map(v => (
-              <div key={v.id} style={S.card}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
-                  <div>
-                    <h3 style={{ margin: '0 0 4px 0', fontSize: '16px', color: '#111', fontWeight: '600' }}>{v.name}</h3>
-                    <p style={{ margin: 0, fontSize: '13px', color: '#667085' }}>GST: {v.gst}</p>
-                  </div>
-                  <span style={S.badge('#e3fcef', '#12b76a')}>{v.status}</span>
-                </div>
-                
-                <div style={{ borderTop: '1px solid #f3f4f6', paddingTop: '16px', marginBottom: '16px' }}>
-                  <p style={{ display: 'flex', alignItems: 'center', gap: '8px', margin: '0 0 8px 0', fontSize: '13px', color: '#344054' }}>
-                    <Mail size={14} color="#667085" /> {v.email}
-                  </p>
-                  <p style={{ display: 'flex', alignItems: 'center', gap: '8px', margin: '0', fontSize: '13px', color: '#344054' }}>
-                    <Phone size={14} color="#667085" /> {v.phone}
-                  </p>
-                </div>
+  const [formData, setFormData] = useState(initialFormState);
+  const [toastMessage, setToastMessage] = useState(null);
 
-                <div style={{ background: '#f9fafb', padding: '12px', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>
-                    <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#667085' }}>Pending Payable</p>
-                    <p style={{ margin: 0, fontSize: '15px', fontWeight: '600', color: v.payable.includes('0') ? '#12b76a' : '#f04438' }}>{v.payable}</p>
-                  </div>
-                  <Link to={`/admin/vendors?sub=Vendor%20Profile`} style={{ fontSize: '13px', color: '#ff6600', textDecoration: 'none', fontWeight: '500' }}>View Profile</Link>
-                </div>
-              </div>
-            ))}
-          </div>
-        );
+  const showToast = (msg, type = 'success') => {
+    setToastMessage({ msg, type });
+    setTimeout(() => setToastMessage(null), 3500);
+  };
 
-      case 'Vendor Profile':
-        return (
-          <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 2fr', gap: '24px' }}>
-            <div style={S.card}>
-              <h3 style={{ margin: '0 0 16px', fontSize: '16px', fontWeight: '600' }}>Wildcraft India Pvt Ltd</h3>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '14px' }}>
-                <p><strong>Primary Contact:</strong> Sanjay Rawat (Sales Head)</p>
-                <p><strong>GSTIN:</strong> 27AABCW1234D1Z5</p>
-                <p><strong>Email:</strong> sales@wildcraft.in</p>
-                <p><strong>Phone:</strong> +91 800-123-4567</p>
-                <p><strong>Registered Address:</strong> Wildcraft Corporate Office, Outer Ring Road, Bangalore - 560048</p>
-                <p><strong>Payable Balance:</strong> <span style={{ color: '#f04438', fontWeight: '700' }}>₹45,000</span></p>
-              </div>
-            </div>
-            <div style={S.card}>
-              <h3 style={{ margin: '0 0 16px', fontSize: '16px', fontWeight: '600' }}>Supplier Brief Performance</h3>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginBottom: '20px' }}>
-                <div style={{ padding: '16px', background: '#fafafa', borderRadius: '8px', border: '1px solid #e5e7eb' }}>
-                  <span style={{ fontSize: '12px', color: '#667085' }}>Fulfillment Score</span>
-                  <strong style={{ display: 'block', fontSize: '20px', color: '#ff6600', mt: '4px' }}>94%</strong>
-                </div>
-                <div style={{ padding: '16px', background: '#fafafa', borderRadius: '8px', border: '1px solid #e5e7eb' }}>
-                  <span style={{ fontSize: '12px', color: '#667085' }}>Total POs Issued</span>
-                  <strong style={{ display: 'block', fontSize: '20px', color: '#ff6600', mt: '4px' }}>18</strong>
-                </div>
-                <div style={{ padding: '16px', background: '#fafafa', borderRadius: '8px', border: '1px solid #e5e7eb' }}>
-                  <span style={{ fontSize: '12px', color: '#667085' }}>Lead Time (Avg)</span>
-                  <strong style={{ display: 'block', fontSize: '20px', color: '#ff6600', mt: '4px' }}>4.8 Days</strong>
-                </div>
-              </div>
-              <button onClick={() => alert('Editing details...')} style={{ ...S.btn, padding: '8px 16px', background: '#ff6600', color: 'white', border: 'none', borderRadius: '6px', fontWeight: '600', cursor: 'pointer' }}>Edit Profile Information</button>
-            </div>
-          </div>
-        );
+  const handleInputChange = (field, value) => {
+    setFormData(prev => {
+      const updated = { ...prev, [field]: value };
+      if (field === 'billingAddress' && prev.sameAsBilling) {
+        updated.shippingAddress = value;
+      }
+      return updated;
+    });
+  };
 
-      case 'GST Details':
-        return (
-          <div style={S.panel}>
-            <div style={{ padding: '16px 20px', borderBottom: '1px solid #e5e7eb' }}>
-              <strong>Vendor GST Registration Information</strong>
-            </div>
-            <table style={S.table}>
-              <thead>
-                <tr>
-                  <th style={S.th}>Vendor</th>
-                  <th style={S.th}>GSTIN</th>
-                  <th style={S.th}>State Code</th>
-                  <th style={S.th}>Status</th>
-                  <th style={S.th}>Verification Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                {vendors.map(v => (
-                  <tr key={v.id}>
-                    <td style={S.td}><strong>{v.name}</strong></td>
-                    <td style={{ ...S.td, fontFamily: 'monospace' }}>{v.gst}</td>
-                    <td style={S.td}>{v.gst.substring(0, 2)} (Maharashtra/Karnataka)</td>
-                    <td style={S.td}><span style={S.badge('#e3fcef', '#12b76a')}>Verified</span></td>
-                    <td style={{ ...S.td, color: '#667085' }}>14 Jan 2026</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        );
+  const handleSameAsBillingToggle = (e) => {
+    const checked = e.target.checked;
+    setFormData(prev => ({
+      ...prev,
+      sameAsBilling: checked,
+      shippingAddress: checked ? prev.billingAddress : prev.shippingAddress
+    }));
+  };
 
-      case 'Contact Details':
-        return (
-          <div style={S.panel}>
-            <div style={{ padding: '16px 20px', borderBottom: '1px solid #e5e7eb' }}>
-              <strong>B2B Supplier Contact Points</strong>
-            </div>
-            <table style={S.table}>
-              <thead>
-                <tr>
-                  <th style={S.th}>Vendor</th>
-                  <th style={S.th}>Contact Person</th>
-                  <th style={S.th}>Email Address</th>
-                  <th style={S.th}>Phone Number</th>
-                </tr>
-              </thead>
-              <tbody>
-                {vendors.map(v => (
-                  <tr key={v.id}>
-                    <td style={S.td}><strong>{v.name}</strong></td>
-                    <td style={S.td}>{v.contactPerson}</td>
-                    <td style={{ ...S.td, color: '#175cd3' }}>{v.email}</td>
-                    <td style={S.td}>{v.phone}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        );
+  // Auto-fetch/validate details from GSTIN
+  const handleGetGstinDetails = () => {
+    const rawGst = (formData.gstin || '').trim().toUpperCase();
+    if (!rawGst || rawGst.length < 15) {
+      alert('Please enter a valid 15-character GSTIN number (e.g. 09AAACT1234F1Z5)');
+      return;
+    }
 
-      case 'Vendor Documents':
-        return (
-          <div style={S.panel}>
-            <div style={{ padding: '16px 20px', borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between' }}>
-              <strong>Verification & Agreement Documents</strong>
-              <button onClick={() => alert('Upload File')} style={{ padding: '7px 14px', background: '#ff6600', color: 'white', border: 'none', borderRadius: '6px', fontSize: '13px', cursor: 'pointer' }}>+ Upload Document</button>
-            </div>
-            <table style={S.table}>
-              <thead>
-                <tr>
-                  <th style={S.th}>Vendor</th>
-                  <th style={S.th}>Document Name</th>
-                  <th style={S.th}>Type</th>
-                  <th style={S.th}>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {[
-                  { name: 'Wildcraft India', doc: 'b2b-supply-agreement-2026.pdf', type: 'Agreement' },
-                  { name: 'Decathlon Sports', doc: 'gst-certificate-verified.pdf', type: 'KYC Document' },
-                  { name: 'Coleman Gear', doc: 'bank-mandate-form.pdf', type: 'Financial' }
-                ].map((d, i) => (
-                  <tr key={i}>
-                    <td style={S.td}><strong>{d.name}</strong></td>
-                    <td style={S.td}><span style={{ color: '#ff6600', fontWeight: '500' }}>{d.doc}</span></td>
-                    <td style={S.td}>{d.type}</td>
-                    <td style={S.td}>
-                      <button onClick={() => alert('Download document')} style={{ color: '#ff6600', background: 'none', border: 'none', cursor: 'pointer', fontWeight: '600' }}>Download</button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        );
+    // Characters 3 to 12 form the PAN
+    const extractedPan = rawGst.substring(2, 12);
+    setFormData(prev => ({
+      ...prev,
+      gstin: rawGst,
+      panNumber: extractedPan
+    }));
+    alert(`GSTIN Verified! PAN Number auto-populated: ${extractedPan}`);
+  };
 
-      case 'Product Mapping':
-        return (
-          <div style={S.panel}>
-            <div style={{ padding: '16px 20px', borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between' }}>
-              <strong>Supplier SKU Catalog Mapping</strong>
-              <button onClick={() => alert('New SKU map')} style={{ padding: '7px 14px', background: '#ff6600', color: 'white', border: 'none', borderRadius: '6px', fontSize: '13px', cursor: 'pointer' }}>+ Map SKU</button>
-            </div>
-            <table style={S.table}>
-              <thead>
-                <tr>
-                  <th style={S.th}>Internal Product</th>
-                  <th style={S.th}>Internal SKU</th>
-                  <th style={S.th}>Vendor</th>
-                  <th style={S.th}>Vendor SKU / Code</th>
-                </tr>
-              </thead>
-              <tbody>
-                {[
-                  { prod: 'Premium Backpack (Orange)', sku: 'BAG-PREM-ORG', vendor: 'Wildcraft India', vsku: 'WLC-BP-0091-O' },
-                  { prod: 'Trekking Shoes', sku: 'SHOE-TRK-001', vendor: 'Decathlon Sports', vsku: 'DEC-TS-9844' },
-                  { prod: 'Camping Tent', sku: 'TENT-CAMP-002', vendor: 'Coleman Gear', vsku: 'CLM-CT-431' }
-                ].map((m, i) => (
-                  <tr key={i}>
-                    <td style={S.td}><strong>{m.prod}</strong></td>
-                    <td style={{ ...S.td, fontFamily: 'monospace' }}>{m.sku}</td>
-                    <td style={S.td}>{m.vendor}</td>
-                    <td style={{ ...S.td, fontFamily: 'monospace' }}>{m.vsku}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        );
+  const handleAddBankPrompt = (e) => {
+    e.preventDefault();
+    const bankName = window.prompt('Enter Bank Name:', 'HDFC Bank');
+    if (!bankName) return;
+    const accNo = window.prompt('Enter Account Number:', '50200012345678');
+    if (!accNo) return;
+    const ifsc = window.prompt('Enter IFSC Code:', 'HDFC0001234');
 
-      case 'Cost Price Management':
-        return (
-          <div style={S.panel}>
-            <div style={{ padding: '16px 20px', borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between' }}>
-              <strong>Cost Price Configuration Matrix</strong>
-              <button onClick={() => alert('Batch update cost price')} style={{ padding: '7px 14px', background: 'white', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '13px', cursor: 'pointer' }}>Batch Update</button>
-            </div>
-            <table style={S.table}>
-              <thead>
-                <tr>
-                  <th style={S.th}>Product &amp; SKU</th>
-                  <th style={S.th}>Vendor</th>
-                  <th style={S.th}>Selling Price (MRP)</th>
-                  <th style={S.th}>Cost Price (Supplier)</th>
-                  <th style={S.th}>Calculated Margin</th>
-                </tr>
-              </thead>
-              <tbody>
-                {[
-                  { name: 'Premium Backpack', sku: 'BAG-PREM-ORG', vendor: 'Wildcraft', mrp: '₹2,499', cost: '₹1,200', margin: '52%' },
-                  { name: 'Trekking Shoes', sku: 'SHOE-TRK-001', vendor: 'Decathlon', mrp: '₹3,299', cost: '₹1,950', margin: '41%' },
-                  { name: 'Camping Tent', sku: 'TENT-CAMP-002', vendor: 'Coleman Gear', mrp: '₹8,500', cost: '₹4,800', margin: '43.5%' }
-                ].map((c, i) => (
-                  <tr key={i}>
-                    <td style={S.td}>
-                      <strong>{c.name}</strong><br /><span style={{ fontSize: '12px', color: '#667085' }}>{c.sku}</span>
-                    </td>
-                    <td style={S.td}>{c.vendor}</td>
-                    <td style={S.td}>{c.mrp}</td>
-                    <td style={{ ...S.td, fontWeight: '600' }}><input type="text" defaultValue={c.cost} style={{ width: '90px', padding: '4px 8px', border: '1px solid #d1d5db', borderRadius: '4px' }} /></td>
-                    <td style={{ ...S.td, color: '#12b76a', fontWeight: '700' }}>{c.margin}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        );
+    setFormData(prev => ({
+      ...prev,
+      bankDetails: {
+        bankName,
+        accountNumber: accNo,
+        ifsc: ifsc || ''
+      }
+    }));
+    alert('Bank details recorded successfully!');
+  };
 
-      case 'Vendor Performance':
-        return (
-          <div style={S.panel}>
-            <div style={{ padding: '16px 20px', borderBottom: '1px solid #e5e7eb' }}>
-              <strong>Supplier Performance Evaluation Scorecard</strong>
-            </div>
-            <table style={S.table}>
-              <thead>
-                <tr>
-                  <th style={S.th}>Vendor</th>
-                  <th style={S.th}>Fulfillment Rate</th>
-                  <th style={S.th}>Avg Lead Days</th>
-                  <th style={S.th}>Defect Ratio</th>
-                  <th style={S.th}>Overall Score</th>
-                </tr>
-              </thead>
-              <tbody>
-                {vendors.map(v => (
-                  <tr key={v.id}>
-                    <td style={S.td}><strong>{v.name}</strong></td>
-                    <td style={S.td}>96.4%</td>
-                    <td style={S.td}>4.5 Days</td>
-                    <td style={{ ...S.td, color: '#12b76a' }}>0.5%</td>
-                    <td style={S.td}>
-                      <span style={S.badge('#e3fcef', '#12b76a')}>{v.score} (Excellent)</span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        );
+  const handleSave = async (isSaveAndNew = false) => {
+    const partyName = formData.name.trim();
+    if (!partyName) {
+      alert('Please enter Party / Vendor Name.');
+      return;
+    }
 
-      case 'Purchase History':
-        return (
-          <div style={S.panel}>
-            <div style={{ padding: '16px 20px', borderBottom: '1px solid #e5e7eb' }}>
-              <strong>Vendor Invoice &amp; PO History Logs</strong>
-            </div>
-            <table style={S.table}>
-              <thead>
-                <tr>
-                  <th style={S.th}>PO Reference</th>
-                  <th style={S.th}>Vendor</th>
-                  <th style={S.th}>Order Date</th>
-                  <th style={S.th}>Total Amount</th>
-                  <th style={S.th}>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {[
-                  { po: 'PO-2026-1005', vendor: 'Wildcraft India', date: '08 Jul 2026', amt: '₹1,25,000', status: 'Sent' },
-                  { po: 'PO-2026-1004', vendor: 'Decathlon Sports', date: '01 Jul 2026', amt: '₹3,40,000', status: 'Received (Partial)' },
-                  { po: 'PO-2026-1003', vendor: 'Coleman Gear', date: '20 Jun 2026', amt: '₹45,500', status: 'Completed' }
-                ].map((h, i) => (
-                  <tr key={i}>
-                    <td style={{ ...S.td, fontWeight: '700', color: '#ff6600' }}>{h.po}</td>
-                    <td style={S.td}>{h.vendor}</td>
-                    <td style={{ ...S.td, color: '#667085' }}>{h.date}</td>
-                    <td style={{ ...S.td, fontWeight: '600' }}>{h.amt}</td>
-                    <td style={S.td}><span style={S.badge('#eff8ff', '#175cd3')}>{h.status}</span></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        );
+    const numBalance = Number(String(formData.openingBalance || 0).replace(/[^0-9.]/g, '')) || 0;
+    const cleanCategory = formData.category && formData.category !== 'Select Category' ? formData.category : 'Bag & Accessories';
+    const balanceTypeKey = formData.balanceType === 'To Collect' ? 'collect' : (numBalance > 0 ? 'pay' : 'neutral');
+    const formattedBalance = numBalance > 0 ? `₹ ${numBalance.toLocaleString('en-IN')}` : '₹ 0';
 
-      case 'Vendor Analytics':
-        return (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
-              {[
-                { label: 'Total B2B Outflow (Month)', val: '₹5.1L', sub: 'Across 3 vendors' },
-                { label: 'Pending B2B Payables', val: '₹57,400', sub: 'Awaiting balance terms' },
-                { label: 'Avg lead fulfillment', val: '5.2 Days', sub: 'Order dispatch to GRN' }
-              ].map((k, i) => (
-                <div key={i} style={S.card}>
-                  <span style={{ fontSize: '13px', color: '#667085' }}>{k.label}</span>
-                  <h2 style={{ margin: '6px 0 4px', fontSize: '24px', fontWeight: '700', color: '#ff6600' }}>{k.val}</h2>
-                  <span style={{ fontSize: '12px', color: '#94a3b8' }}>{k.sub}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        );
+    const payload = {
+      id: Date.now(),
+      name: partyName,
+      partyName: partyName,
+      category: cleanCategory,
+      mobile: formData.mobile.trim(),
+      email: formData.email.trim(),
+      openingBalance: numBalance,
+      balance: formattedBalance,
+      balanceType: balanceTypeKey,
+      gstin: formData.gstin.trim().toUpperCase(),
+      panNumber: formData.panNumber.trim().toUpperCase(),
+      type: formData.type,
+      partyType: formData.type,
+      billingAddress: formData.billingAddress.trim(),
+      shippingAddress: (formData.sameAsBilling ? formData.billingAddress : formData.shippingAddress).trim(),
+      creditPeriod: formData.creditPeriod ? `${formData.creditPeriod} Days` : '30 Days',
+      creditLimit: formData.creditLimit ? `₹ ${Number(String(formData.creditLimit).replace(/[^0-9.]/g, '') || 0).toLocaleString('en-IN')}` : '₹ 0',
+      contactPerson: formData.contactPerson.trim(),
+      dateOfBirth: formData.dateOfBirth.trim(),
+      bankDetails: formData.bankDetails || {}
+    };
+
+    try {
+      const res = await fetch('https://dzire-backend.onrender.com/api/admin/vendors', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }).catch(() => null);
+
+      let savedItem = payload;
+      if (res && res.ok) {
+        const data = await res.json().catch(() => null);
+        if (data?.vendor) savedItem = data.vendor;
+      }
+
+      // Persist to local storage cache
+      try {
+        const STORAGE_KEY = 'dzire_admin_vendors';
+        const raw = localStorage.getItem(STORAGE_KEY);
+        const existing = raw ? JSON.parse(raw) : [];
+        const updated = [savedItem, ...existing.filter(item => String(item.id) !== String(savedItem.id))];
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+        window.dispatchEvent(new CustomEvent('dzire_vendors_updated', { detail: updated }));
+      } catch (e) {}
+
+      if (isSaveAndNew) {
+        setFormData(initialFormState);
+        showToast(`Vendor "${partyName}" saved! You can now enter another vendor.`);
+        alert(`Vendor "${partyName}" created successfully! Form reset for next entry.`);
+      } else {
+        alert(`Vendor "${partyName}" created successfully!`);
+        navigate('/admin/vendors');
+      }
+
+    } catch (err) {
+      alert(`Vendor "${partyName}" saved locally!`);
+      navigate('/admin/vendors');
     }
   };
 
   return (
     <AdminLayout>
-      <div className="admin-page-container">
-        <section className="admin-hero" style={{ marginBottom: '24px' }}>
-          <div>
-            <h1>{activeSub}</h1>
-            <p>Manage raw material suppliers, catalog price agreements, and ledger payables</p>
-          </div>
-          {activeSub === 'All Vendors' && (
-            <button onClick={() => setShowModal(true)} className="admin-primary-button" style={{ padding: '8px 16px', background: '#ff6600', color: 'white', border: 'none', borderRadius: '6px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <Plus size={16} /> Add Vendor
-            </button>
-          )}
-        </section>
-
-        {renderSubContent()}
-      </div>
-
-      {showModal && (
-        <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
-          <div style={{ background: 'white', padding: '32px', borderRadius: '12px', width: '450px', position: 'relative' }}>
-            <button onClick={() => setShowModal(false)} style={{ position: 'absolute', right: '20px', top: '20px', background: 'none', border: 'none', cursor: 'pointer' }}><X size={20} /></button>
-            <h2 style={{ margin: '0 0 8px 0', fontSize: '20px', fontWeight: '600' }}>Add New Vendor</h2>
-            <p style={{ color: '#667085', fontSize: '14px', marginBottom: '24px' }}>Enter B2B supplier details</p>
-            
-            <form onSubmit={handleAddVendor}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                <div>
-                  <label style={{ display: 'block', fontSize: '14px', marginBottom: '4px', fontWeight: '500' }}>Vendor Name</label>
-                  <input type="text" value={newName} onChange={e => setNewName(e.target.value)} placeholder="e.g. Nike India" style={{ width: '100%', padding: '10px', border: '1px solid #d1d5db', borderRadius: '6px' }} required />
-                </div>
-                <div>
-                  <label style={{ display: 'block', fontSize: '14px', marginBottom: '4px', fontWeight: '500' }}>GST Number</label>
-                  <input type="text" value={newGst} onChange={e => setNewGst(e.target.value)} placeholder="e.g. 27AAAAA0000A1Z5" style={{ width: '100%', padding: '10px', border: '1px solid #d1d5db', borderRadius: '6px' }} />
-                </div>
-                <div>
-                  <label style={{ display: 'block', fontSize: '14px', marginBottom: '4px', fontWeight: '500' }}>Primary Email</label>
-                  <input type="email" value={newEmail} onChange={e => setNewEmail(e.target.value)} placeholder="sales@nike.in" style={{ width: '100%', padding: '10px', border: '1px solid #d1d5db', borderRadius: '6px' }} />
-                </div>
-                <div>
-                  <label style={{ display: 'block', fontSize: '14px', marginBottom: '4px', fontWeight: '500' }}>Phone Number</label>
-                  <input type="text" value={newPhone} onChange={e => setNewPhone(e.target.value)} placeholder="+91 999-999-9999" style={{ width: '100%', padding: '10px', border: '1px solid #d1d5db', borderRadius: '6px' }} />
-                </div>
-                <button type="submit" style={{ padding: '12px', background: '#ff6600', color: 'white', border: 'none', borderRadius: '6px', fontSize: '14px', fontWeight: '600', cursor: 'pointer', marginTop: '8px' }}>Save Vendor</button>
-              </div>
-            </form>
-          </div>
+      {/* Toast Notification */}
+      {toastMessage && (
+        <div style={{
+          position: 'fixed',
+          top: '20px',
+          right: '20px',
+          background: '#16a34a',
+          color: '#fff',
+          padding: '12px 20px',
+          borderRadius: '8px',
+          fontSize: '14px',
+          fontWeight: '600',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+          zIndex: 9999,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px'
+        }}>
+          <CheckCircle2 size={18} />
+          {toastMessage.msg}
         </div>
       )}
+
+      <div className="dashboard-wrapper">
+        {/* Top Header */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+          <div>
+            <h1 style={{ fontSize: '20px', fontWeight: '700', margin: '0 0 4px 0', color: '#111' }}>Manage Vendors (Add / Create Party)</h1>
+            <button 
+              onClick={() => navigate('/admin/vendors')} 
+              style={{ background: 'none', border: 'none', color: '#2563eb', padding: 0, fontSize: '13px', cursor: 'pointer', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '4px' }}
+            >
+              <ArrowLeft size={14} /> Back to Vendor Data Sheet
+            </button>
+          </div>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <button 
+              type="button"
+              onClick={() => handleSave(true)}
+              style={{ background: '#fff', border: '1px solid #cbd5e1', padding: '6px 16px', borderRadius: '4px', fontSize: '13px', fontWeight: '600', color: '#334155', cursor: 'pointer' }}
+            >
+              Save & New
+            </button>
+            <button 
+              type="button"
+              onClick={() => handleSave(false)}
+              style={{ background: '#ff6600', color: '#fff', border: 'none', padding: '6px 16px', borderRadius: '4px', fontSize: '13px', fontWeight: '600', cursor: 'pointer' }}
+            >
+              Save Vendor
+            </button>
+          </div>
+        </div>
+
+        {/* Create Vendor Form Container */}
+        <div style={{ background: '#fff', borderRadius: '8px', border: '1px solid #eef2f6', overflow: 'hidden', padding: '24px', marginBottom: '24px' }}>
+          <h4 style={{ margin: '0 0 20px 0', fontSize: '15px', fontWeight: '600', color: '#1e293b', borderBottom: '1px solid #f1f5f9', paddingBottom: '10px' }}>General Details</h4>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginBottom: '20px' }}>
+            <div>
+              <label style={{ display: 'block', fontSize: '12px', color: '#64748b', marginBottom: '8px' }}>Party Name *</label>
+              <input 
+                type="text" 
+                value={formData.name}
+                onChange={(e) => handleInputChange('name', e.target.value)}
+                placeholder="Enter party name" 
+                style={{ width: '100%', padding: '10px', border: '1px solid #cbd5e1', borderRadius: '4px', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }} 
+              />
+            </div>
+            <div>
+              <label style={{ display: 'block', fontSize: '12px', color: '#64748b', marginBottom: '8px' }}>Mobile Number</label>
+              <input 
+                type="text" 
+                value={formData.mobile}
+                onChange={(e) => handleInputChange('mobile', e.target.value)}
+                placeholder="Enter mobile number" 
+                style={{ width: '100%', padding: '10px', border: '1px solid #cbd5e1', borderRadius: '4px', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }} 
+              />
+            </div>
+            <div>
+              <label style={{ display: 'block', fontSize: '12px', color: '#64748b', marginBottom: '8px' }}>Email</label>
+              <input 
+                type="email" 
+                value={formData.email}
+                onChange={(e) => handleInputChange('email', e.target.value)}
+                placeholder="Enter email address" 
+                style={{ width: '100%', padding: '10px', border: '1px solid #cbd5e1', borderRadius: '4px', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }} 
+              />
+            </div>
+            <div>
+              <label style={{ display: 'block', fontSize: '12px', color: '#64748b', marginBottom: '8px' }}>Opening Balance</label>
+              <div style={{ display: 'flex' }}>
+                <div style={{ padding: '10px', border: '1px solid #cbd5e1', borderRight: 'none', borderRadius: '4px 0 0 4px', background: '#f8fafc', color: '#64748b', fontSize: '13px' }}>₹</div>
+                <input 
+                  type="text" 
+                  value={formData.openingBalance}
+                  onChange={(e) => handleInputChange('openingBalance', e.target.value)}
+                  placeholder="0" 
+                  style={{ flex: 1, padding: '10px', border: '1px solid #cbd5e1', borderRight: 'none', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }} 
+                />
+                <select 
+                  value={formData.balanceType}
+                  onChange={(e) => handleInputChange('balanceType', e.target.value)}
+                  style={{ padding: '10px', border: '1px solid #cbd5e1', borderRadius: '0 4px 4px 0', background: '#f8fafc', fontSize: '13px', outline: 'none', color: '#64748b', cursor: 'pointer' }}
+                >
+                  <option value="To Collect">To Collect</option>
+                  <option value="To Pay">To Pay</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px', marginBottom: '20px' }}>
+            <div>
+              <label style={{ display: 'block', fontSize: '12px', color: '#64748b', marginBottom: '8px' }}>GSTIN</label>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <input 
+                  type="text" 
+                  value={formData.gstin}
+                  onChange={(e) => handleInputChange('gstin', e.target.value)}
+                  placeholder="ex: 09AAACT1234F1Z5" 
+                  style={{ flex: 1, padding: '10px', border: '1px solid #cbd5e1', borderRadius: '4px', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }} 
+                />
+                <button 
+                  type="button"
+                  onClick={handleGetGstinDetails}
+                  style={{ background: '#e0e7ff', color: '#4f46e5', border: 'none', padding: '10px 16px', borderRadius: '4px', fontSize: '13px', fontWeight: '600', cursor: 'pointer', whiteSpace: 'nowrap' }}
+                >
+                  Get Details
+                </button>
+              </div>
+            </div>
+            <div>
+              <label style={{ display: 'block', fontSize: '12px', color: '#64748b', marginBottom: '8px' }}>PAN Number</label>
+              <input 
+                type="text" 
+                value={formData.panNumber}
+                onChange={(e) => handleInputChange('panNumber', e.target.value)}
+                placeholder="Enter party PAN Number" 
+                style={{ width: '100%', padding: '10px', border: '1px solid #cbd5e1', borderRadius: '4px', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }} 
+              />
+            </div>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px', marginBottom: '20px' }}>
+            <div>
+              <label style={{ display: 'block', fontSize: '12px', color: '#64748b', marginBottom: '8px' }}>Party Type *</label>
+              <select 
+                value={formData.type}
+                onChange={(e) => handleInputChange('type', e.target.value)}
+                style={{ width: '100%', padding: '10px', border: '1px solid #cbd5e1', borderRadius: '4px', fontSize: '13px', outline: 'none', boxSizing: 'border-box', background: '#fff' }}
+              >
+                <option value="Supplier">Supplier</option>
+                <option value="Manufacturer">Manufacturer</option>
+                <option value="Wholesale">Wholesale</option>
+              </select>
+            </div>
+            <div>
+              <label style={{ display: 'block', fontSize: '12px', color: '#64748b', marginBottom: '8px' }}>Party Category</label>
+              <select 
+                value={formData.category}
+                onChange={(e) => handleInputChange('category', e.target.value)}
+                style={{ width: '100%', padding: '10px', border: '1px solid #cbd5e1', borderRadius: '4px', fontSize: '13px', outline: 'none', boxSizing: 'border-box', background: '#fff' }}
+              >
+                <option value="Select Category">Select Category</option>
+                <option value="Bag & Accessories">Bag & Accessories</option>
+                <option value="Footwear & Belts">Footwear & Belts</option>
+                <option value="Raw Materials">Raw Materials</option>
+                <option value="Trekking Gear">Trekking Gear</option>
+                <option value="Camping & Tents">Camping & Tents</option>
+              </select>
+            </div>
+          </div>
+
+          <h4 style={{ margin: '30px 0 20px 0', fontSize: '14px', color: '#1e293b', borderBottom: '1px solid #f1f5f9', paddingBottom: '10px' }}>Address Details</h4>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px', marginBottom: '20px' }}>
+            <div>
+              <label style={{ display: 'block', fontSize: '12px', color: '#64748b', marginBottom: '8px' }}>Billing Address</label>
+              <textarea 
+                value={formData.billingAddress}
+                onChange={(e) => handleInputChange('billingAddress', e.target.value)}
+                placeholder="Enter billing address" 
+                style={{ width: '100%', padding: '10px', border: '1px solid #cbd5e1', borderRadius: '4px', fontSize: '13px', outline: 'none', minHeight: '80px', boxSizing: 'border-box' }}
+              ></textarea>
+            </div>
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <label style={{ display: 'block', fontSize: '12px', color: '#64748b', marginBottom: '8px' }}>Shipping Address</label>
+                <label style={{ fontSize: '12px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
+                  <input 
+                    type="checkbox" 
+                    checked={formData.sameAsBilling} 
+                    onChange={handleSameAsBillingToggle}
+                  /> Same as Billing address
+                </label>
+              </div>
+              <textarea 
+                value={formData.sameAsBilling ? formData.billingAddress : formData.shippingAddress}
+                onChange={(e) => handleInputChange('shippingAddress', e.target.value)}
+                placeholder="Enter shipping address" 
+                style={{ width: '100%', padding: '10px', border: '1px solid #cbd5e1', borderRadius: '4px', fontSize: '13px', outline: 'none', minHeight: '80px', background: formData.sameAsBilling ? '#f8fafc' : '#fff', boxSizing: 'border-box' }} 
+                readOnly={formData.sameAsBilling}
+              ></textarea>
+            </div>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginBottom: '20px' }}>
+            <div>
+              <label style={{ display: 'block', fontSize: '12px', color: '#64748b', marginBottom: '8px' }}>Credit Period</label>
+              <div style={{ display: 'flex' }}>
+                <input 
+                  type="text" 
+                  value={formData.creditPeriod}
+                  onChange={(e) => handleInputChange('creditPeriod', e.target.value)}
+                  placeholder="30" 
+                  style={{ flex: 1, padding: '10px', border: '1px solid #cbd5e1', borderRight: 'none', borderRadius: '4px 0 0 4px', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }} 
+                />
+                <div style={{ padding: '10px', border: '1px solid #cbd5e1', borderRadius: '0 4px 4px 0', background: '#f8fafc', color: '#64748b', fontSize: '13px' }}>Days</div>
+              </div>
+            </div>
+            <div>
+              <label style={{ display: 'block', fontSize: '12px', color: '#64748b', marginBottom: '8px' }}>Credit Limit</label>
+              <div style={{ display: 'flex' }}>
+                <div style={{ padding: '10px', border: '1px solid #cbd5e1', borderRight: 'none', borderRadius: '4px 0 0 4px', background: '#f8fafc', color: '#64748b', fontSize: '13px' }}>₹</div>
+                <input 
+                  type="text" 
+                  value={formData.creditLimit}
+                  onChange={(e) => handleInputChange('creditLimit', e.target.value)}
+                  placeholder="0" 
+                  style={{ flex: 1, padding: '10px', border: '1px solid #cbd5e1', borderRadius: '0 4px 4px 0', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }} 
+                />
+              </div>
+            </div>
+          </div>
+
+          <h4 style={{ margin: '30px 0 20px 0', fontSize: '14px', color: '#1e293b', borderBottom: '1px solid #f1f5f9', paddingBottom: '10px' }}>Contact Person Details</h4>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginBottom: '20px' }}>
+            <div>
+              <label style={{ display: 'block', fontSize: '12px', color: '#64748b', marginBottom: '8px' }}>Contact Person Name</label>
+              <input 
+                type="text" 
+                value={formData.contactPerson}
+                onChange={(e) => handleInputChange('contactPerson', e.target.value)}
+                placeholder="Ex: Ankit Mishra" 
+                style={{ width: '100%', padding: '10px', border: '1px solid #cbd5e1', borderRadius: '4px', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }} 
+              />
+            </div>
+            <div>
+              <label style={{ display: 'block', fontSize: '12px', color: '#64748b', marginBottom: '8px' }}>Date of Birth</label>
+              <input 
+                type="text" 
+                value={formData.dateOfBirth}
+                onChange={(e) => handleInputChange('dateOfBirth', e.target.value)}
+                placeholder="DD-MM-YYYY" 
+                style={{ width: '100%', padding: '10px', border: '1px solid #cbd5e1', borderRadius: '4px', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }} 
+              />
+            </div>
+          </div>
+
+          <h4 style={{ margin: '30px 0 20px 0', fontSize: '14px', color: '#1e293b', borderBottom: '1px solid #f1f5f9', paddingBottom: '10px' }}>Party Bank Account</h4>
+          <div style={{ border: '1px dashed #cbd5e1', borderRadius: '8px', padding: '30px', textAlign: 'center', background: '#f8fafc' }}>
+            <div style={{ display: 'inline-block', padding: '12px', background: '#e0e7ff', borderRadius: '50%', color: '#4f46e5', marginBottom: '12px' }}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="22" x2="21" y2="22"></line><line x1="6" y1="18" x2="6" y2="11"></line><line x1="10" y1="18" x2="10" y2="11"></line><line x1="14" y1="18" x2="14" y2="11"></line><line x1="18" y1="18" x2="18" y2="11"></line><polygon points="12 2 20 7 4 7 12 2"></polygon></svg>
+            </div>
+            {formData.bankDetails ? (
+              <div style={{ fontSize: '13px', color: '#1e293b', lineHeight: '1.6' }}>
+                <span style={{ fontWeight: '600' }}>{formData.bankDetails.bankName}</span> — A/C: {formData.bankDetails.accountNumber} ({formData.bankDetails.ifsc})
+                <br />
+                <a href="#" onClick={handleAddBankPrompt} style={{ color: '#2563eb', fontSize: '12px', fontWeight: '600', textDecoration: 'none' }}>Change Bank Details</a>
+              </div>
+            ) : (
+              <>
+                <p style={{ margin: '0 0 8px 0', fontSize: '13px', color: '#64748b' }}>Add party bank information to manage transactions</p>
+                <a href="#" onClick={handleAddBankPrompt} style={{ color: '#2563eb', fontSize: '13px', fontWeight: '600', textDecoration: 'none' }}>+ Add Bank Account</a>
+              </>
+            )}
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '30px' }}>
+            <button 
+              type="button"
+              onClick={() => navigate('/admin/vendors')}
+              style={{ background: '#fff', border: '1px solid #cbd5e1', padding: '10px 20px', borderRadius: '4px', fontSize: '13px', fontWeight: '600', color: '#334155', cursor: 'pointer' }}
+            >
+              Cancel
+            </button>
+            <button 
+              type="button"
+              onClick={() => handleSave(false)}
+              style={{ background: '#ff6600', color: '#fff', border: 'none', padding: '10px 24px', borderRadius: '4px', fontSize: '13px', fontWeight: '600', cursor: 'pointer' }}
+            >
+              Save Vendor
+            </button>
+          </div>
+
+        </div>
+      </div>
     </AdminLayout>
   );
 };

@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./BannerSection.css";
+import { offerAPI } from "../services/api";
+import { getBannerSettings, BANNER_SETTINGS_EVENT } from "../services/bannerSettings";
 
-const banners = [
+const defaultBanners = [
   {
     id: 1,
     image:
@@ -40,8 +42,76 @@ const banners = [
 ];
 
 const BannerSection = () => {
+  const [banners, setBanners] = useState(() => {
+    const homeConfig = getBannerSettings().home;
+    if (homeConfig && (homeConfig.image || homeConfig.title)) {
+      return [{
+        id: 1,
+        image: homeConfig.image || defaultBanners[0].image,
+        title: homeConfig.title || defaultBanners[0].title,
+        subtitle: homeConfig.subtitle || defaultBanners[0].subtitle,
+      }];
+    }
+    const saved = getBannerSettings().homeExplore?.banners;
+    return Array.isArray(saved) && saved.length > 0 ? saved : defaultBanners;
+  });
   const [currentBanner, setCurrentBanner] = useState(0);
   const touchStartX = useRef(null);
+
+  useEffect(() => {
+    const handleUpdate = (e) => {
+      const homeConfig = e.detail?.home || getBannerSettings().home;
+      if (homeConfig && (homeConfig.image || homeConfig.title)) {
+        setBanners([{
+          id: 1,
+          image: homeConfig.image || defaultBanners[0].image,
+          title: homeConfig.title || defaultBanners[0].title,
+          subtitle: homeConfig.subtitle || defaultBanners[0].subtitle,
+        }]);
+        return;
+      }
+      const updated = e.detail?.homeExplore?.banners || getBannerSettings().homeExplore?.banners;
+      if (Array.isArray(updated) && updated.length > 0) {
+        setBanners(updated);
+      }
+    };
+    window.addEventListener(BANNER_SETTINGS_EVENT, handleUpdate);
+    window.addEventListener("storage", handleUpdate);
+    return () => {
+      window.removeEventListener(BANNER_SETTINGS_EVENT, handleUpdate);
+      window.removeEventListener("storage", handleUpdate);
+    };
+  }, []);
+
+  useEffect(() => {
+    let mounted = true;
+    const customBanners = getBannerSettings().homeExplore?.banners;
+    const hasCustom = localStorage.getItem("dzire_page_banners_settings");
+
+    if (!hasCustom) {
+      offerAPI
+        .getAll()
+        .then((res) => {
+          if (mounted && res && res.success && Array.isArray(res.offers)) {
+            const activeOffers = res.offers.filter((o) => o.status !== "Inactive");
+            if (activeOffers.length > 0) {
+              const mapped = activeOffers.map((o, idx) => ({
+                id: o.id || o._id || idx,
+                image: o.bannerImage || o.image || defaultBanners[idx % defaultBanners.length].image,
+                title: o.title || o.name || "Special Offer",
+                subtitle: o.description || o.subtitle || (o.code ? `Use coupon code: ${o.code}` : "Exclusive limited-time discount at Dzire Store"),
+              }));
+              setBanners(mapped);
+            }
+          }
+        })
+        .catch(() => {});
+    }
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const goToPrev = () => {
     setCurrentBanner((prev) =>
@@ -56,6 +126,7 @@ const BannerSection = () => {
   };
 
   useEffect(() => {
+    if (banners.length <= 1) return;
     const interval = setInterval(() => {
       setCurrentBanner((prev) =>
         prev === banners.length - 1 ? 0 : prev + 1
@@ -63,7 +134,7 @@ const BannerSection = () => {
     }, 5000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [banners.length]);
 
   const handleTouchStart = (event) => {
     touchStartX.current = event.touches[0].clientX;

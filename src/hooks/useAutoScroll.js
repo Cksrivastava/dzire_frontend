@@ -3,9 +3,14 @@ import { useEffect, useRef, useState } from "react";
 export const useAutoScroll = (containerRef, scrollNextFn, delay = 10000, inactivityDelay = 10000) => {
   const [isPaused, setIsPaused] = useState(false);
   const isCursorInside = useRef(false);
+  const isPausedRef = useRef(false);
   const inactivityTimer = useRef(null);
   const autoScrollTimer = useRef(null);
   const scrollNextRef = useRef(scrollNextFn);
+
+  useEffect(() => {
+    isPausedRef.current = isPaused;
+  }, [isPaused]);
 
   // Keep scrollNextRef up to date with the latest callback
   useEffect(() => {
@@ -54,19 +59,19 @@ export const useAutoScroll = (containerRef, scrollNextFn, delay = 10000, inactiv
 
     const handleMouseEnter = () => {
       isCursorInside.current = true;
-      setIsPaused(true);
+      setIsPaused((prev) => (!prev ? true : prev));
       resetInactivityTimer();
     };
 
     const handleMouseLeave = () => {
       isCursorInside.current = false;
       if (inactivityTimer.current) clearTimeout(inactivityTimer.current);
-      setIsPaused(false);
+      setIsPaused((prev) => (prev ? false : prev));
     };
 
     const handleMouseMove = () => {
       if (!isCursorInside.current) return;
-      if (!isPaused) {
+      if (!isPausedRef.current) {
         setIsPaused(true);
       }
       resetInactivityTimer();
@@ -83,5 +88,5 @@ export const useAutoScroll = (containerRef, scrollNextFn, delay = 10000, inactiv
       if (inactivityTimer.current) clearTimeout(inactivityTimer.current);
       stopAutoScroll();
     };
-  }, [containerRef, isPaused]);
+  }, [containerRef]);
 };

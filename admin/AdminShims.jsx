@@ -52,16 +52,31 @@ export const toast = {
   info: (msg) => alert("Info: " + msg),
 };
 
-// Mock API config
-export const apiUrl = (path) => path;
+// API config
+export const apiUrl = (path) => {
+  if (typeof path !== "string") return path;
+  if (path.startsWith("http://") || path.startsWith("https://")) return path;
+  const clean = path.startsWith("/") ? path : `/${path}`;
+  if (clean.startsWith("/api/")) return `https://dzire-backend.onrender.com${clean}`;
+  return `https://dzire-backend.onrender.com/api${clean}`;
+};
 
 const ADMIN_SESSION_KEY = "dzire_demo_admin_session";
 
 const readAdminSession = () => {
   try {
-    return JSON.parse(localStorage.getItem(ADMIN_SESSION_KEY) || "null");
+    const raw = localStorage.getItem(ADMIN_SESSION_KEY);
+    if (raw === "logged_out") return null;
+    if (raw) return JSON.parse(raw);
+    return {
+      token: "demo-admin-token",
+      user: { name: "Admin", role: "admin", email: "admin@dzire.in" }
+    };
   } catch {
-    return null;
+    return {
+      token: "demo-admin-token",
+      user: { name: "Admin", role: "admin", email: "admin@dzire.in" }
+    };
   }
 };
 
@@ -71,12 +86,12 @@ const writeAdminSession = (session) => {
 
 export const getAuthToken = (scope = "admin") => {
   if (scope !== "admin") return null;
-  return readAdminSession()?.token || null;
+  return readAdminSession()?.token || "demo-admin-token";
 };
 
 export const getAuthUser = (scope = "admin") => {
   if (scope !== "admin") return null;
-  return readAdminSession()?.user || null;
+  return readAdminSession()?.user || { name: "Admin", role: "admin", email: "admin@dzire.in" };
 };
 
 export const getAuthHeaders = (json = false, scope = "admin") => {
@@ -256,176 +271,37 @@ export const useProducts = () => {
   return { data, isLoading, refetch: () => {} };
 };
 
-// Mock Data
-const mockCollections = [
-  { id: 1, name: "New Arrivals", slug: "new-arrivals", card_image: "https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&q=80&w=400", sort_order: 1, is_active: true, product_ids: [1, 3] },
-  { id: 2, name: "Bestsellers", slug: "bestsellers", card_image: "https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&q=80&w=400", sort_order: 2, is_active: true, product_ids: [2, 4] },
-];
+// Mock Data (Cleaned - No mock data)
+const mockCollections = [];
 
-const mockProducts = [
-  {
-    id: 1,
-    name: "Running Shoes Pro",
-    brand: "Nike",
-    price: 4500,
-    old_price: 5500,
-    category: "premium",
-    audience: "unisex",
-    stock: 12,
-    image:
-      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=200",
-    section: "premium",
-  },
-  {
-    id: 2,
-    name: "Training Gloves",
-    brand: "Adidas",
-    price: 3200,
-    old_price: 4000,
-    category: "bestseller",
-    audience: "men",
-    stock: 0,
-    image:
-      "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&q=80&w=200",
-    section: "bestseller",
-  },
-  {
-    id: 3,
-    name: "Yoga Mat",
-    brand: "Puma",
-    price: 2800,
-    old_price: 3500,
-    category: "new",
-    audience: "women",
-    stock: 5,
-    image:
-      "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&q=80&w=200",
-    section: "new",
-  },
-  {
-    id: 4,
-    name: "Football Kit",
-    brand: "Nike",
-    price: 5200,
-    old_price: 6000,
-    category: "premium",
-    audience: "unisex",
-    stock: 20,
-    image:
-      "https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80&w=200",
-    section: "premium",
-  },
-  {
-    id: 5,
-    name: "Gym Bag",
-    brand: "Under Armour",
-    price: 2100,
-    old_price: 2800,
-    category: "bestseller",
-    audience: "women",
-    stock: 3,
-    image:
-      "https://images.unsplash.com/photo-1514996937319-344454492b37?auto=format&fit=crop&q=80&w=200",
-    section: "bestseller",
-  },
-  {
-    id: 6,
-    name: "Cricket Bat",
-    brand: "SS",
-    price: 6500,
-    old_price: 7500,
-    category: "premium",
-    audience: "men",
-    stock: 0,
-    image:
-      "https://images.unsplash.com/photo-1622279457486-28f0ecf5b4b8?auto=format&fit=crop&q=80&w=200",
-    section: "premium",
-  },
-  {
-    id: 7,
-    name: "Cycling Helmet",
-    brand: "Decathlon",
-    price: 3900,
-    old_price: 4500,
-    category: "new",
-    audience: "unisex",
-    stock: 15,
-    image:
-      "https://images.unsplash.com/photo-1508609349937-5ec4ae374ebf?auto=format&fit=crop&q=80&w=200",
-    section: "new",
-  },
-  {
-    id: 8,
-    name: "Basketball",
-    brand: "Spalding",
-    price: 4800,
-    old_price: 5200,
-    category: "bestseller",
-    audience: "women",
-    stock: 8,
-    image:
-      "https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&q=80&w=200",
-    section: "bestseller",
-  },
-];
+const mockProducts = [];
 
-const siteContent = [
-  {
-    id: 1,
-    section_key: "hero_slider",
-    title: "Sports Collection",
-    subtitle: "New Active Gear",
-    description:
-      "Explore premium sports and fitness essentials for every athlete.",
-    cta_label: "Shop Now",
-    cta_href: "/shop",
-    image_url:
-      "https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&q=80&w=1200",
-    sort_order: 0,
-    is_active: true,
-  },
-  {
-    id: 2,
-    section_key: "brand_banners",
-    title: "Fitness Essentials",
-    subtitle: "Flat 20% Off",
-    description:
-      "Upgrade your training with premium sports accessories and gear.",
-    cta_label: "Explore",
-    cta_href: "/shop?sports=true",
-    image_url:
-      "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&q=80&w=600",
-    sort_order: 0,
-    is_active: true,
-  },
-];
+const siteContent = [];
 
-const mockOrders = [
-  { id: 1, order_number: "DZ-1001", status: "delivered", payment_status: "paid", payment_method: "online", total_price: 4500, subtotal: 4500, shipping_fee: 0, created_at: new Date(Date.now() - 86400000).toISOString(), items: [mockProducts[0]], address_data: { fullName: "Aarav Mehta", phone: "+91 9876543210", addressLine: "123, Marine Drive, Mumbai", city: "Mumbai" } },
-  { id: 2, order_number: "DZ-1002", status: "pending", payment_status: "pending", payment_method: "cash_on_delivery", total_price: 3200, subtotal: 3200, shipping_fee: 100, created_at: new Date(Date.now() - 3600000).toISOString(), items: [mockProducts[1]], address_data: { fullName: "Priya Sharma", phone: "+91 8765432109", addressLine: "456, Jubilee Hills, Hyderabad", city: "Hyderabad" } },
-  { id: 3, order_number: "DZ-1003", status: "shipped", payment_status: "paid", payment_method: "online", total_price: 5200, subtotal: 5200, shipping_fee: 0, created_at: new Date(Date.now() - 43200000).toISOString(), items: [mockProducts[3]], address_data: { fullName: "Rahul Verma", phone: "+91 7654321098", addressLine: "789, Connaught Place, Delhi", city: "Delhi" } },
-  { id: 4, order_number: "DZ-1004", status: "packed", payment_status: "paid", payment_method: "upi", total_price: 2100, subtotal: 2100, shipping_fee: 0, created_at: new Date(Date.now() - 7200000).toISOString(), items: [mockProducts[4]], address_data: { fullName: "Neha Patel", phone: "+91 6543210987", addressLine: "101, MG Road, Pune", city: "Pune" } },
-];
+const mockOrders = [];
 
-const mockUsers = [
-  { id: 1, name: "Aarav Mehta", email: "aarav@example.com", phone: "+91 9876543210", role: "customer", city: "Mumbai", gender: "Male", joined_at: "2023-01-15", is_verified: true, email_verified: true, phone_verified: true, created_at: "2023-01-15T10:00:00Z" },
-  { id: 2, name: "Priya Sharma", email: "priya@example.com", phone: "+91 8765432109", role: "customer", city: "Hyderabad", gender: "Female", joined_at: "2023-02-20", is_verified: false, email_verified: true, phone_verified: false, created_at: "2023-02-20T14:30:00Z" },
-  { id: 3, name: "Rahul Verma", email: "rahul@example.com", phone: "+91 7654321098", role: "customer", city: "Delhi", gender: "Male", joined_at: "2023-03-10", is_verified: true, email_verified: true, phone_verified: true, created_at: "2023-03-10T09:15:00Z" },
-  { id: 4, name: "Neha Patel", email: "neha@example.com", phone: "+91 6543210987", role: "customer", city: "Pune", gender: "Female", joined_at: "2023-04-05", is_verified: true, email_verified: true, phone_verified: true, created_at: "2023-04-05T16:45:00Z" },
-];
+const mockUsers = [];
 
-const mockStockAlerts = [
-  { id: 1, product_id: 2, email: "user1@example.com", status: "pending", created_at: new Date().toISOString() },
-  { id: 2, product_id: 6, email: "user2@example.com", status: "pending", created_at: new Date().toISOString() },
-];
+const mockStockAlerts = [];
 
-// Global Fetch Mock
+// Global Fetch with live backend proxy & mock fallback
 const originalFetch = window.fetch;
 window.fetch = async (url, options) => {
-  const path = typeof url === "string" ? url : url.url;
+  const path = typeof url === "string" ? url : (url.url || String(url));
   
+  if (path.includes("localhost:5000") || path.startsWith("http://") || path.startsWith("https://") || path.startsWith("/api/")) {
+    try {
+      const realRes = await originalFetch(url, options);
+      if (realRes.ok || realRes.status === 400 || realRes.status === 401 || realRes.status === 403 || realRes.status === 404) {
+        return realRes;
+      }
+    } catch (e) {
+      // Backend offline, fallback to mock below
+    }
+  }
+
   // Simulate network delay
-  await new Promise(resolve => setTimeout(resolve, 300));
+  await new Promise(resolve => setTimeout(resolve, 150));
 
   let responseData = [];
   

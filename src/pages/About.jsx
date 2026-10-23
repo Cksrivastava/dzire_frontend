@@ -1,18 +1,64 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import "./About.css";
 import aboutImg from "../assets/about.jpeg";
 import aboutVideo from "../assets/about.mp4";
+import { getBannerSettings, BANNER_SETTINGS_EVENT } from "../services/bannerSettings";
 
 const About = () => {
+  const [aboutConfig, setAboutConfig] = useState(() => getBannerSettings().about);
+
+  useEffect(() => {
+    const handleUpdate = (e) => {
+      if (e.detail?.about) {
+        setAboutConfig(e.detail.about);
+      } else {
+        setAboutConfig(getBannerSettings().about);
+      }
+    };
+    window.addEventListener(BANNER_SETTINGS_EVENT, handleUpdate);
+    window.addEventListener("storage", handleUpdate);
+    return () => {
+      window.removeEventListener(BANNER_SETTINGS_EVENT, handleUpdate);
+      window.removeEventListener("storage", handleUpdate);
+    };
+  }, []);
+
   return (
     <>
       <Navbar />
 
       {/* TOP IMAGE */}
-      <div className="about-image">
-        <img src={aboutImg} alt="About Dzire Store" />
+      <div className="about-image" style={{ position: "relative" }}>
+        <img src={aboutConfig?.image || aboutConfig?.topBannerImage || aboutImg} alt="About Dzire Store" />
+        {(aboutConfig?.title || aboutConfig?.subtitle) && (
+          <div
+            style={{
+              position: "absolute",
+              bottom: "20px",
+              left: "30px",
+              backgroundColor: "rgba(15, 23, 42, 0.72)",
+              backdropFilter: "blur(6px)",
+              padding: "16px 24px",
+              borderRadius: "10px",
+              color: "#ffffff",
+              maxWidth: "600px",
+              border: "1px solid rgba(255, 255, 255, 0.15)",
+            }}
+          >
+            {aboutConfig?.title && (
+              <h1 style={{ fontSize: "26px", fontWeight: "800", margin: "0 0 6px 0", color: "#ffffff" }}>
+                {aboutConfig.title}
+              </h1>
+            )}
+            {aboutConfig?.subtitle && (
+              <p style={{ margin: 0, fontSize: "14px", color: "rgba(255, 255, 255, 0.92)", lineHeight: "1.4" }}>
+                {aboutConfig.subtitle}
+              </p>
+            )}
+          </div>
+        )}
       </div>
 
       {/* ROOTS SECTION */}
@@ -20,14 +66,14 @@ const About = () => {
         <div className="about-story-grid">
           <div className="about-story-left">
             <img
-              src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80"
+              src={aboutConfig?.rootsImage || "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80"}
               alt="Dzire Store roots"
               className="about-story-img about-story-img-main"
             />
           </div>
 
           <div className="about-story-right">
-            <h2 className="about-story-title">OUR ROOTS</h2>
+            <h2 className="about-story-title">{aboutConfig?.rootsTitle || "OUR ROOTS"}</h2>
 
             <p>
               Welcome to Dzire Store – your trusted destination for outdoor gear, trekking equipment, and travel accessories in India. Whether you’re heading for a Himalayan trek, a weekend hike in the Sahyadris, or simply looking for durable everyday travel essentials, Dzire Store has you covered.
@@ -44,7 +90,7 @@ const About = () => {
 
           <div className="about-story-bottom-image">
             <img
-              src="https://images.unsplash.com/photo-1464823063530-08f10ed1a2dd?auto=format&fit=crop&w=1200&q=80"
+              src={aboutConfig?.bottomJourneyImage || "https://images.unsplash.com/photo-1464823063530-08f10ed1a2dd?auto=format&fit=crop&w=1200&q=80"}
               alt="Dzire Store adventure journey"
               className="about-story-img about-story-img-overlay"
             />

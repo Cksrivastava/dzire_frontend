@@ -2,10 +2,7 @@ import { cn, Button, Input, AuthShell, toast, apiUrl, getAuthHeaders, getAuthTok
 import { useEffect, useMemo, useState } from "react";
 import { AlertTriangle, BellRing, PackageSearch, RefreshCcw } from "lucide-react";
 import { Link } from "react-router-dom";
-
-
-
-
+import ExportDropdown from "../components/ExportDropdown";
 import AdminLayout from "./AdminLayout";
 const formatDateTime = (value) => value ? new Date(value).toLocaleString() : "-";
 const formatCurrency = (value) => `${Number(value || 0).toLocaleString()} Rs`;
@@ -361,10 +358,25 @@ const AdminOutOfStock = () => {
             Live database view of every product whose stock has reached zero. This updates from the same backend stock values used by orders, admin, and the customer storefront.
           </p>
         </div>
-        <button className="admin-primary-button" type="button" onClick={() => window.location.reload()}>
-          <RefreshCcw size={18} />
-          Refresh Data
-        </button>
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+          <ExportDropdown
+            fileName="Out_Of_Stock_Products_Report"
+            title="Out of Stock Products Inventory Report"
+            headers={['Product Name', 'Brand', 'Category', 'Price', 'Pending Alerts Count', 'Last Updated']}
+            rows={products.map((p) => [
+              p.name || '',
+              p.brand || '',
+              getCategoryLabel(p.category),
+              formatCurrency(p.price),
+              String(p.pending_alerts || 0),
+              formatDateTime(p.updated_at)
+            ])}
+          />
+          <button className="admin-primary-button" type="button" onClick={() => window.location.reload()}>
+            <RefreshCcw size={18} />
+            Refresh Data
+          </button>
+        </div>
       </section>
 
       <section className="admin-out-metrics">

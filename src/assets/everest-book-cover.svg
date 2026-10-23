@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 850" width="100%" height="100%">
+  <defs>
+    <!-- Background Mountain Gradient -->
+    <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0c2340"/>
+      <stop offset="40%" stop-color="#1e3a5f"/>
+      <stop offset="70%" stop-color="#4a709c"/>
+      <stop offset="100%" stop-color="#8faecb"/>
+    </linearGradient>
+
+    <!-- Snow Peak Gradient -->
+    <linearGradient id="snowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="60%" stop-color="#e2e8f0"/>
+      <stop offset="100%" stop-color="#cbd5e1"/>
+    </linearGradient>
+
+    <!-- Mountain Shadow Gradient -->
+    <linearGradient id="shadowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+
+    <linearGradient id="ridgeShadow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#000000" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </linearGradient>
+
+    <linearGradient id="bookSpineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#09131f"/>
+      <stop offset="70%" stop-color="#1b2a3a"/>
+      <stop offset="90%" stop-color="#ffffff" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.4"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Main Cover Background -->
+  <rect x="0" y="0" width="600" height="850" fill="url(#skyGrad)"/>
+
+  <!-- Clouds / Sky Atmosphere -->
+  <path d="M0,280 Q150,260 300,290 T600,270 L600,380 L0,380 Z" fill="#ffffff" opacity="0.15"/>
+  <path d="M0,320 Q200,300 400,330 T600,310 L600,450 L0,450 Z" fill="#ffffff" opacity="0.2"/>
+
+  <!-- Distant Mountains -->
+  <polygon points="50,480 180,350 280,480" fill="#2d4263" opacity="0.7"/>
+  <polygon points="320,480 440,320 580,480" fill="#1b2a47" opacity="0.8"/>
+
+  <!-- Main Everest Peak (Center-Right background) -->
+  <polygon points="120,450 310,180 500,450" fill="url(#shadowGrad)"/>
+  <polygon points="310,180 310,450 500,450" fill="url(#snowGrad)"/>
+  <!-- Peak Shading Texture -->
+  <path d="M310,180 L250,280 L310,320 L220,420 L310,450" fill="none" stroke="#1e293b" stroke-width="4"/>
+  <polygon points="310,180 340,240 310,280 370,360 310,450" fill="#ffffff" opacity="0.9"/>
+
+  <!-- Foreground Snowy West Ridge -->
+  <polygon points="-50,850 260,380 650,850" fill="url(#snowGrad)"/>
+  <!-- Left Side Ridge Shadow -->
+  <polygon points="-50,850 260,380 280,850" fill="url(#shadowGrad)" opacity="0.85"/>
+
+  <!-- Ridge Crest Line & Snow Flurries -->
+  <path d="M260,380 C280,460 210,580 310,850" stroke="#94a3b8" stroke-width="3" fill="none"/>
+  <path d="M260,380 L320,440 L290,520 L380,630 L310,850" stroke="#e2e8f0" stroke-width="5" fill="none"/>
+
+  <!-- Climber Silhouette on the Ridge -->
+  <!-- Red jacket climber -->
+  <circle cx="360" cy="560" r="5" fill="#ef4444"/> <!-- Head/Helmet -->
+  <path d="M356,565 L364,565 L366,585 L354,585 Z" fill="#dc2626"/> <!-- Body / Backpack -->
+  <path d="M358,585 L355,600 M362,585 L365,600" stroke="#1e293b" stroke-width="3"/> <!-- Legs -->
+  <path d="M352,572 L345,582" stroke="#1e293b" stroke-width="2"/> <!-- Trekking pole -->
+
+  <!-- Top Dark Blue Header Banner for Text -->
+  <rect x="0" y="0" width="600" height="230" fill="#0b192c" opacity="0.92"/>
+
+  <!-- Top Tagline -->
+  <text x="300" y="45" font-family="'Inter', 'Arial', sans-serif" font-size="14" font-weight="700" fill="#d1d5db" text-anchor="middle" letter-spacing="3">THE DEFINITIVE ACCOUNT</text>
+  <text x="300" y="68" font-family="'Inter', 'Arial', sans-serif" font-size="14" font-weight="700" fill="#d1d5db" text-anchor="middle" letter-spacing="3">OF THE GREATEST CLIMB</text>
+
+  <!-- Horizontal Line Accent -->
+  <line x1="200" y1="85" x2="400" y2="85" stroke="#94a3b8" stroke-width="1" opacity="0.5"/>
+
+  <!-- Main Book Title -->
+  <text x="300" y="142" font-family="'Montserrat', 'Arial Black', sans-serif" font-size="54" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="4">EVEREST</text>
+  <text x="300" y="185" font-family="'Montserrat', 'Arial Black', sans-serif" font-size="28" font-weight="800" fill="#f8fafc" text-anchor="middle" letter-spacing="6">THE WEST RIDGE</text>
+
+  <!-- Bottom Overlay Banner for Author -->
+  <rect x="0" y="720" width="600" height="130" fill="#09131f" opacity="0.95"/>
+
+  <!-- Author Name -->
+  <text x="300" y="765" font-family="'Montserrat', 'Arial Black', sans-serif" font-size="28" font-weight="800" fill="#ffffff" text-anchor="middle" letter-spacing="4">THOMAS HORNBEIN</text>
+  <text x="300" y="800" font-family="'Inter', 'Arial', sans-serif" font-size="14" font-weight="700" fill="#fb923c" text-anchor="middle" letter-spacing="2">WITH A NEW FOREWORD BY CONRAD ANKER</text>
+
+  <!-- Publisher Logo Accent (Bottom Left) -->
+  <g transform="translate(45, 750)">
+    <path d="M0,0 L15,-10 L30,0 L30,25 L15,15 L0,25 Z" fill="#ffffff" opacity="0.9"/>
+    <circle cx="15" cy="5" r="4" fill="#09131f"/>
+  </g>
+
+  <!-- 3D Book Spine Overlay (Left Edge Effect) -->
+  <rect x="0" y="0" width="35" height="850" fill="url(#bookSpineGrad)"/>
+  <line x1="35" y1="0" x2="35" y2="850" stroke="#000000" stroke-width="1.5" opacity="0.4"/>
+</svg>

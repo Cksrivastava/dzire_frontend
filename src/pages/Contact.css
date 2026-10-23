@@ -1,147 +1,408 @@
-:root {
-  --primary: #ff6600;
-  --primary-hover: #e65c00;
-  --dark: #111;
-  --text: #222;
-  --muted: #666;
-  --bg: #f8f8f8;
-}
+/* ==========================================================================
+   CONTACT PAGE STYLES - MODERN HIGH-END LAYOUT MATCHING MOCKUP & BRAND PALETTE
+   ========================================================================== */
 
-.contact-page {
+.contact-page-wrapper {
   width: 100%;
-  background: #fff;
-  padding: 26px 22px 45px;
+  background-color: #f8fafc;
+  min-height: 100vh;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #1e293b;
+  box-sizing: border-box;
 }
 
-.contact-top {
-  max-width: 1250px;
-  margin: 0 auto 36px;
-  display: grid;
-  grid-template-columns: 1fr 1.25fr;
-  gap: 24px;
-  align-items: start;
+/* --------------------------------------------------------------------------
+   1. HERO BANNER (#023341 TO #0b7c80 GRADIENT)
+   -------------------------------------------------------------------------- */
+.contact-hero-banner {
+  background: linear-gradient(135deg, #023341 0%, #055462 50%, #0b7c80 100%);
+  color: #ffffff;
+  padding: 48px 24px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
 }
 
-.contact-info-card {
-  background: #fff;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
+.contact-hero-container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 32px;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 2;
 }
 
-.info-block {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
+.contact-hero-container h1 {
+  font-size: 38px;
+  font-weight: 800;
+  margin: 0 0 12px 0;
+  letter-spacing: -0.02em;
+  color: #ffffff;
 }
 
-.icon-circle {
-  width: 44px;
-  height: 44px;
-  min-width: 44px;
-  border-radius: 50%;
-  background: #fff5ef;
-  color: var(--primary);
-  display: flex;
+.contact-breadcrumb {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  font-size: 20px;
+  gap: 8px;
+  font-size: 14px;
+  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 6px 16px;
+  border-radius: 20px;
+  backdrop-filter: blur(4px);
 }
 
-.info-block h3 {
-  margin: 0 0 5px;
-  font-size: 17px;
-  color: var(--dark);
+.contact-breadcrumb a {
+  color: #cbd5e1;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.contact-breadcrumb a:hover {
+  color: #ff6600;
+}
+
+.contact-breadcrumb .breadcrumb-sep {
+  color: #64748b;
+}
+
+.contact-breadcrumb span {
+  color: #ff6600;
   font-weight: 600;
 }
 
-.info-block p {
-  margin: 0 0 5px;
-  color: var(--muted);
-  line-height: 1.6;
+/* --------------------------------------------------------------------------
+   2. MAIN CONTAINER & TWO-COLUMN GRID
+   -------------------------------------------------------------------------- */
+.contact-main-container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 24px 32px 20px;
+  box-sizing: border-box;
+}
+
+.contact-grid-section {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 32px;
+  margin-bottom: 28px;
+  align-items: stretch;
+}
+
+/* --------------------------------------------------------------------------
+   3. LEFT COLUMN: CONTACT FORM CARD
+   -------------------------------------------------------------------------- */
+.contact-form-card {
+  background: #ffffff;
+  border-radius: 20px;
+  border: 1px solid #e2e8f0;
+  padding: 36px 32px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+}
+
+.form-header {
+  margin-bottom: 24px;
+}
+
+.form-header h2 {
+  font-size: 26px;
+  font-weight: 800;
+  color: #023341;
+  margin: 0 0 10px 0;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+}
+
+.form-header p {
   font-size: 14px;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.6;
 }
 
-.whatsapp-btn {
-  width: 220px;
-  display: inline-block;
-  margin-top: 8px;
-  margin-right: 10px;
-  background: var(--primary);
-  color: #fff;
-  text-decoration: none;
-  padding: 8px 14px;
-  font-size: 12px;
-  font-weight: 700;
-  border-radius: 18px;
-  letter-spacing: 0.3px;
-}
-
-.whatsapp-btn:hover {
-  background: var(--primary-hover);
-}
-
-.map-card {
-  position: relative;
-  background: #fff;
+.form-success-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
   border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+}
+
+.form-success-banner h4 {
+  margin: 0 0 4px 0;
+  font-size: 16px;
+  color: #166534;
+}
+
+.form-success-banner p {
+  margin: 0;
+  font-size: 13.5px;
+  color: #15803d;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-row-two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-size: 14px;
+  color: #0f172a;
+  font-family: inherit;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  outline: none;
+  border-color: #ff6600;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.12);
+}
+
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+  color: #94a3b8;
+}
+
+.contact-submit-btn {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #ff6600;
+  color: #ffffff;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 12px rgba(255, 102, 0, 0.25);
+}
+
+.contact-submit-btn:hover {
+  background: #ea580c;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(234, 88, 12, 0.35);
+}
+
+/* Social Media Row */
+.social-media-follow {
+  margin-top: auto;
+  padding-top: 20px;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.social-media-follow span {
+  font-size: 14px;
+  font-weight: 700;
+  color: #334155;
+}
+
+.social-icons-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.social-icon-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border: 1px solid #e2e8f0;
+}
+
+.social-icon-btn:hover {
+  transform: translateY(-2px);
+  background: #ff6600;
+  color: #ffffff;
+  border-color: #ff6600;
+  box-shadow: 0 4px 10px rgba(255, 102, 0, 0.25);
+}
+
+/* --------------------------------------------------------------------------
+   4. RIGHT COLUMN: CONTACT DETAILS CARD (#0b7c80 TO #023341 BRAND GRADIENT)
+   -------------------------------------------------------------------------- */
+.contact-details-card {
+  background: linear-gradient(135deg, #0b7c80 0%, #065b63 50%, #023341 100%);
+  border-radius: 20px;
+  padding: 36px 32px;
+  color: #ffffff;
+  box-shadow: 0 10px 30px rgba(11, 124, 128, 0.28);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.details-title {
+  font-size: 26px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 24px 0;
+  letter-spacing: -0.01em;
+}
+
+.contact-details-vertical-list {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  flex: 1 !important;
+  gap: 16px !important;
+  grid-template-columns: none !important;
+}
+
+.detail-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+}
+
+.detail-icon-circle {
+  width: 56px;
+  height: 56px;
+  min-width: 56px;
+  border-radius: 50%;
+  background: #fcf5e3;
+  color: #023341;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease;
+}
+
+.detail-item:hover .detail-icon-circle {
+  transform: scale(1.08);
+}
+
+.detail-info h4 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 6px 0;
+}
+
+.detail-info p {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.94);
+  margin: 0;
+  line-height: 1.55;
+}
+
+.detail-info .closed-tag {
+  color: #fcf5e3;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   5. FULL WIDTH GOOGLE MAP SECTION
+   -------------------------------------------------------------------------- */
+.contact-map-section {
+  background: #ffffff;
+  border-radius: 20px;
+  border: 1px solid #e2e8f0;
+  padding: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  margin-bottom: 0;
   overflow: hidden;
-  min-height: 400px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+/* --------------------------------------------------------------------------
+   6. INSTAGRAM COMMUNITY & GALLERY SECTION
+   -------------------------------------------------------------------------- */
+.contact-instagram-section {
+  background: #ffffff;
+  border-radius: 20px;
+  border: 1px solid #e2e8f0;
+  padding: 32px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
 }
 
 .store-social-header {
-  max-width: 1250px;
-  margin: 0 auto 22px;
+  margin-bottom: 24px;
 }
 
 .store-brand-row {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 8px 6px;
+  gap: 16px;
 }
 
 .store-mini-logo {
-  width: 60px;
-  height: 36px;
-  border-radius: 6px;
-  background: var(--dark);
-  color: #fff;
+  width: 56px;
+  height: 38px;
+  border-radius: 8px;
+  background: #ff6600;
+  color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
-  text-transform: lowercase;
+  font-weight: 800;
+  font-size: 15px;
 }
 
 .store-brand-row h2 {
   margin: 0;
-  font-size: 24px;
-  color: var(--dark);
+  font-size: 22px;
+  font-weight: 800;
+  color: #0f172a;
 }
 
 .store-brand-row p {
-  margin: 3px 0 0;
-  color: var(--muted);
-  font-size: 13px;
+  margin: 4px 0 0;
+  color: #64748b;
+  font-size: 13.5px;
 }
 
 .gallery-grid {
-  max-width: 1250px;
-  margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 12px;
+  gap: 14px;
 }
 
 .gallery-item {
   display: block;
-  background: #fff;
-  border-radius: 4px;
+  background: #f1f5f9;
+  border-radius: 12px;
   overflow: hidden;
   text-decoration: none;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
@@ -149,81 +410,94 @@
 
 .gallery-item:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
 .gallery-item img {
   width: 100%;
-  height: 200px;
+  height: 190px;
   object-fit: cover;
   display: block;
 }
 
 .gallery-buttons {
-  max-width: 1250px;
-  margin: 24px auto 0;
+  margin-top: 28px;
   display: flex;
   justify-content: center;
-  gap: 14px;
+  gap: 16px;
   flex-wrap: wrap;
 }
 
 .load-more-btn {
-  border: none;
-  background: var(--dark);
-  color: #fff;
-  padding: 11px 20px;
-  border-radius: 4px;
-  font-size: 12px;
+  border: 1px solid #0f172a;
+  background: #0f172a;
+  color: #ffffff;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-size: 13px;
   font-weight: 700;
-  letter-spacing: 0.8px;
+  letter-spacing: 0.5px;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .load-more-btn:hover {
-  background: var(--primary);
+  background: #ff6600;
+  border-color: #ff6600;
 }
 
 .instagram-btn {
   text-decoration: none;
-  background: var(--primary);
-  color: #fff;
-  padding: 11px 18px;
-  border-radius: 4px;
+  background: #ff6600;
+  color: #ffffff;
+  padding: 12px 24px;
+  border-radius: 10px;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(255, 102, 0, 0.2);
 }
 
 .instagram-btn:hover {
-  background: var(--primary-hover);
+  background: #ea580c;
+  box-shadow: 0 6px 16px rgba(234, 88, 12, 0.3);
 }
 
-@media (max-width: 1100px) {
-  .contact-top {
+/* --------------------------------------------------------------------------
+   7. RESPONSIVE BREAKPOINTS
+   -------------------------------------------------------------------------- */
+@media (max-width: 992px) {
+  .contact-grid-section {
     grid-template-columns: 1fr;
   }
 
   .gallery-grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
-@media (max-width: 768px) {
-  .contact-page {
-    padding: 16px 10px 30px;
+@media (max-width: 640px) {
+  .contact-hero-banner {
+    padding: 36px 16px;
   }
 
-  .contact-info-card {
+  .contact-hero-container h1 {
+    font-size: 28px;
+  }
+
+  .contact-main-container {
+    padding: 16px 16px 40px;
+  }
+
+  .contact-form-card,
+  .contact-details-card,
+  .contact-instagram-section {
+    padding: 24px 18px;
+    border-radius: 16px;
+  }
+
+  .form-row-two {
     grid-template-columns: 1fr;
-    padding: 16px;
-  }
-
-  .map-card {
-    min-height: 300px;
-  }
-
-  .store-brand-row h2 {
-    font-size: 20px;
   }
 
   .gallery-grid {
@@ -232,16 +506,10 @@
   }
 
   .gallery-item img {
-    height: 170px;
-  }
-}
-
-@media (max-width: 480px) {
-  .gallery-grid {
-    grid-template-columns: 1fr;
+    height: 150px;
   }
 
-  .gallery-item img {
-    height: 220px;
+  .contact-submit-btn {
+    width: 100%;
   }
 }

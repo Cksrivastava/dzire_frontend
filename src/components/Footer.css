@@ -243,17 +243,18 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 14px;
   flex-shrink: 0;
   width: 170px;
   min-width: 170px;
+  align-self: center;
 }
 
 .fp-logo {
-  height: 68px;
+  height: 48px;
   width: auto;
   object-fit: contain;
-  margin-left: -10px; /* Shift logo left slightly to align visual start of 'dzire' with column and icons */
+  margin-left: -5px;
+  /* Shift logo left slightly to align visual start of 'dzire' with column and icons */
 }
 
 .fp-tagline {
@@ -265,7 +266,7 @@
 
 .fp-socials {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   margin-top: 6px;
 }
 
@@ -273,8 +274,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   border: 1.5px solid rgba(255, 255, 255, 0.22);
   background-color: transparent;
@@ -460,6 +461,12 @@
   flex-wrap: wrap;
 }
 
+@media (max-width: 992px) {
+  .fp-bottom-inner {
+    padding-bottom: 75px !important;
+  }
+}
+
 .fp-bottom-copy {
   font-size: 13px;
   font-weight: 500;
@@ -629,11 +636,13 @@
     align-items: flex-start;
     min-width: 135px;
     gap: 12px;
+    align-self: center;
   }
 
   .fp-brand-col .fp-logo {
-    height: 40px;
-    margin-left: -8px !important; /* Shift logo left slightly to align visually */
+    height: 38px;
+    margin-left: -8px !important;
+    /* Shift logo left slightly to align visually */
   }
 
   .fp-socials {
@@ -642,8 +651,8 @@
   }
 
   .fp-social-btn {
-    width: 34px;
-    height: 34px;
+    width: 30px;
+    height: 30px;
   }
 
   /* ── 4 columns side by side ── */
@@ -781,7 +790,7 @@
   }
 
   .fp-mob-logo {
-    height: 72px;
+    height: 48px;
     width: auto;
     object-fit: contain;
   }
@@ -938,7 +947,7 @@
     border-top: 1px solid rgba(255, 255, 255, .08);
   }
 
-  /* ── Bottom bar: ORANGE on mobile ── */
+  /* ── Bottom bar: Mobile Reordered ── */
   .fp-bottom-bar {
     background-color: #000000;
     padding: 0;
@@ -948,62 +957,66 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
-    padding: 10px 16px 14px;
-    gap: 0;
+    padding: 16px 16px 80px;
+    gap: 12px;
   }
 
-  /* Copyright */
-  .fp-bottom-copy {
-    font-size: 13px;
-    font-weight: 400;
-    color: #ffffff;
-    padding: 8px 0 6px;
-    width: 100%;
-  }
-
-  /* Divider line between copyright and policies */
-  .fp-bottom-copy::after {
-    content: "";
-    display: block;
-    width: 100%;
-    height: 1px;
-    background: rgba(255, 255, 255, .1);
-    margin-top: 8px;
-  }
-
-  /* Policies */
-  .fp-bottom-policies {
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 8px 0;
-  }
-
-  .fp-bottom-policies a {
-    color: #ffffff;
-    font-size: 13px;
-  }
-
-  .fp-policy-sep {
-    color: rgba(255, 255, 255, .6);
-  }
-
-  /* Payment */
+  /* Payment badges at top of mobile bottom bar */
   .fp-bottom-payment {
+    order: 1;
     flex-direction: column;
     gap: 6px;
-    padding-top: 8px;
+    padding-top: 0;
+    margin-bottom: 4px;
   }
 
   .fp-accept-text {
     color: #ffffff;
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 13.5px;
+    letter-spacing: 0.3px;
   }
 
   .fp-payment-badges {
     justify-content: center;
+    gap: 10px;
   }
 
   .fp-badge-img {
-    height: 30px;
+    height: 28px;
+  }
+
+  /* Policies in middle */
+  .fp-bottom-policies {
+    order: 2;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 4px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    width: 100%;
+    padding-top: 10px;
+  }
+
+  .fp-bottom-policies a {
+    color: #ffffff;
+    font-size: 12.5px;
+  }
+
+  .fp-policy-sep {
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  /* Copyright at bottom */
+  .fp-bottom-copy {
+    order: 3;
+    font-size: 12px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.7);
+    padding: 2px 0 0;
+    width: 100%;
+  }
+
+  .fp-bottom-copy::after {
+    display: none;
   }
 }

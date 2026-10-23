@@ -205,7 +205,6 @@ th {
   line-height: 1.4;
 }
 
-/* Centering and standard container sizing for all pages to match navbar/home page */
 .product-page,
 .wildcraft-page,
 .wishlist-page,
@@ -225,8 +224,6 @@ th {
 .booking-page,
 .od-page,
 .account-container,
-.auth-page,
-.auth-wrapper,
 .register-page,
 .register-container,
 .event-detail-page,
@@ -239,7 +236,7 @@ th {
 .store-pickup-container,
 .shipping-policy-page {
   width: 100% !important;
-  max-width: 1300px !important;
+  max-width: 900px !important;
 }
 
 @media (min-width: 769px) {
@@ -263,8 +260,6 @@ th {
   .booking-page,
   .od-page,
   .account-container,
-  .auth-page,
-  .auth-wrapper,
   .register-page,
   .register-container,
   .event-detail-page,
@@ -279,6 +274,13 @@ th {
     padding-left: 32px !important;
     padding-right: 32px !important;
   }
+}
+
+@media (min-width: 1200px) {
+    .product-page, .wildcraft-page, .wishlist-page, .wishlist-wrapper, .cart-page, .cart-container, .rental-page, .compare-page-wrapper, .privacy-page, .privacy-container, .terms-page, .terms-container, .returns-page, .returns-wrapper, .return-request-container, .rp-page, .booking-page, .od-page, .account-container, .register-page, .register-container, .event-detail-page, .classes-page, .event-container, .cookie-page, .cookie-container, .shop-page, .contact-page, .store-pickup-container, .shipping-policy-page {
+        padding-left: 155px !important;
+        padding-right: 155px !important;
+    }
 }
 
 /* Override global gray text color inside the banner cards */
@@ -297,42 +299,446 @@ body {
   max-width: 100%;
 }
 
-/* Mobile padding overrides for all page containers */
+/* Mobile padding overrides for all inner page content containers */
 @media (max-width: 768px) {
-  .product-page,
-  .wildcraft-page,
-  .wishlist-page,
+
   .wishlist-wrapper,
-  .cart-page,
   .cart-container,
-  .rental-page,
-  .compare-page-wrapper,
-  .privacy-page,
   .privacy-container,
-  .terms-page,
   .terms-container,
-  .returns-page,
   .returns-wrapper,
   .return-request-container,
   .rp-page,
   .booking-page,
   .od-page,
   .account-container,
-  .auth-page,
   .auth-wrapper,
-  .register-page,
   .register-container,
-  .event-detail-page,
-  .classes-page,
+  .classes-container,
   .event-container,
-  .cookie-page,
   .cookie-container,
-  .shop-page,
-  .contact-page,
+  .contact-container,
   .store-pickup-container,
-  .shipping-policy-page {
-    padding-left: 14px !important;
-    padding-right: 14px !important;
+  .shipping-policy-page,
+  .bookstore-container,
+  .book-detail-container,
+  .about-container,
+  .event-category-container,
+  .event-detail-container,
+  .rental-product-container,
+  .rental-booking-container,
+  .order-details-container,
+  .order-history-container,
+  .saved-addresses-container,
+  .wallet-loyalty-container,
+  .offers-coupons-container {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
   }
 }
 
+/* Similar Products Responsive Layout: 4 cards in laptop view, 2x2 grid per view with page-by-page swipe in mobile & tablet view */
+@media (min-width: 993px) {
+  .product-page-layout-wrapper .similar-products-slider {
+    display: flex !important;
+    gap: 16px !important;
+    overflow-x: auto !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    scrollbar-width: none !important;
+  }
+
+  .product-page-layout-wrapper .similar-products-slider .product-card,
+  .product-page-layout-wrapper .similar-products-slider .sim-card {
+    flex: 0 0 calc((100% - 48px) / 4) !important;
+    width: calc((100% - 48px) / 4) !important;
+    max-width: calc((100% - 48px) / 4) !important;
+    min-width: calc((100% - 48px) / 4) !important;
+    box-sizing: border-box !important;
+  }
+}
+
+@media (max-width: 992px) {
+  .product-page-layout-wrapper .similar-products-slider {
+    display: grid !important;
+    grid-template-rows: repeat(2, min-content) !important;
+    grid-auto-flow: column !important;
+    grid-auto-columns: calc((100% - 10px) / 2) !important;
+    gap: 12px 10px !important;
+    width: 100% !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    scroll-behavior: smooth !important;
+    -webkit-overflow-scrolling: touch !important;
+    touch-action: pan-x pan-y !important;
+    box-sizing: border-box !important;
+    scrollbar-width: none !important;
+    padding-bottom: 8px !important;
+  }
+
+  .product-page-layout-wrapper .similar-products-slider .sim-card {
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    scroll-snap-align: none !important;
+  }
+
+  /* Snap 2x2 grid page by page (cards 1, 5, 9...) */
+  .product-page-layout-wrapper .similar-products-slider .sim-card:nth-child(4n+1) {
+    scroll-snap-align: start !important;
+  }
+
+  .product-page-layout-wrapper .similar-products-slider::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .product-page-layout-wrapper .similar-products-slider::after {
+    display: none !important;
+  }
+}
+
+/* ==========================================================================
+   PAGE LAYOUT UNIFICATION (ALL PAGES)
+   Ensures equal margins and alignment for Header, all page sections, and Footer
+   ========================================================================== */
+
+/* Target all major page/section containers */
+.nav-container,
+.sec-nav-container,
+.categories,
+.product-sections-wrapper,
+.event-section-container,
+.blog-section-container,
+.reviews-container,
+.popular-searches-container,
+.fp-value-desktop,
+.fp-dark-inner,
+.fp-cards-inner,
+.fp-bottom-inner,
+.about-story-grid,
+.about-community-content,
+.about-responsibility-content,
+.about-video video,
+/* Outer Page Wrappers Reset (Prevents double padding nesting & ensures 0px edge padding) */
+.blog-detail-page,
+.blog-page,
+.category-products-page,
+.compare-page-wrapper,
+.contact-page,
+.cookie-page,
+.event-page,
+.classes-page,
+.event-detail-page,
+.register-page,
+.auth-page,
+.privacy-page,
+.rental-page,
+.booking-page,
+.product-page,
+.rp-page,
+.returns-page,
+.shipping-policy-page,
+.shop-page,
+.terms-page,
+.wishlist-page,
+.bookstore-page,
+.book-detail-page,
+.about-page,
+.event-category-page,
+.rental-product-page,
+.wildcraft-page {
+  width: 100% !important;
+  max-width: 100% !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* Unified Main Content Inner Containers - Aligns 100% Equal with Navbar */
+.nav-container,
+.sec-nav-container,
+.classes-container,
+.book-detail-container,
+.bookstore-container,
+.cart-container,
+.checkout-container,
+.account-container,
+.offers-content,
+.od-page,
+.order-history-content,
+.return-request-container,
+.addresses-content,
+.store-pickup-container,
+.wallet-content,
+.categories,
+.product-sections-wrapper,
+.event-section-container,
+.blog-section-container,
+.reviews-container,
+.popular-searches-container,
+.fp-value-desktop,
+.fp-dark-inner,
+.fp-cards-inner,
+.fp-bottom-inner,
+.about-story-grid,
+.about-community-content,
+.about-responsibility-content,
+.rental-page .main,
+.rental-page .banner-wrap,
+.dzire-sticky-bar-inner {
+  max-width: 1300px !important;
+  padding-left: 32px !important;
+  padding-right: 32px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Specific resets to prevent double padding or conflicts */
+.workout-section,
+.popular-section,
+.trending-showcase-section,
+.ways-to-save-section,
+.banner-section {
+  max-width: 100% !important;
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Ensure inner containers inside already padded wrappers do not get double padding */
+.product-sections-wrapper .price-cards-container,
+.product-sections-wrapper .trending-showcase-section,
+.product-sections-wrapper .ways-to-save-section,
+.product-sections-wrapper .banner-section,
+.categories .banner-section {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  max-width: 100% !important;
+}
+
+/* Product Page Layout Unification Resets - Aligns 100% Equal with Navbar */
+.product-page-layout-wrapper .product-page {
+  max-width: 1300px !important;
+  padding-left: 32px !important;
+  padding-right: 32px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+@media (min-width: 993px) {
+
+  .product-page-layout-wrapper .product-sticky-layout,
+  .product-page-layout-wrapper .wildcraft-grid.product-sticky-layout {
+    display: grid !important;
+    grid-template-columns: 1fr 400px !important;
+    gap: 0 !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .product-page-layout-wrapper .product-right-sticky {
+    width: 400px !important;
+    max-width: 400px !important;
+    min-width: 400px !important;
+    padding-left: 32px !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+  }
+}
+
+.product-page-layout-wrapper .product-left-column {
+  padding: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Compact Feature Badges (Premium Quality, Lightweight, Breathable, Ergonomic, Durability) */
+.product-page-layout-wrapper .feature-badges-strip {
+  gap: 6px !important;
+  padding: 5px 0 !important;
+  margin-top: 10px !important;
+}
+
+.product-page-layout-wrapper .feature-strip-badge {
+  padding: 4px 8px !important;
+  font-size: 11px !important;
+  gap: 5px !important;
+  border-radius: 6px !important;
+}
+
+.product-page-layout-wrapper .feature-strip-badge svg {
+  width: 12px !important;
+  height: 12px !important;
+}
+
+.product-page-layout-wrapper .product-breadcrumb,
+.product-page-layout-wrapper .product-mobile-header {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  width: 100% !important;
+}
+
+.product-page-layout-wrapper .product-lower-content,
+.product-page-layout-wrapper .fbt-section {
+  width: 100% !important;
+  max-width: 100% !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.similar-products-fullwidth-wrapper,
+.similar-products-section {
+  width: 100% !important;
+  max-width: 100% !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* Why Choose Dzire inner box reset */
+.fp-value-inner {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Mobile & Tablet Inner Container Overrides (<= 768px) */
+@media (max-width: 768px) {
+
+  .nav-container,
+  .sec-nav-container,
+  .categories,
+  .product-sections-wrapper,
+  .event-section-container,
+  .blog-section-container,
+  .reviews-container,
+  .popular-searches-container,
+  .fp-dark-inner,
+  .fp-cards-inner,
+  .fp-bottom-inner,
+  .about-story-grid,
+  .about-community-content,
+  .about-responsibility-content,
+  .about-video video,
+  .cart-container,
+  .checkout-container,
+  .account-container,
+  .classes-container,
+  .event-container,
+  .offers-content,
+  .od-page,
+  .order-history-content,
+  .privacy-container,
+  .rental-page .main,
+  .rental-page .banner-wrap,
+  .return-request-container,
+  .returns-wrapper,
+  .addresses-content,
+  .shipping-policy-page,
+  .store-pickup-container,
+  .terms-container,
+  .wallet-content,
+  .wishlist-wrapper,
+  .bookstore-container,
+  .book-detail-container,
+  .about-container,
+  .contact-container,
+  .event-category-container,
+  .event-detail-container,
+  .rental-product-container,
+  .rental-booking-container,
+  .order-details-container,
+  .order-history-container,
+  .saved-addresses-container,
+  .wallet-loyalty-container,
+  .offers-coupons-container,
+  .dzire-sticky-bar-inner {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  /* Force Outer Page Wrappers 0px padding on mobile */
+  .bookstore-page,
+  .product-page,
+  .shop-page,
+  .cart-page,
+  .rental-page,
+  .blog-page,
+  .blog-detail-page,
+  .event-page,
+  .event-category-page,
+  .event-detail-page,
+  .about-page,
+  .contact-page,
+  .privacy-page,
+  .terms-page,
+  .returns-page,
+  .wishlist-page,
+  .register-page,
+  .auth-page,
+  .cookie-page,
+  .book-detail-page,
+  .rental-product-page,
+  .wildcraft-page {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+
+/* Mobile Product Page Layout Clean Alignment (<= 768px) */
+@media (max-width: 768px) {
+  .product-page-layout-wrapper .product-page {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .product-page-layout-wrapper .product-breadcrumb,
+  .product-page-layout-wrapper .product-mobile-header {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    width: 100% !important;
+  }
+
+  .product-page-layout-wrapper .product-left-column,
+  .product-page-layout-wrapper .product-right-sticky,
+  .product-page-layout-wrapper .product-right-panel,
+  .product-page-layout-wrapper .wildcraft-panel,
+  .product-page-layout-wrapper .product-lower-content,
+  .product-page-layout-wrapper .fbt-section,
+  .product-page-layout-wrapper .similar-products-fullwidth-wrapper,
+  .product-page-layout-wrapper .similar-products-section {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    box-sizing: border-box !important;
+  }
+}

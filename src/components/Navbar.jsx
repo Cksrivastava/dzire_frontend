@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import {
   Menu,
   Search,
@@ -22,33 +22,17 @@ import {
   Tag,
   ChevronDown,
   ChevronUp,
+  Sparkles,
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
+import { PiPants } from "react-icons/pi";
 import "./Navbar.css";
 import logo from "../assets/logo.png";
+import { couponAPI, productAPI, eventAPI } from "../services/api";
+import wsClient from "../services/websocket";
 
-// Custom Trousers Icon component
-const Trousers = ({ size = 24, className = "" }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
-  >
-    <path d="M6 3h12l1 5-2 13h-3l-2-9-2 9H7L5 8Z" />
-    <path d="M6 8h12" />
-    <path d="M12 8v3" />
-  </svg>
-);
-
-const searchSuggestions = [
+const defaultSearchSuggestions = [
   "Polished Cycle",
   "Sports Shoes",
   "Camping Jacket",
@@ -61,6 +45,13 @@ const Navbar = () => {
   const [searchText, setSearchText] = useState("");
   const [showAnnouncement, setShowAnnouncement] = useState(false); // Default to false (hidden on load/refresh)
   const [closedManually, setClosedManually] = useState(false);
+  const [announcementCoupon, setAnnouncementCoupon] = useState(null);
+  const [searchSuggestions, setSearchSuggestions] = useState(defaultSearchSuggestions);
+  const [allProducts, setAllProducts] = useState([]);
+  const [allEvents, setAllEvents] = useState([]);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const searchContainerRef = useRef(null);
+  const searchInputRef = useRef(null);
 
   const [mobileSectionsOpen, setMobileSectionsOpen] = useState({
     categories: false,
@@ -79,6 +70,75 @@ const Navbar = () => {
 
   const navigate = useNavigate();
   const { cartCount, wishlistItems, compareItems = [], user, logoutUser } = useContext(ShopContext);
+
+  useEffect(() => {
+    let mounted = true;
+
+    couponAPI
+      .getAll()
+      .then((res) => {
+        if (mounted && res && res.success && Array.isArray(res.coupons) && res.coupons.length > 0) {
+          const active = res.coupons.find((c) => c.status === "Active");
+          if (active) setAnnouncementCoupon(active);
+        }
+      })
+      .catch(() => {});
+
+    const fetchProducts = () => {
+      productAPI
+        .getAll()
+        .then((res) => {
+          if (!mounted) return;
+          const prods = Array.isArray(res) ? res : (res?.products || []);
+          if (Array.isArray(prods)) {
+            setAllProducts(prods);
+            const names = prods.slice(0, 8).map((p) => p.name).filter(Boolean);
+            if (names.length > 0) setSearchSuggestions(names);
+          }
+        })
+        .catch(() => {});
+    };
+
+    const fetchEvents = () => {
+      eventAPI
+        .getAll()
+        .then((res) => {
+          if (!mounted) return;
+          const evts = Array.isArray(res) ? res : (res?.events || res?.data || []);
+          if (Array.isArray(evts)) {
+            setAllEvents(evts);
+          }
+        })
+        .catch(() => {});
+    };
+
+    fetchProducts();
+    fetchEvents();
+
+    const unsubProduct = wsClient?.on ? wsClient.on("PRODUCT_UPDATED", fetchProducts) : null;
+    const unsubEvents = wsClient?.on ? wsClient.on("EVENTS_UPDATED", fetchEvents) : null;
+
+    return () => {
+      mounted = false;
+      if (typeof unsubProduct === "function") unsubProduct();
+      if (typeof unsubEvents === "function") unsubEvents();
+    };
+  }, []);
+
+  // Close search dropdown on click outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(e.target)) {
+        setIsSearchOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
+  }, []);
 
   // Track if the user has scrolled down at least once
   const hasScrolledDown = React.useRef(false);
@@ -107,14 +167,77 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [closedManually]);
 
+  const trimmedSearch = searchText.trim().toLowerCase();
+
+  const allCategories = [
+    { name: "Top-Wear", path: "/shop?category=Top-Wear", type: "Category" },
+    { name: "Bottom-Wear", path: "/shop?category=Bottom-Wear", type: "Category" },
+    { name: "Foot-Wear", path: "/shop?category=Foot-Wear", type: "Category" },
+    { name: "Accessories", path: "/shop?category=Accessories", type: "Category" },
+    { name: "Camping", path: "/events/camping", type: "Activity" },
+    { name: "Cycling", path: "/events/cycling", type: "Activity" },
+    { name: "Climbing", path: "/events/climbing", type: "Activity" },
+    { name: "All Treks & Events", path: "/event", type: "Adventures" },
+  ];
+
+  const matchedCategories = trimmedSearch
+    ? allCategories.filter((c) => c.name.toLowerCase().includes(trimmedSearch))
+    : [];
+
+  const matchedProducts = trimmedSearch
+    ? allProducts
+        .filter(
+          (p) =>
+            (p.name && p.name.toLowerCase().includes(trimmedSearch)) ||
+            (p.category && p.category.toLowerCase().includes(trimmedSearch)) ||
+            (p.brand && p.brand.toLowerCase().includes(trimmedSearch))
+        )
+        .slice(0, 5)
+    : [];
+
+  const matchedEvents = trimmedSearch
+    ? allEvents
+        .filter(
+          (ev) =>
+            (ev.title && ev.title.toLowerCase().includes(trimmedSearch)) ||
+            (ev.category && ev.category.toLowerCase().includes(trimmedSearch)) ||
+            (ev.location && ev.location.toLowerCase().includes(trimmedSearch))
+        )
+        .slice(0, 4)
+    : [];
+
+  const trendingKeywords = [
+    "Trekking",
+    "Camping",
+    "Backpack",
+    "Yoga Mat",
+    "Shoes",
+    "Cycling",
+    "Climbing",
+    "Jacket",
+  ];
+
+  const handleSelectSuggestion = (text) => {
+    setSearchText(text);
+    setIsSearchOpen(false);
+    navigate(`/shop?search=${encodeURIComponent(text)}`);
+    setMenuOpen(false);
+  };
+
+  const handleNavigate = (path) => {
+    setIsSearchOpen(false);
+    navigate(path);
+    setMenuOpen(false);
+  };
+
   const handleSearch = (e) => {
     e.preventDefault();
 
     const finalSearch = searchText.trim();
 
     if (finalSearch) {
+      setIsSearchOpen(false);
       navigate(`/shop?search=${encodeURIComponent(finalSearch)}`);
-      setSearchText("");
       setMenuOpen(false);
     }
   };
@@ -133,11 +256,15 @@ const Navbar = () => {
             <div className="announcement-marquee-wrapper">
               <marquee behavior="scroll" direction="left" scrollamount="4">
                 <span className="announcement-text">
-                  Welcome to Dzire Store. Use code <span className="announcement-highlight">"WELCOME10"</span> & Get Flat <span className="announcement-highlight">10% OFF</span> on your 1st order.
+                  Welcome to Dzire Store. {announcementCoupon ? (
+                    <>Use code <span className="announcement-highlight">"{announcementCoupon.code}"</span> & Get <span className="announcement-highlight">{announcementCoupon.discountType === 'Percentage' || announcementCoupon.discountType === 'percent' ? `${announcementCoupon.discountValue}% OFF` : `₹${announcementCoupon.discountValue} OFF`}</span>{announcementCoupon.minOrderValue ? ` on orders above ₹${announcementCoupon.minOrderValue}` : ''}!</>
+                  ) : (
+                    <>Use code <span className="announcement-highlight">"WELCOME10"</span> & Get Flat <span className="announcement-highlight">10% OFF</span> on your 1st order.</>
+                  )}
                 </span>
                 <span className="announcement-separator">•</span>
                 <span className="announcement-text">
-                  Free Shipping on orders above <span className="announcement-highlight">₹999!</span>
+                  Free Shipping on orders above <span className="announcement-highlight">₹{announcementCoupon?.minOrderValue || 999}!</span>
                 </span>
                 <span className="announcement-separator">•</span>
                 <span className="announcement-text">
@@ -173,16 +300,221 @@ const Navbar = () => {
               </Link>
             </div>
 
-            <form className="nav-search" onSubmit={handleSearch}>
-              <Search size={18} className="search-icon-left" />
-              <input
-                type="text"
-                placeholder="I am searching for..."
-                value={searchText}
-                onChange={(e) => setSearchText(e.target.value)}
-              />
-              <button type="submit" className="search-btn">Search</button>
-            </form>
+            <div className="nav-search-wrapper" ref={searchContainerRef}>
+              <form className="nav-search" onSubmit={handleSearch}>
+                <Search size={18} className="search-icon-left" />
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  placeholder="I am searching for..."
+                  value={searchText}
+                  onChange={(e) => {
+                    setSearchText(e.target.value);
+                    if (!isSearchOpen) setIsSearchOpen(true);
+                  }}
+                  onFocus={() => setIsSearchOpen(true)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Escape") {
+                      setIsSearchOpen(false);
+                    }
+                  }}
+                />
+                {searchText.trim().length > 0 && (
+                  <button
+                    type="button"
+                    className="nav-search-clear-btn"
+                    onClick={() => {
+                      setSearchText("");
+                      searchInputRef.current?.focus();
+                    }}
+                    aria-label="Clear search"
+                  >
+                    <X size={15} />
+                  </button>
+                )}
+                <button type="submit" className="search-btn">Search</button>
+              </form>
+
+              {isSearchOpen && (
+                <div className="nav-search-dropdown">
+                  <div className="nav-search-results-scroll">
+                    {!trimmedSearch ? (
+                      <>
+                        <div className="nav-search-section-title">
+                          <Sparkles size={13} /> Trending Searches
+                        </div>
+                        <div className="nav-search-trending-chips">
+                          {trendingKeywords.map((kw, idx) => (
+                            <button
+                              key={idx}
+                              type="button"
+                              className="nav-search-trending-chip"
+                              onClick={() => handleSelectSuggestion(kw)}
+                            >
+                              <Search size={12} />
+                              {kw}
+                            </button>
+                          ))}
+                        </div>
+                        {allEvents.length > 0 && (
+                          <>
+                            <div className="nav-search-section-title" style={{ marginTop: "10px" }}>
+                              <Compass size={13} /> Popular Adventures
+                            </div>
+                            {allEvents.slice(0, 3).map((ev) => {
+                              const evImg = ev.image || (Array.isArray(ev.images) && ev.images[0]) || "";
+                              return (
+                                <div
+                                  key={ev._id || ev.id}
+                                  className="nav-search-item"
+                                  onClick={() => handleNavigate(`/event/${ev.slug || ev._id || ev.id}`)}
+                                >
+                                  {evImg ? (
+                                    <img src={evImg} alt={ev.title} className="nav-search-item-img" />
+                                  ) : (
+                                    <div className="nav-search-item-img-placeholder">⛺</div>
+                                  )}
+                                  <div className="nav-search-item-info">
+                                    <div className="nav-search-item-name">{ev.title}</div>
+                                    <div className="nav-search-item-sub">
+                                      <span className="nav-search-item-badge">Event</span>
+                                      {ev.location && <span>• {ev.location}</span>}
+                                    </div>
+                                  </div>
+                                  <span className="nav-search-item-price">₹{ev.price}</span>
+                                </div>
+                              );
+                            })}
+                          </>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        {matchedCategories.length > 0 && (
+                          <>
+                            <div className="nav-search-section-title">
+                              <Tag size={13} /> Categories & Activities
+                            </div>
+                            {matchedCategories.map((cat, idx) => (
+                              <div
+                                key={idx}
+                                className="nav-search-tag-chip"
+                                onClick={() => handleNavigate(cat.path)}
+                              >
+                                <Search size={14} style={{ color: "#ff6600" }} />
+                                <span>{cat.name}</span>
+                                <span className="nav-search-item-badge" style={{ marginLeft: "auto" }}>
+                                  {cat.type}
+                                </span>
+                              </div>
+                            ))}
+                          </>
+                        )}
+
+                        {matchedEvents.length > 0 && (
+                          <>
+                            <div
+                              className="nav-search-section-title"
+                              style={{ marginTop: matchedCategories.length > 0 ? "8px" : "0" }}
+                            >
+                              <Compass size={13} /> Events & Adventures ({matchedEvents.length})
+                            </div>
+                            {matchedEvents.map((ev) => {
+                              const evImg = ev.image || (Array.isArray(ev.images) && ev.images[0]) || "";
+                              return (
+                                <div
+                                  key={ev._id || ev.id}
+                                  className="nav-search-item"
+                                  onClick={() => handleNavigate(`/event/${ev.slug || ev._id || ev.id}`)}
+                                >
+                                  {evImg ? (
+                                    <img src={evImg} alt={ev.title} className="nav-search-item-img" />
+                                  ) : (
+                                    <div className="nav-search-item-img-placeholder">⛺</div>
+                                  )}
+                                  <div className="nav-search-item-info">
+                                    <div className="nav-search-item-name">{ev.title}</div>
+                                    <div className="nav-search-item-sub">
+                                      <span className="nav-search-item-badge">Event</span>
+                                      {ev.location && <span>• {ev.location}</span>}
+                                    </div>
+                                  </div>
+                                  <span className="nav-search-item-price">₹{ev.price}</span>
+                                </div>
+                              );
+                            })}
+                          </>
+                        )}
+
+                        {matchedProducts.length > 0 && (
+                          <>
+                            <div
+                              className="nav-search-section-title"
+                              style={{
+                                marginTop:
+                                  matchedCategories.length > 0 || matchedEvents.length > 0
+                                    ? "8px"
+                                    : "0",
+                              }}
+                            >
+                              <Shirt size={13} /> Products ({matchedProducts.length})
+                            </div>
+                            {matchedProducts.map((p) => {
+                              const pImg = p.image || (Array.isArray(p.images) && p.images[0]) || "";
+                              const pPrice = p.salePrice || p.price || 0;
+                              return (
+                                <div
+                                  key={p._id || p.id}
+                                  className="nav-search-item"
+                                  onClick={() => handleNavigate(`/product/${p._id || p.id}`)}
+                                >
+                                  {pImg ? (
+                                    <img src={pImg} alt={p.name} className="nav-search-item-img" />
+                                  ) : (
+                                    <div className="nav-search-item-img-placeholder">📦</div>
+                                  )}
+                                  <div className="nav-search-item-info">
+                                    <div className="nav-search-item-name">{p.name}</div>
+                                    <div className="nav-search-item-sub">
+                                      {p.category && (
+                                        <span className="nav-search-item-badge">{p.category}</span>
+                                      )}
+                                      {p.brand && <span>• {p.brand}</span>}
+                                    </div>
+                                  </div>
+                                  <span className="nav-search-item-price">₹{pPrice}</span>
+                                </div>
+                              );
+                            })}
+                          </>
+                        )}
+
+                        {matchedCategories.length === 0 &&
+                          matchedEvents.length === 0 &&
+                          matchedProducts.length === 0 && (
+                            <div className="nav-search-empty-state">
+                              <span>No direct matches found</span>
+                              Try checking your spelling or search our full catalog below.
+                            </div>
+                          )}
+                      </>
+                    )}
+                  </div>
+
+                  {trimmedSearch && (
+                    <div
+                      className="nav-search-footer-action"
+                      onClick={() => handleSelectSuggestion(searchText.trim())}
+                    >
+                      <span>
+                        View all results for "<strong>{searchText}</strong>"
+                      </span>
+                      <ChevronRight size={15} />
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
 
             <div className="nav-right">
               <a
@@ -197,41 +529,41 @@ const Navbar = () => {
                 <span>Find a Store</span>
               </a>
 
-              <Link to="/login" className="nav-item account-link">
+              <Link to={user ? "/profile" : "/login?redirectTo=/profile"} className="nav-item account-link">
                 <div className="nav-icon-wrapper">
                   <User size={22} />
                 </div>
-                <span>{user ? "Account" : "Account"}</span>
+                <span>Account</span>
               </Link>
 
-              <Link to="/cart" className="nav-item cart-link">
+              <Link to={user ? "/cart" : "/login?redirectTo=/cart"} className="nav-item cart-link">
                 <div className="nav-icon-wrapper">
                   <ShoppingCart size={22} />
-                  {cartCount > 0 && (
+                  {user && cartCount > 0 && (
                     <span className="nav-badge cart-badge">{cartCount}</span>
                   )}
                 </div>
                 <span>Cart</span>
               </Link>
 
-              <Link to="/wishlist" className="nav-item wishlist-link">
+              <Link to={user ? "/wishlist" : "/login?redirectTo=/wishlist"} className="nav-item wishlist-link">
                 <div className="nav-icon-wrapper">
                   <Heart
                     size={22}
-                    fill={wishlistItems.length > 0 ? "#ff3333" : "transparent"}
-                    color={wishlistItems.length > 0 ? "#ff3333" : "currentColor"}
+                    fill={user && wishlistItems.length > 0 ? "#ff3333" : "transparent"}
+                    color={user && wishlistItems.length > 0 ? "#ff3333" : "currentColor"}
                   />
-                  {wishlistItems.length > 0 && (
+                  {user && wishlistItems.length > 0 && (
                     <span className="nav-badge">{wishlistItems.length}</span>
                   )}
                 </div>
                 <span>Wishlist</span>
               </Link>
 
-              <Link to="/compare" className="nav-item compare-link">
+              <Link to={user ? "/compare" : "/login?redirectTo=/compare"} className="nav-item compare-link">
                 <div className="nav-icon-wrapper">
                   <RefreshCw size={21} />
-                  {compareItems.length > 0 && (
+                  {user && compareItems.length > 0 && (
                     <span className="nav-badge compare-badge">{compareItems.length}</span>
                   )}
                 </div>
@@ -268,7 +600,7 @@ const Navbar = () => {
                 </Link>
                 <Link to="/shop?category=Bottom-Wear" className="cat-dropdown-item">
                   <div className="cat-item-left">
-                    <Trousers size={16} className="cat-item-icon" />
+                    <PiPants size={16} className="cat-item-icon" />
                     <span>Bottom-Wear</span>
                   </div>
                   <ChevronRight size={14} className="cat-chevron" />
@@ -294,7 +626,7 @@ const Navbar = () => {
                   </div>
                   <ChevronRight size={14} className="cat-chevron" />
                 </Link>
-                <Link to="/shop?category=Books" className="cat-dropdown-item">
+                <Link to="/bookstore" className="cat-dropdown-item">
                   <div className="cat-item-left">
                     <BookOpen size={16} className="cat-item-icon" />
                     <span>Book Store</span>
@@ -421,7 +753,7 @@ const Navbar = () => {
                 <span>Top-Wear</span>
               </Link>
               <Link to="/shop?category=Bottom-Wear" onClick={() => setMenuOpen(false)}>
-                <Trousers size={16} />
+                <PiPants size={16} />
                 <span>Bottom-Wear</span>
               </Link>
               <Link to="/shop?category=Foot-Wear" onClick={() => setMenuOpen(false)}>
@@ -436,7 +768,7 @@ const Navbar = () => {
                 <Watch size={16} />
                 <span>Accessories</span>
               </Link>
-              <Link to="/shop?category=Books" onClick={() => setMenuOpen(false)}>
+              <Link to="/bookstore" onClick={() => setMenuOpen(false)}>
                 <BookOpen size={16} />
                 <span>Book Store</span>
               </Link>
@@ -510,7 +842,7 @@ const Navbar = () => {
           {/* 7. COMMUNITY */}
           <div className={`mobile-menu-accordion-item mobile-menu-community-item ${mobileSectionsOpen.community ? "is-open" : ""}`}>
             <button className="mobile-menu-accordion-head" onClick={() => toggleMobileSection("community")}>
-              <span>Community</span>
+              <span>COMMUNITY</span>
               {mobileSectionsOpen.community ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
             </button>
             <div className="mobile-menu-accordion-body">
@@ -523,7 +855,7 @@ const Navbar = () => {
           {/* 8. DZIRE */}
           <div className={`mobile-menu-accordion-item ${mobileSectionsOpen.dzire ? "is-open" : ""}`}>
             <button className="mobile-menu-accordion-head" onClick={() => toggleMobileSection("dzire")}>
-              <span>Dzire</span>
+              <span>DZIRE</span>
               {mobileSectionsOpen.dzire ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
             </button>
             <div className="mobile-menu-accordion-body">
@@ -540,15 +872,9 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* 10. Quick Access Links */}
-          <div className="mobile-menu-quick-access">
-            <Link to="/login" className="mobile-quick-link" onClick={() => setMenuOpen(false)}>
-              <div className="mobile-quick-icon">
-                <User size={20} />
-              </div>
-              <span>Account</span>
-              <ChevronRight size={16} className="mobile-quick-chevron" />
-            </Link>
+          {/* 10. ACCOUNT Link (Matching 100% with menu items) */}
+          <div className="mobile-menu-direct-link">
+            <Link to={user ? "/profile" : "/login?redirectTo=/profile"} onClick={() => setMenuOpen(false)}>ACCOUNT</Link>
           </div>
         </div>
       </div>

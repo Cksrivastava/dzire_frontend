@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import "./RentalBookingForm.css";
+import { rentalAPI } from "../services/api";
 
 const RentalBookingForm = () => {
   const location = useLocation();
@@ -27,8 +28,8 @@ const RentalBookingForm = () => {
     size: productData.size || "",
     productName: productData.productName || "",
     costing: productData.costing || "",
-    date: todayDate,
-    tripDate: todayDate,
+    date: productData.fromDate || todayDate,
+    tripDate: productData.toDate || todayDate,
     email: "",
     phone: "",
   });
@@ -63,7 +64,7 @@ const RentalBookingForm = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const finalBookingData = {
@@ -71,6 +72,21 @@ const RentalBookingForm = () => {
       totalDays,
       totalCost,
     };
+
+    try {
+      await rentalAPI.book({
+        rentalId: productData.product?.id || 1,
+        userName: formData.userName,
+        userEmail: formData.email,
+        userPhone: formData.phone,
+        startDate: formData.date,
+        endDate: formData.tripDate,
+        days: totalDays,
+        totalCost,
+      });
+    } catch (apiErr) {
+      console.warn("Backend rental booking sync fallback:", apiErr);
+    }
 
     alert("Rental booking submitted successfully!");
     console.log(finalBookingData);

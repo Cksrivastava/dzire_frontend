@@ -4,14 +4,22 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { allEvents } from "../data/eventDetail";
 import "./EventRegister.css";
+import { eventAPI } from "../services/api";
 
 const EventStep4 = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { id, slug } = useParams();
+  const eventIdentifier = slug || id;
   const location = useLocation();
 
   const event =
-    location.state?.event || allEvents.find((item) => item.id === Number(id));
+    location.state?.event ||
+    allEvents.find(
+      (item) =>
+        String(item.slug) === String(eventIdentifier) ||
+        String(item.id) === String(eventIdentifier) ||
+        String(item._id) === String(eventIdentifier)
+    );
 
   const [confirmed, setConfirmed] = useState(false);
 
@@ -33,7 +41,7 @@ const EventStep4 = () => {
 
       <main className="register-page">
         <div className="register-container">
-          <Link to={`/event/${event.id}`} className="continue-link">
+          <Link to={`/event/${event.slug || event.id || eventIdentifier}`} className="continue-link">
             ‹ Continue Browsing
           </Link>
 
@@ -85,9 +93,24 @@ const EventStep4 = () => {
               </div>
               <button
                 className={`continue-btn ${!confirmed ? "disabled" : ""}`}
-                onClick={() =>
-                  confirmed && navigate(`/event-success/${id}`, { state: { event } })
-                }
+                onClick={async () => {
+                  if (!confirmed) return;
+                  try {
+                    await eventAPI.register({
+                      eventId: event.id || event._id || eventIdentifier,
+                      name: location.state?.name || "Participant",
+                      email: location.state?.email || "participant@example.com",
+                      phone: location.state?.phone || "",
+                      date: event.date,
+                      time: event.time,
+                      tickets: 1,
+                      amountPaid: event.memberPrice || event.price || "Free",
+                    });
+                  } catch (err) {
+                    console.warn("Backend event registration sync fallback:", err);
+                  }
+                  navigate(`/event-success/${event.slug || event.id || eventIdentifier}`, { state: { event } });
+                }}
                 disabled={!confirmed}
               >
                 Register

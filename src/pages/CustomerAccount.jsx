@@ -1,131 +1,162 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useState, useContext, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { ShopContext } from '../context/ShopContext';
 import './CustomerAccount.css';
-import { 
-  User, 
-  ShoppingBag, 
-  MapPin, 
-  Wallet, 
-  Heart, 
-  TicketPercent, 
-  LogOut,
-  ChevronRight
-} from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
+
+import AccountSidebar from '../components/AccountSidebar';
+import AccountHeader from '../components/AccountHeader';
+
+import ProfileBannerCard from '../components/customer-account/ProfileBannerCard';
+import ProfileOrdersTable from '../components/customer-account/ProfileOrdersTable';
+import PersonalInfoCard from '../components/customer-account/PersonalInfoCard';
+import DzireCreditCardWidget from '../components/customer-account/DzireCreditCardWidget';
+import EditProfileModal from '../components/customer-account/EditProfileModal';
+import { userAPI } from '../services/api';
 
 const CustomerAccount = () => {
+  const { user, refreshUser } = useContext(ShopContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!user) {
+      navigate('/login?redirectTo=/profile');
+    }
+  }, [user, navigate]);
+
+  // Profile data state
+  const [profileData, setProfileData] = useState({
+    fullName: user?.name || "",
+    phone: user?.phone || "",
+    email: user?.email || "",
+    gender: user?.gender || "",
+    dobFormatted: user?.dobFormatted || user?.dob || "",
+    altPhone: user?.altPhone || "",
+    altEmail: user?.altEmail || "",
+  });
+
+  useEffect(() => {
+    if (user) {
+      setProfileData({
+        fullName: user.name || "",
+        email: user.email || "",
+        phone: user.phone || "",
+        gender: user.gender || "",
+        dobFormatted: user.dobFormatted || user.dob || "",
+        altPhone: user.altPhone || "",
+        altEmail: user.altEmail || "",
+      });
+    }
+  }, [user]);
+
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editFormData, setEditFormData] = useState({ ...profileData });
+
+  const handleOpenEdit = () => {
+    setEditFormData({ ...profileData });
+    setIsEditModalOpen(true);
+  };
+
+  const handleEditChange = (field, value) => {
+    setEditFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleSaveProfile = async (e) => {
+    e.preventDefault();
+    setProfileData({ ...editFormData });
+    setIsEditModalOpen(false);
+
+    try {
+      const res = await userAPI.updateProfile({
+        name: editFormData.fullName,
+        phone: editFormData.phone,
+        gender: editFormData.gender,
+        dobFormatted: editFormData.dobFormatted,
+        altPhone: editFormData.altPhone,
+        altEmail: editFormData.altEmail,
+      });
+      if (res && res.user && refreshUser) {
+        await refreshUser();
+      }
+    } catch (err) {
+      console.warn("Backend profile sync error:", err);
+    }
+  };
+
+  const avatarUrl =
+    "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80";
+
+  if (!user) {
+    return null;
+  }
+
   return (
     <>
       <Navbar />
-      <div className="account-container">
-        
-        {/* Sidebar */}
-        <aside className="account-sidebar">
-          <div className="account-sidebar-menu">
-            <NavLink to="/account" className="account-sidebar-link active" end>
-              <User size={18} /> My Profile
-            </NavLink>
-            <NavLink to="/account/orders" className="account-sidebar-link">
-              <ShoppingBag size={18} /> Order History
-            </NavLink>
-            <NavLink to="/account/addresses" className="account-sidebar-link">
-              <MapPin size={18} /> Saved Addresses
-            </NavLink>
-            <NavLink to="/account/wallet" className="account-sidebar-link">
-              <Wallet size={18} /> Wallet & Loyalty
-            </NavLink>
-            <NavLink to="/offers" className="account-sidebar-link">
-              <TicketPercent size={18} /> Offers & Coupons
-            </NavLink>
-            <NavLink to="/wishlist" className="account-sidebar-link">
-              <Heart size={18} /> Wishlist
-            </NavLink>
-            <button className="account-sidebar-link logout" style={{width: '100%', border: 'none', background: 'none', textAlign: 'left', cursor: 'pointer', fontFamily: 'inherit'}}>
-              <LogOut size={18} /> Logout
-            </button>
-          </div>
-        </aside>
-
-        {/* Main Content */}
-        <div className="account-content">
-          <div className="account-header">
-            <h1>Hello, John Doe!</h1>
-            <p>Welcome back to your account dashboard.</p>
-          </div>
-
-          <div className="account-dashboard-cards">
-            <div className="account-card" onClick={() => window.location.href='/account/orders'}>
-              <div className="account-card-icon"><ShoppingBag size={24} /></div>
-              <div className="account-card-value">12</div>
-              <div className="account-card-label">Total Orders</div>
-            </div>
-            
-            <div className="account-card" onClick={() => window.location.href='/account/wallet'}>
-              <div className="account-card-icon"><Wallet size={24} /></div>
-              <div className="account-card-value">₹1,250</div>
-              <div className="account-card-label">Wallet Balance</div>
-            </div>
-            
-            <div className="account-card">
-              <div className="account-card-icon"><Heart size={24} /></div>
-              <div className="account-card-value">8</div>
-              <div className="account-card-label">Wishlist Items</div>
-            </div>
-            
-            <div className="account-card" onClick={() => window.location.href='/account/wallet'}>
-              <div className="account-card-icon" style={{backgroundColor: '#e3fcef', color: '#12b76a'}}><TicketPercent size={24} /></div>
-              <div className="account-card-value">450</div>
-              <div className="account-card-label">Loyalty Points</div>
-            </div>
-          </div>
-
-          <div className="account-section">
-            <h2>Recent Orders</h2>
-            <div className="recent-orders-list">
-              <div className="recent-order-item">
-                <div className="order-info">
-                  <h3>Order #DZ-10045</h3>
-                  <p>Placed on Oct 24, 2026 • ₹4,999</p>
-                </div>
-                <div className="order-status">Delivered</div>
-                <a href="/order-details" className="view-btn">View Details</a>
-              </div>
-              
-              <div className="recent-order-item">
-                <div className="order-info">
-                  <h3>Order #DZ-10042</h3>
-                  <p>Placed on Oct 10, 2026 • ₹1,299</p>
-                </div>
-                <div className="order-status" style={{backgroundColor: '#fff4ed', color: '#ff6600'}}>Processing</div>
-                <a href="/order-details" className="view-btn">View Details</a>
-              </div>
-            </div>
-          </div>
-
-          <div className="account-section">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #e5e7eb', paddingBottom: '16px', marginBottom: '20px' }}>
-              <h2 style={{ margin: 0, border: 'none', padding: 0 }}>Profile Details</h2>
-              <button style={{ color: '#ff6600', background: 'none', border: 'none', fontWeight: '600', cursor: 'pointer' }}>Edit</button>
-            </div>
-            
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-              <div>
-                <p style={{ color: '#667085', fontSize: '14px', marginBottom: '4px' }}>Full Name</p>
-                <p style={{ fontWeight: '500', margin: 0 }}>John Doe</p>
-              </div>
-              <div>
-                <p style={{ color: '#667085', fontSize: '14px', marginBottom: '4px' }}>Email Address</p>
-                <p style={{ fontWeight: '500', margin: 0 }}>john.doe@example.com</p>
-              </div>
-              <div>
-                <p style={{ color: '#667085', fontSize: '14px', marginBottom: '4px' }}>Phone Number</p>
-                <p style={{ fontWeight: '500', margin: 0 }}>+91 9876543210</p>
-              </div>
-            </div>
+      <div className="profile-page-wrapper">
+        {/* Top Breadcrumb Bar */}
+        <div className="profile-top-breadcrumb-bar">
+          <div className="profile-top-breadcrumb">
+            <Link to="/" className="breadcrumb-home">
+              Home
+            </Link>
+            <ChevronRight size={14} className="breadcrumb-separator" />
+            <span className="breadcrumb-active">My Profile</span>
           </div>
         </div>
+
+        <div className="profile-page-container">
+          {/* Left Sidebar Navigation */}
+          <AccountSidebar />
+
+          {/* Main Dashboard Content */}
+          <main className="profile-main-content">
+            {/* Top Page Title & Breadcrumbs Header with Mobile Toggle */}
+            <AccountHeader
+              title="My Profile"
+              subtitle="Manage your personal information and account settings"
+            />
+
+            {/* Top User Profile Header Banner Card */}
+            <ProfileBannerCard
+              avatarUrl={avatarUrl}
+              profileData={profileData}
+              user={user}
+              onVerifyPhone={() =>
+                window.dispatchEvent(new Event("openPhoneVerificationModal"))
+              }
+            />
+
+            {/* Full-Width Order History Section */}
+            <ProfileOrdersTable />
+
+            {/* Grid Layout for Personal Info & Payment Methods */}
+            <div className="profile-grid">
+              <PersonalInfoCard
+                profileData={profileData}
+                onOpenEdit={handleOpenEdit}
+                onVerifyPhone={() =>
+                  window.dispatchEvent(new Event("openPhoneVerificationModal"))
+                }
+              />
+
+              <DzireCreditCardWidget />
+            </div>
+          </main>
+        </div>
       </div>
+
+      {/* Edit Profile Modal */}
+      <EditProfileModal
+        isOpen={isEditModalOpen}
+        editFormData={editFormData}
+        onChange={handleEditChange}
+        onClose={() => setIsEditModalOpen(false)}
+        onSave={handleSaveProfile}
+      />
+
       <Footer />
     </>
   );

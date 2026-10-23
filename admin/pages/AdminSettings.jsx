@@ -1,26 +1,10 @@
 import React, { useState } from "react";
 import AdminLayout from "./AdminLayout";
-import { useSearchParams } from "react-router-dom";
-import { Settings, ShieldAlert, CreditCard, Truck, Percent, Gift, FileText, Database, Save, Check, Globe, Code, ArrowLeftRight, CheckCircle, RefreshCw } from "lucide-react";
+import { Settings, ShieldAlert, CreditCard, Truck, Percent, Gift, FileText, Database, Save, Check } from "lucide-react";
 import { Button, Input, Textarea, Switch } from "../AdminShims";
 import { AdminPanel } from "../components/AdminUi";
 
-const S = {
-  card: { background: 'white', padding: '24px', borderRadius: '12px', border: '1px solid #e5e7eb', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' },
-  panel: { background: 'white', borderRadius: '12px', border: '1px solid #e5e7eb', overflow: 'hidden' },
-  th: { padding: '12px 20px', fontWeight: '600', textAlign: 'left', background: '#f9fafb', fontSize: '12px', color: '#667085', textTransform: 'uppercase' },
-  td: { padding: '16px 20px', fontSize: '14px', borderTop: '1px solid #e5e7eb' },
-  label: { display: 'block', marginBottom: '6px', fontSize: '13px', fontWeight: '500', color: '#374151' },
-  inp: { width: '100%', padding: '9px 12px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', boxSizing: 'border-box' },
-  saveBtn: { padding: '10px 20px', background: '#ff6600', color: 'white', border: 'none', borderRadius: '6px', fontWeight: '600', cursor: 'pointer', marginTop: '16px' },
-  badge: (bg, col) => ({ padding: '3px 10px', borderRadius: '20px', fontSize: '12px', fontWeight: '500', background: bg, color: col, display: 'inline-block' }),
-};
-
 const AdminSettings = () => {
-  const [searchParams] = useSearchParams();
-  const activeMenu = searchParams.get("menu") || "Settings";
-  const activeSub = searchParams.get("sub") || "SEO Settings";
-
   const [activeTab, setActiveTab] = useState("store"); // "store", "shipping", "payments", "loyalty", "invoice", "backup"
   const [saveStatus, setSaveStatus] = useState(false);
 
@@ -46,197 +30,19 @@ const AdminSettings = () => {
   // Invoice Template Select
   const [selectedInvoiceTemplate, setSelectedInvoiceTemplate] = useState("Clean Minimalist");
 
-  // SEO specific states
-  const [robotsTxt, setRobotsTxt] = useState("User-agent: *\nDisallow: /admin/\nDisallow: /checkout/\nSitemap: https://dzirestore.com/sitemap.xml");
-
   const handleSave = (e) => {
     e.preventDefault();
     setSaveStatus(true);
     setTimeout(() => {
       setSaveStatus(false);
-      alert("Settings successfully updated!");
+      alert("Store system settings successfully updated!");
     }, 800);
   };
 
   const handleBackup = (type) => {
-    alert(type + " backup initialized...\nZip archive created successfully!");
+    alert(type + " backup initialized...\nZip archive created successfully and uploaded to secure cloud storage!");
   };
 
-  /* ── SEO Section renderer ────────────────────────────────── */
-  const renderSeoContent = () => {
-    switch (activeSub) {
-      case "SEO Settings":
-      default:
-        return (
-          <div style={{ ...S.card, maxWidth: "560px" }}>
-            <h3 style={{ margin: "0 0 16px 0", fontSize: "16px", fontWeight: "600" }}>General SEO Indexing Preferences</h3>
-            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-              <label style={{ display: "flex", alignItems: "center", gap: "12px", fontSize: "14px", cursor: "pointer" }}>
-                <input type="checkbox" defaultChecked /> Enable Google Indexing (Add follow, index meta tags)
-              </label>
-              <label style={{ display: "flex", alignItems: "center", gap: "12px", fontSize: "14px", cursor: "pointer" }}>
-                <input type="checkbox" defaultChecked /> Append trailing slashes to route paths
-              </label>
-              <div>
-                <label style={S.label}>Default Brand Suffix</label>
-                <input type="text" defaultValue=" | Dzire Premium Store" style={S.inp} />
-              </div>
-              <button onClick={() => alert('Global SEO settings saved')} style={S.saveBtn}>Save SEO Preferences</button>
-            </div>
-          </div>
-        );
-
-      case "Meta Tags":
-        return (
-          <div style={{ ...S.card, maxWidth: "560px" }}>
-            <h3 style={{ margin: "0 0 16px 0", fontSize: "16px", fontWeight: "600" }}>Default Meta &amp; Social OG Tags</h3>
-            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-              <div>
-                <label style={S.label}>Store Default Title Tag</label>
-                <input type="text" defaultValue="Dzire Store | Premium Outdoor Clothing and Adventure Gears" style={S.inp} />
-              </div>
-              <div>
-                <label style={S.label}>Store Default Description Tag</label>
-                <textarea defaultValue="Explore premium outdoor tents, hiking boots, trekking backpacks, and hydration packs at Dzire store with flat discounts." style={{ ...S.inp, minHeight: '80px' }} />
-              </div>
-              <div>
-                <label style={S.label}>Open Graph (OG) Share Image URL</label>
-                <input type="text" defaultValue="https://dzirestore.com/assets/logo.png" style={S.inp} />
-              </div>
-              <button onClick={() => alert('Meta Tags saved')} style={S.saveBtn}>Save Meta Preferences</button>
-            </div>
-          </div>
-        );
-
-      case "Sitemap Generator":
-        return (
-          <div style={{ ...S.card, maxWidth: "560px" }}>
-            <h3 style={{ margin: "0 0 16px 0", fontSize: "16px", fontWeight: "600" }}>XML Sitemap Automatic Builder</h3>
-            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-              <div style={{ padding: "14px", background: "#fcf6f2", border: "1px solid #ffe0cc", borderRadius: "10px" }}>
-                <p style={{ margin: "0 0 4px 0", fontSize: "14px" }}>🛰️ <strong>Sitemap status:</strong> Active</p>
-                <p style={{ margin: "0 0 8px 0", fontSize: "12px", color: "#667085" }}>Indexed links: <strong>214 pages</strong> (Products, Categories, Collections)</p>
-                <span style={{ fontSize: "11px", color: "#9ca3af" }}>Last auto build date: 09 Jul 2026, 02:00 AM</span>
-              </div>
-              <button onClick={() => alert('Rebuilding sitemap index...')} style={{ ...S.saveBtn, marginTop: 0 }}>Rebuild Sitemap Index</button>
-            </div>
-          </div>
-        );
-
-      case "Robots.txt":
-        return (
-          <div style={{ ...S.card, maxWidth: "600px" }}>
-            <h3 style={{ margin: "0 0 16px 0", fontSize: "16px", fontWeight: "600" }}>Configure Robots Crawler Directives</h3>
-            <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-              <textarea value={robotsTxt} onChange={e => setRobotsTxt(e.target.value)} style={{ ...S.inp, minHeight: '180px', fontFamily: 'monospace', fontSize: '13px' }} />
-              <button onClick={() => alert('Robots.txt file successfully updated!')} style={S.saveBtn}>Save Robots.txt</button>
-            </div>
-          </div>
-        );
-
-      case "URL Redirects":
-        return (
-          <div style={S.panel}>
-            <div style={{ padding: "16px 20px", borderBottom: "1px solid #e5e7eb", display: "flex", justifyContent: "space-between" }}>
-              <strong>301 / 302 URL Redirect Matrix</strong>
-              <button onClick={() => alert('New redirect rule')} style={{ padding: "8px 16px", background: "#ff6600", color: "white", border: "none", borderRadius: "6px", cursor: "pointer" }}>+ Add Redirect</button>
-            </div>
-            <table style={S.table}>
-              <thead>
-                <tr>{['Source Route', 'Target Destination', 'Type', 'Actions'].map(h => <th key={h} style={S.th}>{h}</th>)}</tr>
-              </thead>
-              <tbody>
-                {[
-                  { from: '/old-backpacks', to: '/shop?category=bags', type: '301 (Permanent)' },
-                  { from: '/sale-items', to: '/offers', type: '302 (Temporary)' }
-                ].map((r, i) => (
-                  <tr key={i}>
-                    <td style={{ ...S.td, fontFamily: 'monospace' }}>{r.from}</td>
-                    <td style={{ ...S.td, fontFamily: 'monospace' }}>{r.to}</td>
-                    <td style={S.td}><span style={S.badge('#e3fcef', '#12b76a')}>{r.type}</span></td>
-                    <td style={S.td}><button onClick={() => alert('Deleted')} style={{ background: 'none', border: 'none', color: '#f04438', cursor: 'pointer' }}>Delete</button></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        );
-
-      case "Canonical Tags":
-        return (
-          <div style={{ ...S.card, maxWidth: "560px" }}>
-            <h3 style={{ margin: "0 0 16px 0", fontSize: "16px", fontWeight: "600" }}>Canonical Domain Formatting</h3>
-            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-              <div>
-                <label style={S.label}>Preferred Storefront Domain Name</label>
-                <input type="text" defaultValue="https://www.dzirestore.com" style={S.inp} />
-              </div>
-              <label style={{ display: "flex", alignItems: "center", gap: "12px", fontSize: "14px", cursor: "pointer" }}>
-                <input type="checkbox" defaultChecked /> Strip search tracking parameters to avoid duplicate content tags
-              </label>
-              <button onClick={() => alert('Canonical config updated')} style={S.saveBtn}>Save Canonical Settings</button>
-            </div>
-          </div>
-        );
-
-      case "Schema Markup":
-        return (
-          <div style={{ ...S.card, maxWidth: "560px" }}>
-            <h3 style={{ margin: "0 0 16px 0", fontSize: "16px", fontWeight: "600" }}>Rich Snippets Schema Injection</h3>
-            <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-              <label style={{ display: "flex", alignItems: "center", gap: "12px", fontSize: "14px", cursor: "pointer" }}>
-                <input type="checkbox" defaultChecked /> Enable JSON-LD product micro-data schemas
-              </label>
-              <label style={{ display: "flex", alignItems: "center", gap: "12px", fontSize: "14px", cursor: "pointer" }}>
-                <input type="checkbox" defaultChecked /> Include stock units status inside schemas
-              </label>
-              <label style={{ display: "flex", alignItems: "center", gap: "12px", fontSize: "14px", cursor: "pointer" }}>
-                <input type="checkbox" defaultChecked /> Include reviews rating metrics inside search results
-              </label>
-              <button onClick={() => alert('Schema markup preferences saved')} style={S.saveBtn}>Save Schema Preferences</button>
-            </div>
-          </div>
-        );
-
-      case "Search Console Integration":
-        return (
-          <div style={{ ...S.card, maxWidth: "560px" }}>
-            <h3 style={{ margin: "0 0 16px 0", fontSize: "16px", fontWeight: "600" }}>Google Console Verification Webmaster Tools</h3>
-            <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-              <div>
-                <label style={S.label}>Google Site Verification Tag ID</label>
-                <input type="text" defaultValue="googlesiteverificationid892347918" style={S.inp} />
-              </div>
-              <div>
-                <label style={S.label}>Bing Webmaster Verification Code</label>
-                <input type="text" defaultValue="bingverificationid89234" style={S.inp} />
-              </div>
-              <button onClick={() => alert('Verification tags saved')} style={S.saveBtn}>Verify Integration</button>
-            </div>
-          </div>
-        );
-    }
-  };
-
-  /* ── Check if SEO menu context needs to render ────────────── */
-  if (activeMenu === "SEO") {
-    return (
-      <AdminLayout>
-        <div className="admin-page-container">
-          <section className="admin-hero" style={{ marginBottom: "24px" }}>
-            <div>
-              <h1>{activeSub}</h1>
-              <p>Configure search keywords sitemaps robots and URL canonical redirect parameters</p>
-            </div>
-          </section>
-
-          {renderSeoContent()}
-        </div>
-      </AdminLayout>
-    );
-  }
-
-  /* ── Otherwise fall back to the standard Settings view ──── */
   return (
     <AdminLayout>
       <div className="space-y-6">
@@ -292,85 +98,104 @@ const AdminSettings = () => {
                     <Input value={storeName} onChange={e => setStoreName(e.target.value)} />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-slate-500 mb-1">GST Identification Number</label>
+                    <label className="block text-xs font-semibold text-slate-500 mb-1">GST Registration Number</label>
                     <Input value={gstNumber} onChange={e => setGstNumber(e.target.value)} />
                   </div>
-                  <div className="sm:col-span-2">
-                    <label className="block text-xs font-semibold text-slate-500 mb-1">Registered Billing Address</label>
-                    <Textarea value={storeAddress} onChange={e => setStoreAddress(e.target.value)} style={{ minHeight: '80px' }} />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-500 mb-1">Physical Address</label>
+                  <Textarea value={storeAddress} onChange={e => setStoreAddress(e.target.value)} rows="3" />
+                </div>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-500 mb-1">Contact Email</label>
+                    <Input type="email" defaultValue="support@dzirestore.in" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-500 mb-1">Support Mobile</label>
+                    <Input type="tel" defaultValue="+91 80 4912 3012" />
                   </div>
                 </div>
               </AdminPanel>
             )}
 
-            {/* Shipping */}
+            {/* Shipping options */}
             {activeTab === "shipping" && (
               <AdminPanel className="p-6 space-y-4">
-                <h3 className="text-lg font-bold text-slate-900 mb-2">Configure Shipping Tariffs</h3>
+                <h3 className="text-lg font-bold text-slate-900 mb-2">Shipping Charges & Pickup Policies</h3>
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div>
-                    <label className="block text-xs font-semibold text-slate-500 mb-1">Default Shipping Cost (Rs)</label>
-                    <Input type="number" value={shippingCharge} onChange={e => setShippingCharge(Number(e.target.value))} />
+                    <label className="block text-xs font-semibold text-slate-500 mb-1">Standard Delivery Fee (Rs)</label>
+                    <Input type="number" value={shippingCharge} onChange={e => setShippingCharge(e.target.value)} />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-slate-500 mb-1">Free Shipping Cart Minimum (Rs)</label>
-                    <Input type="number" value={freeShippingThreshold} onChange={e => setFreeShippingThreshold(Number(e.target.value))} />
+                    <label className="block text-xs font-semibold text-slate-500 mb-1">Minimum Cart for Free Shipping (Rs)</label>
+                    <Input type="number" value={freeShippingThreshold} onChange={e => setFreeShippingThreshold(e.target.value)} />
                   </div>
-                  <div className="sm:col-span-2 flex items-center justify-between p-3 border border-slate-100 rounded-xl bg-slate-50">
-                    <div>
-                      <h4 className="text-sm font-semibold text-slate-800">Storefront Self-Pickup Option</h4>
-                      <p className="text-xs text-slate-500 mt-0.5">Let users choose local warehouse pickup at checkout</p>
-                    </div>
-                    <Switch checked={allowStorePickup} onChange={setAllowStorePickup} />
+                </div>
+                <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100">
+                  <div>
+                    <h4 className="text-sm font-bold text-slate-900">Enable Local Store Pickups</h4>
+                    <p className="text-xs text-slate-500 mt-1">Let customers choose local showroom pickup to bypass standard delivery fee.</p>
                   </div>
+                  <Switch checked={allowStorePickup} onCheckedChange={setAllowStorePickup} />
                 </div>
               </AdminPanel>
             )}
 
-            {/* Payment Gateway */}
+            {/* Razorpay Payments */}
             {activeTab === "payments" && (
               <AdminPanel className="p-6 space-y-4">
-                <h3 className="text-lg font-bold text-slate-900 mb-2">Razorpay Gateway Integration</h3>
-                <div className="grid gap-4">
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-500 mb-1">Razorpay Live Key ID</label>
-                    <Input value={rzpKey} onChange={e => setRzpKey(e.target.value)} />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-500 mb-1">Razorpay Secret Password</label>
-                    <Input type="password" value={rzpSecret} onChange={e => setRzpSecret(e.target.value)} />
-                  </div>
+                <h3 className="text-lg font-bold text-slate-900 mb-2">Razorpay Gateway Credentials</h3>
+                <p className="text-sm text-slate-500 mb-4">Integrate payment success webhook scripts for instant order activation.</p>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-500 mb-1">Razorpay API Key ID</label>
+                  <Input value={rzpKey} onChange={e => setRzpKey(e.target.value)} />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-500 mb-1">Razorpay Key Secret</label>
+                  <Input type="password" value={rzpSecret} onChange={e => setRzpSecret(e.target.value)} />
+                </div>
+                <div className="flex items-center gap-2 text-xs font-bold text-emerald-700 bg-emerald-50 p-3 rounded-xl border border-emerald-100">
+                  <Check size={16} /> Checkout script verified and loaded correctly.
                 </div>
               </AdminPanel>
             )}
 
-            {/* Loyalty */}
+            {/* Loyalty settings */}
             {activeTab === "loyalty" && (
               <AdminPanel className="p-6 space-y-4">
-                <h3 className="text-lg font-bold text-slate-900 mb-2">Dzire Credits Wallet Settings</h3>
+                <h3 className="text-lg font-bold text-slate-900 mb-2">Dzire Credits Loyalty Policy</h3>
                 <div className="grid gap-4 sm:grid-cols-3">
                   <div>
-                    <label className="block text-xs font-semibold text-slate-500 mb-1">Credits per Rs 1,000 spend</label>
-                    <Input type="number" value={conversionRate} onChange={e => setConversionRate(Number(e.target.value))} />
+                    <label className="block text-xs font-semibold text-slate-500 mb-1">Points Eearned Per Spend of Rs 1000</label>
+                    <Input type="number" value={conversionRate} onChange={e => setConversionRate(e.target.value)} />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-slate-500 mb-1">Points value in cash (1 Pt = X Rs)</label>
-                    <Input type="number" value={pointsValue} onChange={e => setPointsValue(Number(e.target.value))} />
+                    <label className="block text-xs font-semibold text-slate-500 mb-1">Value of 1 Point in Rupees</label>
+                    <Input type="number" value={pointsValue} onChange={e => setPointsValue(e.target.value)} />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-slate-500 mb-1">Max cart redemption limit (%)</label>
-                    <Input type="number" value={redemptionLimit} onChange={e => setRedemptionLimit(Number(e.target.value))} />
+                    <label className="block text-xs font-semibold text-slate-500 mb-1">Max Point Earning Limit Per Order</label>
+                    <Input type="number" defaultValue="500" />
                   </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-500 mb-1">Max Cart Redemption Limit (%)</label>
+                  <Input type="number" value={redemptionLimit} onChange={e => setRedemptionLimit(e.target.value)} max="100" />
+                  <p className="text-xs text-slate-400 mt-1">Limits deduction to 10% of checkout cart (excludes shipping fee) for safety.</p>
                 </div>
               </AdminPanel>
             )}
 
-            {/* Invoice Templates */}
+            {/* Invoice template selection */}
             {activeTab === "invoice" && (
               <AdminPanel className="p-6 space-y-4">
-                <h3 className="text-lg font-bold text-slate-900 mb-2">PDF Invoice Layout templates</h3>
+                <h3 className="text-lg font-bold text-slate-900 mb-2">GST Invoice Templates</h3>
+                <p className="text-sm text-slate-500 mb-4">Choose the printable layout for Retail Invoices, GST Tax Invoices, and Credit Notes.</p>
+
                 <div className="grid gap-4 sm:grid-cols-2">
-                  {["Clean Minimalist", "Professional Invoice Structure", "Compact Thermal POS"].map(template => (
+                  {["Clean Minimalist", "Corporate Modern", "Classic Retro Table", "Slim POS Bill"].map(template => (
                     <div
                       key={template}
                       onClick={() => setSelectedInvoiceTemplate(template)}

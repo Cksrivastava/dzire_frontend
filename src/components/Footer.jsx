@@ -34,7 +34,7 @@ const valueProps = [
 const sections = [
   {
     key: "explore", icon: <Compass size={20} className="fp-col-icon" />, title: "EXPLORE",
-    links: [{ label: "Our Story", to: "/about" }, { label: "Blogs", to: "/blog" }, { label: "Rentals", to: "/rental" }, { label: "Bookstore", to: "/shop" }],
+    links: [{ label: "Our Story", to: "/about" }, { label: "Blogs", to: "/blog" }, { label: "Rentals", to: "/rental" }, { label: "Bookstore", to: "/bookstore" }],
   },
   {
     key: "support", icon: <Headphones size={20} className="fp-col-icon" />, title: "SUPPORT",
@@ -140,9 +140,9 @@ const Footer = ({ showPopularSearches = true, showReviews = true }) => {
             <div className="fp-brand-col">
               <img src={logo} alt="Dzire Store" className="fp-logo" />
               <div className="fp-socials">
-                <a href="https://wa.me/919923080044" target="_blank" rel="noreferrer" className="fp-social-btn"><FaWhatsapp size={17} /></a>
-                <a href="https://instagram.com" target="_blank" rel="noreferrer" className="fp-social-btn"><FaInstagram size={17} /></a>
-                <a href="https://facebook.com" target="_blank" rel="noreferrer" className="fp-social-btn"><FaFacebookF size={17} /></a>
+                <a href="https://wa.me/919923080044" target="_blank" rel="noreferrer" className="fp-social-btn"><FaWhatsapp size={15} /></a>
+                <a href="https://instagram.com" target="_blank" rel="noreferrer" className="fp-social-btn"><FaInstagram size={15} /></a>
+                <a href="https://facebook.com" target="_blank" rel="noreferrer" className="fp-social-btn"><FaFacebookF size={15} /></a>
               </div>
             </div>
 
@@ -192,9 +192,9 @@ const Footer = ({ showPopularSearches = true, showReviews = true }) => {
 
           {/* Mobile social icons row */}
           <div className="fp-mob-socials">
-            <a href="https://wa.me/919923080044" target="_blank" rel="noreferrer" className="fp-social-btn"><FaWhatsapp size={17} /></a>
-            <a href="https://instagram.com" target="_blank" rel="noreferrer" className="fp-social-btn"><FaInstagram size={17} /></a>
-            <a href="https://facebook.com" target="_blank" rel="noreferrer" className="fp-social-btn"><FaFacebookF size={17} /></a>
+            <a href="https://wa.me/919923080044" target="_blank" rel="noreferrer" className="fp-social-btn"><FaWhatsapp size={15} /></a>
+            <a href="https://instagram.com" target="_blank" rel="noreferrer" className="fp-social-btn"><FaInstagram size={15} /></a>
+            <a href="https://facebook.com" target="_blank" rel="noreferrer" className="fp-social-btn"><FaFacebookF size={15} /></a>
           </div>
 
         </div>

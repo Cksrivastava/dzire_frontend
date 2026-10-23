@@ -1,109 +1,155 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { FaRegCalendar, FaMapMarkerAlt } from "react-icons/fa";
+import { FaMapMarkerAlt, FaRegClock } from "react-icons/fa";
 import "./EventSection.css";
+import { eventAPI } from "../services/api";
+import wsClient from "../services/websocket";
+import { getSectionSettings, SECTION_SETTINGS_EVENT } from "../services/sectionSettings";
 
-const eventData = [
-  {
-    id: 1,
-    category: "TREK",
-    date: "24 - 30 May, 2026",
-    day: "24 - 30",
-    month: "MAY",
-    year: "2026",
-    title: "Hampta Pass Trek",
-    location: "Himachal Pradesh",
-    price: "₹ 8,999 onwards",
-    image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80"
-  },
-  {
-    id: 2,
-    category: "WORKSHOP",
-    date: "02 Jun, 2026",
-    day: "02",
-    month: "JUN",
-    year: "2026",
-    title: "Wilderness Camping Workshop",
-    location: "Dehradun",
-    price: "₹ 1,499",
-    image: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=600&q=80"
-  },
-  {
-    id: 3,
-    category: "CLIMBING",
-    date: "15 - 16 Jun, 2026",
-    day: "15 - 16",
-    month: "JUN",
-    year: "2026",
-    title: "Rock Climbing Basic Skills",
-    location: "Malviya Nagar",
-    price: "₹ 2,999",
-    image: "https://images.unsplash.com/photo-1522163182402-834f871fd851?auto=format&fit=crop&w=600&q=80"
-  },
-  {
-    id: 4,
-    category: "MEETUP",
-    date: "29 Jun, 2026",
-    day: "29",
-    month: "JUN",
-    year: "2026",
-    title: "Dzire Adventure Community Meetup",
-    location: "Bangalore",
-    price: "Free",
-    image: "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=600&q=80"
+const parseEventDate = (dateStr) => {
+  if (!dateStr) return { day: "—", month: "—" };
+  const str = String(dateStr).trim();
+  const tokens = str.replace(/[,']/g, " ").trim().split(/\s+/);
+  const dayToken = tokens.find((t) => /^\d{1,2}$/.test(t));
+  const monthToken = tokens.find(
+    (t) =>
+      /^[a-zA-Z]{3,}/.test(t) &&
+      !/^(mon|tue|wed|thu|fri|sat|sun)/i.test(t)
+  );
+
+  if (dayToken && monthToken) {
+    return {
+      day: dayToken.padStart(2, "0"),
+      month: monthToken.slice(0, 3).toUpperCase(),
+    };
   }
-];
+
+  const parts = str.split(" ");
+  return {
+    day: parts[1] || parts[0] || "—",
+    month: (parts[0] || "—").slice(0, 3).toUpperCase(),
+  };
+};
 
 const EventSection = () => {
+  const [events, setEvents] = useState([]);
+  const [eventSectionConfig, setEventSectionConfig] = useState(() => getSectionSettings().events);
+
+  useEffect(() => {
+    const handleUpdate = (e) => {
+      if (e.detail?.events) {
+        setEventSectionConfig(e.detail.events);
+      } else {
+        setEventSectionConfig(getSectionSettings().events);
+      }
+    };
+    window.addEventListener(SECTION_SETTINGS_EVENT, handleUpdate);
+    window.addEventListener("storage", handleUpdate);
+    return () => {
+      window.removeEventListener(SECTION_SETTINGS_EVENT, handleUpdate);
+      window.removeEventListener("storage", handleUpdate);
+    };
+  }, []);
+
+  const loadEvents = (skipCache = false) => {
+    eventAPI
+      .getAll({ skipCache })
+      .then((res) => {
+        if (Array.isArray(res.events)) {
+          const visible = res.events
+            .filter((e) => e.visibility !== "in-store" && e.status !== "Cancelled")
+            .slice(0, 4);
+          setEvents(visible.length > 0 ? visible : res.events.slice(0, 4));
+        }
+      })
+      .catch(() => {});
+  };
+
+  useEffect(() => {
+    loadEvents(false);
+    const unsub = wsClient.on("EVENTS_UPDATED", () => loadEvents(true));
+    return () => {
+      unsub();
+    };
+  }, []);
+
+  if (events.length === 0) return null;
+
   return (
     <section className="event-section">
       <div className="event-section-container">
-
-        {/* Header Block */}
+        {/* Section Header */}
         <div className="home-event-section-header">
-          <span className="home-event-section-subtitle">UPCOMING EVENTS</span>
-          <h2 className="home-event-section-title">Join Experiences. Learn. Connect.</h2>
-          <p className="home-event-section-description">
-            Workshops, treks, and meetups for adventurers and explorers.
-          </p>
+          {eventSectionConfig.subtitle && (
+            <span className="home-event-section-subtitle">{eventSectionConfig.subtitle}</span>
+          )}
+          <h2 className="home-event-section-title">
+            {eventSectionConfig.title || "Join Experiences. Learn. Connect."}
+          </h2>
+          {eventSectionConfig.description && (
+            <p className="home-event-section-description">
+              {eventSectionConfig.description}
+            </p>
+          )}
         </div>
 
         {/* Event Grid */}
         <div className="home-event-grid">
-          {eventData.map((event) => (
-            <Link
-              key={event.id}
-              to={`/event/${event.id}`}
-              className="home-event-card"
-              style={{ backgroundImage: `url(${event.image})` }}
-            >
-              {/* Card Overlay */}
-              <div className="home-event-card-overlay"></div>
+          {events.map((event) => {
+            const { day, month } = parseEventDate(event.date);
+            const eventId = event.id || event._id;
+            const priceText = event.isFree
+              ? "Free"
+              : String(event.price || "").startsWith("₹")
+              ? event.price
+              : event.price
+              ? `₹${event.price}`
+              : "Free";
 
-              {/* Card Content Top: Category Badge & Date Badge */}
-              <div className="home-event-card-top">
-                <span className="home-event-card-badge">{event.category}</span>
-                <div className="event-card-date-badge">
-                  <span className="event-day">{event.day}</span>
-                  <span className="event-month">{event.month} {event.year}</span>
+            const eventSlug = event.slug || (event.title ? event.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") : (event.id || event._id));
+
+            return (
+              <Link
+                key={eventId}
+                to={`/event/${eventSlug}`}
+                className="home-event-card"
+                style={{ backgroundImage: `url(${event.image})` }}
+              >
+                <div className="home-event-card-overlay"></div>
+
+                <div className="home-event-card-top">
+                  <span className="home-event-card-badge">
+                    {event.category || event.type || "EVENT"}
+                  </span>
+                  <div className="event-card-date-badge">
+                    <span className="event-day">{day}</span>
+                    <span className="event-month">{month}</span>
+                  </div>
                 </div>
-              </div>
 
-              {/* Card Content Bottom: Info */}
-              <div className="home-event-card-bottom">
-                <div className="home-event-detail-item" style={{ marginBottom: '2px' }}>
-                  <FaMapMarkerAlt className="event-icon" />
-                  <span>{event.location}</span>
+                <div className="home-event-card-bottom">
+                  <div className="home-event-meta-row">
+                    <div className="home-event-detail-item">
+                      <FaMapMarkerAlt className="event-icon" />
+                      <span>{event.location || "Online"}</span>
+                    </div>
+                    {event.time && (
+                      <div className="home-event-detail-item">
+                        <FaRegClock className="event-icon" />
+                        <span>{event.time}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <h3 className="home-event-card-title">{event.title}</h3>
+
+                  <div className="home-event-card-price">
+                    <span>{priceText}</span>
+                  </div>
                 </div>
-
-                <h3 className="home-event-card-title">{event.title}</h3>
-
-                <div className="home-event-card-price">
-                  <span>{event.price}</span>
-                </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
         </div>
 
         {/* View All Button */}
@@ -112,7 +158,6 @@ const EventSection = () => {
             VIEW ALL EVENTS <span className="btn-arrow">&raquo;</span>
           </Link>
         </div>
-
       </div>
     </section>
   );

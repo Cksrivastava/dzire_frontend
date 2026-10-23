@@ -1,294 +1,339 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { Link, useNavigate } from "react-router-dom";
+import { DEFAULT_CART_ITEMS, AVAILABLE_OFFERS } from "../data/cartDefaults";
+import CartHeader from "../components/cart/CartHeader";
+import CartEmptyState from "../components/cart/CartEmptyState";
+import CartTable from "../components/cart/CartTable";
+import CartSummary from "../components/cart/CartSummary";
+import CartTrustBadges from "../components/cart/CartTrustBadges";
 import "./Cart.css";
+
+const normalizeCartItem = (item, idx) => {
+  let size = item.size;
+  let availableSizes = item.availableSizes;
+
+  if (!size || size === "Standard") {
+    if (item.category === "Backpack") {
+      size = "60L";
+      availableSizes = ["50L", "60L", "70L"];
+    } else if (
+      item.category === "Trekking Shoes" ||
+      item.category === "Foot-Wear"
+    ) {
+      size = "UK 8";
+      availableSizes = ["UK 7", "UK 8", "UK 9", "UK 10", "UK 11"];
+    } else {
+      size = "M";
+      availableSizes = ["S", "M", "L", "XL"];
+    }
+  }
+
+  if (!availableSizes || availableSizes.includes("Standard")) {
+    availableSizes = ["S", "M", "L", "XL"];
+  }
+
+  return {
+    ...item,
+    id: item.id || `cart-${idx}`,
+    category: item.category || "Gear",
+    color: item.color || "Black",
+    size: size || "M",
+    inStock: true,
+    availableColors: item.availableColors || [
+      { name: "Black", hex: "#18181b" },
+      { name: "Blue", hex: "#1d4ed8" },
+      { name: "Olive Green", hex: "#4d7c0f" },
+    ],
+    availableSizes: availableSizes,
+  };
+};
 
 const Cart = () => {
   const navigate = useNavigate();
-  const { cartItems, removeFromCart, addToCart, decreaseCartQuantity } =
-    useContext(ShopContext);
+  const shopContext = useContext(ShopContext);
+  const user = shopContext?.user;
 
-  const [couponCode, setCouponCode] = useState("");
-  const [showCheckoutOptions, setShowCheckoutOptions] = useState(false);
-  const [deliveryType, setDeliveryType] = useState("");
-  const [paymentMode, setPaymentMode] = useState("");
+  useEffect(() => {
+    if (!user) {
+      navigate("/login?redirectTo=/cart");
+    }
+  }, [user, navigate]);
 
-  const total = cartItems.reduce(
+  const contextCartItems = shopContext?.cartItems || [];
+  const removeFromCart = shopContext?.removeFromCart || (() => {});
+  const addToCart = shopContext?.addToCart || (() => {});
+  const decreaseCartQuantity = shopContext?.decreaseCartQuantity || (() => {});
+  const toggleWishlist = shopContext?.toggleWishlist || (() => {});
+
+  // Local active cart items list (fallback to DEFAULT_CART_ITEMS if context cart is empty)
+  const [items, setItems] = useState(() => {
+    if (contextCartItems.length > 0) {
+      return contextCartItems.map((item, idx) => normalizeCartItem(item, idx));
+    }
+    return DEFAULT_CART_ITEMS;
+  });
+
+  const [couponCode, setCouponCode] = useState("DZIRE10");
+  const [appliedCouponName, setAppliedCouponName] = useState("DZIRE10");
+
+  const [showGstForm, setShowGstForm] = useState(false);
+  const [gstNumber, setGstNumber] = useState("");
+  const [companyName, setCompanyName] = useState("");
+  const [gstSaved, setGstSaved] = useState(false);
+
+  useEffect(() => {
+    if (contextCartItems.length > 0) {
+      setItems(contextCartItems.map((item, idx) => normalizeCartItem(item, idx)));
+    }
+  }, [contextCartItems]);
+
+  const handleUpdateQuantity = (id, delta) => {
+    setItems((prev) =>
+      prev
+        .map((item) => {
+          if (item.id === id) {
+            const newQty = item.quantity + delta;
+            return newQty > 0 ? { ...item, quantity: newQty } : null;
+          }
+          return item;
+        })
+        .filter(Boolean)
+    );
+    if (delta > 0) {
+      const targetItem = items.find((i) => i.id === id);
+      if (targetItem && addToCart) addToCart(targetItem);
+    } else {
+      if (decreaseCartQuantity) decreaseCartQuantity(id);
+    }
+  };
+
+  const handleRemoveItem = (id) => {
+    setItems((prev) => prev.filter((item) => item.id !== id));
+    if (removeFromCart) removeFromCart(id);
+  };
+
+  const handleClearCart = () => {
+    setItems([]);
+    if (contextCartItems.length > 0 && shopContext?.setCartItems) {
+      shopContext.setCartItems([]);
+    }
+  };
+
+  const handleColorSelect = (itemId, colorName) => {
+    setItems((prev) =>
+      prev.map((item) =>
+        item.id === itemId ? { ...item, color: colorName } : item
+      )
+    );
+  };
+
+  const handleSizeSelect = (itemId, sizeVal) => {
+    setItems((prev) =>
+      prev.map((item) =>
+        item.id === itemId ? { ...item, size: sizeVal } : item
+      )
+    );
+  };
+
+  const handleMoveToWishlist = (item) => {
+    if (toggleWishlist) toggleWishlist(item);
+    handleRemoveItem(item.id);
+    alert(`"${item.name}" moved to Wishlist`);
+  };
+
+  const handleProductClick = (item) => {
+    const targetId = item.originalId || item.id;
+    if (
+      String(targetId).startsWith("book-") ||
+      item.category === "Book" ||
+      item.category === "Bookstore" ||
+      item.category === "Books"
+    ) {
+      navigate(`/bookstore/${targetId}`, { state: item });
+    } else {
+      const slug =
+        item?.seoSlug ||
+        item?.slug ||
+        (item?.name ? item.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)+/g, "") : targetId);
+      navigate(`/product/${slug}`, { state: item });
+    }
+  };
+
+  // Calculations
+  const subtotal = items.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
+  const totalItemCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
-  const shippingFee =
-    deliveryType === "store" ? 0 : deliveryType === "home" ? 50 : 0;
+  const baseShipping = 99;
+  const freeShippingThreshold = 12000;
+  const isFreeShipping = subtotal >= freeShippingThreshold;
+  const shippingFee = isFreeShipping ? 0 : baseShipping;
 
-  const grandTotal = total + shippingFee;
+  const computeDiscount = (couponName, currentSubtotal, currentShippingFee) => {
+    if (!couponName) return 0;
+    const code = couponName.toUpperCase();
+    if (code === "DZIRE10") {
+      if (currentSubtotal < 2999) return 0;
+      return Math.min(500, Math.round(currentSubtotal * 0.1));
+    }
+    if (code === "ADVENTURE15") {
+      if (currentSubtotal < 5000) return 0;
+      return Math.min(1000, Math.floor(currentSubtotal * 0.15));
+    }
+    if (code === "FREESHIP") {
+      if (currentSubtotal < 999) return 0;
+      return currentShippingFee > 0 ? currentShippingFee : 99;
+    }
+    return 0;
+  };
 
-  const handleApplyCoupon = () => {
-    if (!couponCode.trim()) {
+  const appliedDiscount = computeDiscount(appliedCouponName, subtotal, shippingFee);
+  const grandTotal = Math.max(0, subtotal + shippingFee - appliedDiscount);
+  const gstAmount = Math.round((subtotal * 18) / 118);
+  const amountAwayFromFreeShipping = Math.max(0, freeShippingThreshold - subtotal);
+  const freeShippingProgress = Math.min(
+    100,
+    (subtotal / freeShippingThreshold) * 100
+  );
+
+  useEffect(() => {
+    if (appliedCouponName) {
+      const match = AVAILABLE_OFFERS.find((o) => o.code === appliedCouponName);
+      if (match && subtotal < match.minOrder) {
+        setAppliedCouponName("");
+        setCouponCode("");
+      }
+    }
+  }, [subtotal, appliedCouponName]);
+
+  const handleApplyCoupon = (codeToApply) => {
+    const code = (codeToApply || couponCode).trim().toUpperCase();
+    if (!code) {
       alert("Please enter a coupon code");
       return;
     }
-    alert(`Coupon "${couponCode}" applied`);
+    const matchingOffer = AVAILABLE_OFFERS.find((o) => o.code === code);
+    if (matchingOffer) {
+      if (subtotal < matchingOffer.minOrder) {
+        alert(
+          `Coupon "${code}" requires a minimum order price of ₹${matchingOffer.minOrder.toLocaleString(
+            "en-IN"
+          )}.\n\nYour current cart total is ₹${subtotal.toLocaleString(
+            "en-IN"
+          )}. Add ₹${(matchingOffer.minOrder - subtotal).toLocaleString(
+            "en-IN"
+          )} more to select this offer!`
+        );
+        return;
+      }
+      setAppliedCouponName(code);
+      setCouponCode(code);
+      const discountVal = computeDiscount(code, subtotal, shippingFee);
+      alert(`Coupon "${code}" applied successfully! Saved ₹${discountVal.toLocaleString("en-IN")}`);
+    } else {
+      alert(`Coupon "${code}" is invalid or expired.`);
+    }
   };
 
   const handleProceedCheckout = () => {
-    setShowCheckoutOptions(true);
+    if (items.length === 0) {
+      alert("Your cart is empty!");
+      return;
+    }
+    navigate("/order-details", {
+      state: {
+        orderId: "DZIRE2505181024",
+        customerName: "Ananya",
+        email: "ananya.patil@email.com",
+        orderDate: "18 May, 2025 • 10:24 AM",
+        paymentStatus: "Paid",
+        paymentMethod: "UPI – Google Pay",
+        orderStatus: "Confirmed",
+        items: items,
+        subtotal: subtotal,
+        shippingFee: shippingFee,
+        discountAmount: appliedDiscount,
+        grandTotal: grandTotal,
+        shippingAddress: {
+          name: "Ananya Patil",
+          address: "Flat 12, Sai Residency,\nBaner Road, Pune – 411045\nMaharashtra, India",
+          phone: "+91 98765 43210",
+        },
+      },
+    });
   };
 
-  const handlePlaceOrder = () => {
-  if (!deliveryType) {
-    alert("Please select delivery option");
-    return;
+  if (!user) {
+    return null;
   }
-
-  if (!paymentMode) {
-    alert("Please select payment mode");
-    return;
-  }
-
-  const firstItem = cartItems[0];
-
-  navigate("/order-details", {
-    state: {
-      orderId: "OD" + Date.now(),
-      productName: firstItem?.name || "Dzire Store Product",
-      color: firstItem?.color || "Multicolor",
-      price: grandTotal,
-      image: firstItem?.image || "https://picsum.photos/120/120",
-      deliveryType:
-        deliveryType === "store" ? "Pickup from Store" : "Home Delivery",
-      paymentMode: paymentMode === "cash" ? "Cash" : "Online",
-    },
-  });
-};
 
   return (
     <>
       <Navbar />
 
-      <div className="cart-container">
-        {cartItems.length === 0 ? (
-          <div className="cart-empty">
-            <div className="cart-empty-content">
-              <div className="empty-cart-icon">🛒</div>
-              <h2>Your Cart is Empty</h2>
-              <p>Looks like you haven't added any items to your cart yet.</p>
-              <Link to="/shop" className="continue-shopping-btn">
-                Continue Shopping
-              </Link>
+      <div className="dz-cart-page">
+        <div className="dz-cart-wrapper">
+          {/* TOP TITLE & BREADCRUMB BAR */}
+          <CartHeader
+            totalCount={items.reduce((acc, item) => acc + (item.quantity || 1), 0)}
+          />
+
+          {items.length === 0 ? (
+            <CartEmptyState />
+          ) : (
+            <div className="dz-cart-grid">
+              {/* LEFT COLUMN: PRODUCTS TABLE & OPTIONS */}
+              <CartTable
+                items={items}
+                handleProductClick={handleProductClick}
+                handleUpdateQuantity={handleUpdateQuantity}
+                handleRemoveItem={handleRemoveItem}
+                handleMoveToWishlist={handleMoveToWishlist}
+                handleColorSelect={handleColorSelect}
+                handleSizeSelect={handleSizeSelect}
+                handleClearCart={handleClearCart}
+                amountAwayFromFreeShipping={amountAwayFromFreeShipping}
+                freeShippingProgress={freeShippingProgress}
+              />
+
+              {/* RIGHT COLUMN: ORDER SUMMARY SIDEBAR */}
+              <CartSummary
+                totalItemCount={totalItemCount}
+                subtotal={subtotal}
+                gstAmount={gstAmount}
+                shippingFee={shippingFee}
+                isFreeShipping={isFreeShipping}
+                appliedDiscount={appliedDiscount}
+                appliedCouponName={appliedCouponName}
+                setAppliedCouponName={setAppliedCouponName}
+                setCouponCode={setCouponCode}
+                grandTotal={grandTotal}
+                amountAwayFromFreeShipping={amountAwayFromFreeShipping}
+                freeShippingProgress={freeShippingProgress}
+                showGstForm={showGstForm}
+                setShowGstForm={setShowGstForm}
+                gstNumber={gstNumber}
+                setGstNumber={setGstNumber}
+                companyName={companyName}
+                setCompanyName={setCompanyName}
+                gstSaved={gstSaved}
+                setGstSaved={setGstSaved}
+                couponCode={couponCode}
+                handleApplyCoupon={handleApplyCoupon}
+                availableOffers={AVAILABLE_OFFERS}
+                handleProceedCheckout={handleProceedCheckout}
+              />
+
+              {/* TRUST BADGES GRID ITEM */}
+              <CartTrustBadges />
             </div>
-          </div>
-        ) : (
-          <>
-            <div className="cart-header">
-              <h1 className="cart-title">Shopping Cart</h1>
-              <p className="cart-subtitle">
-                {cartItems.length} items in your cart
-              </p>
-            </div>
-
-            <div className="cart-wrapper">
-              <div className="cart-items-section">
-                {cartItems.map((item) => (
-                  <div key={item.id} className="cart-item">
-                    <div className="cart-item-image">
-                      <img src={item.image} alt={item.name} />
-                    </div>
-
-                    <div className="cart-item-details">
-                      <h3 className="cart-item-name">{item.name}</h3>
-                      <p className="cart-item-price">
-                        ₹{item.price.toLocaleString()}
-                      </p>
-
-                      <div className="cart-item-actions">
-                        <div className="quantity-controls">
-                          <button
-                            className="qty-btn"
-                            onClick={() => decreaseCartQuantity(item.id)}
-                          >
-                            -
-                          </button>
-
-                          <span className="qty-number">{item.quantity}</span>
-
-                          <button
-                            className="qty-btn"
-                            onClick={() => addToCart(item)}
-                          >
-                            +
-                          </button>
-                        </div>
-
-                        <button
-                          className="remove-btn"
-                          onClick={() => removeFromCart(item.id)}
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    </div>
-
-                    <div className="cart-item-total">
-                      <span className="item-total-label">Total</span>
-                      <span className="item-total-price">
-                        ₹{(item.price * item.quantity).toLocaleString()}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="cart-summary">
-                <div className="coupon-box">
-                  <h4 className="coupon-title">Apply Coupon</h4>
-                  <div className="coupon-input-group">
-                    <input
-                      type="text"
-                      placeholder="Enter coupon code"
-                      value={couponCode}
-                      onChange={(e) => setCouponCode(e.target.value)}
-                      className="coupon-input"
-                    />
-                    <button
-                      className="apply-coupon-btn"
-                      onClick={handleApplyCoupon}
-                    >
-                      Apply
-                    </button>
-                  </div>
-                </div>
-
-                <div className="rewards-box">
-                  <div className="reward-row">
-                    <span>Sporty Rewards:</span>
-                    <span>₹0</span>
-                  </div>
-                  <div className="reward-row">
-                    <span>Available Balance:</span>
-                    <span>₹0</span>
-                  </div>
-                </div>
-
-                <h3 className="summary-title">Order Summary</h3>
-
-                <div className="summary-row">
-                  <span>Subtotal</span>
-                  <span>₹{total.toLocaleString()}</span>
-                </div>
-
-                <div className="summary-row">
-                  <span>Shipping Fee</span>
-                  <span>
-                    {deliveryType === ""
-                      ? "Select delivery option"
-                      : shippingFee === 0
-                      ? "FREE"
-                      : `₹${shippingFee}`}
-                  </span>
-                </div>
-
-                <div className="summary-row shipping-info">
-                  
-                </div>
-
-                <div className="summary-divider"></div>
-
-                <div className="summary-row total-row">
-                  <span>Grand Total</span>
-                  <span>₹{grandTotal.toLocaleString()}</span>
-                </div>
-
-                <button className="checkout-btn" onClick={handleProceedCheckout}>
-                  Proceed to Checkout
-                </button>
-
-                {showCheckoutOptions && (
-                  <div className="checkout-dropdown">
-                    <h4 className="checkout-option-title">Select Delivery Type</h4>
-
-                    <div className="delivery-options">
-                      <label className="option-label">
-                        <input
-                          type="radio"
-                          name="deliveryType"
-                          value="store"
-                          checked={deliveryType === "store"}
-                          onChange={(e) => {
-                            setDeliveryType(e.target.value);
-                            setPaymentMode("");
-                          }}
-                        />
-                        Pickup from Store (Shipping Free)
-                      </label>
-
-                      <label className="option-label">
-                        <input
-                          type="radio"
-                          name="deliveryType"
-                          value="home"
-                          checked={deliveryType === "home"}
-                          onChange={(e) => {
-                            setDeliveryType(e.target.value);
-                            setPaymentMode("");
-                          }}
-                        />
-                        Home Delivery (Shipping ₹50)
-                      </label>
-                    </div>
-
-                    {deliveryType && (
-                      <>
-                        <h4 className="checkout-option-title payment-title">
-                          Select Payment Mode
-                        </h4>
-
-                        <div className="payment-options">
-                          <label className="option-label">
-                            <input
-                              type="radio"
-                              name="paymentMode"
-                              value="cash"
-                              checked={paymentMode === "cash"}
-                              onChange={(e) => setPaymentMode(e.target.value)}
-                            />
-                            Cash
-                          </label>
-
-                          <label className="option-label">
-                            <input
-                              type="radio"
-                              name="paymentMode"
-                              value="online"
-                              checked={paymentMode === "online"}
-                              onChange={(e) => setPaymentMode(e.target.value)}
-                            />
-                            Online (Card / UPI)
-                          </label>
-                        </div>
-                      </>
-                    )}
-
-                    {deliveryType && paymentMode && (
-                      <button
-                        className="place-order-btn"
-                        onClick={handlePlaceOrder}
-                      >
-                        Confirm Order
-                      </button>
-                    )}
-                  </div>
-                )}
-
-                <Link to="/shop" className="continue-shop-link">
-                  ← Continue Shopping
-                </Link>
-              </div>
-            </div>
-          </>
-        )}
+          )}
+        </div>
       </div>
 
       <Footer />

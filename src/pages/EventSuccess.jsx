@@ -6,11 +6,18 @@ import { allEvents } from "../data/eventDetail";
 import "./EventRegister.css";
 
 const EventSuccess = () => {
-  const { id } = useParams();
+  const { id, slug } = useParams();
+  const eventIdentifier = slug || id;
   const location = useLocation();
 
   const event =
-    location.state?.event || allEvents.find((item) => item.id === Number(id));
+    location.state?.event ||
+    allEvents.find(
+      (item) =>
+        String(item.slug) === String(eventIdentifier) ||
+        String(item.id) === String(eventIdentifier) ||
+        String(item._id) === String(eventIdentifier)
+    );
 
   if (!event) {
     return (

@@ -1,158 +1,149 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import AdminLayout from './AdminLayout';
-import { UploadCloud, Download, FileSpreadsheet, CheckCircle, Package } from 'lucide-react';
+import { UploadCloud, FileText, RefreshCcw, Save } from 'lucide-react';
 
-const IMPORT_TEMPLATE = `sku,name,category,brand,price,mrp,stock,description,tags
-SKU-001,Sample Running Shoes,Footwear,Nike,1499,1999,50,Premium cushioning sole,running;sports
-SKU-002,Cycling Helmet Pro,Cycling,Trek,2999,3999,20,Lightweight aerodynamic shell,cycling;safety`;
-
-const EXPORT_FIELDS = ['SKU', 'Product Name', 'Category', 'Brand', 'Price', 'MRP', 'Stock', 'Description', 'Tags', 'Status', 'Created At'];
+const templates = [
+  {
+    title: 'Product Upload Template',
+    subtitle: 'CSV format',
+    color: '#175cd3',
+    fileName: 'product-upload-template.csv',
+    content: 'sku,name,category,brand,price,stock,description\nSKU-001,Sample Product,Camping,Dzire,999,25,Product details here\n'
+  },
+  {
+    title: 'Inventory Update Template',
+    subtitle: 'CSV format',
+    color: '#12b76a',
+    fileName: 'inventory-update-template.csv',
+    content: 'sku,stock,location,low_stock_alert\nSKU-001,25,Main Warehouse,5\n'
+  }
+];
 
 const AdminBulkUpload = () => {
-  const [tab, setTab] = useState('import');
-  const [file, setFile] = useState(null);
-  const [success, setSuccess] = useState(false);
-  const [selectedFields, setSelectedFields] = useState(['SKU', 'Product Name', 'Category', 'Price', 'Stock', 'Status']);
   const fileInputRef = useRef(null);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedTemplate, setSelectedTemplate] = useState('');
+  const [saveMessage, setSaveMessage] = useState('');
 
-  const handleDownloadTemplate = () => {
-    const blob = new Blob([IMPORT_TEMPLATE], { type: 'text/csv;charset=utf-8;' });
+  const handleBrowseFile = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files?.[0];
+
+    if (file) {
+      setSelectedFile(file);
+      setSaveMessage('');
+    }
+  };
+
+  const handleTemplateDownload = (template) => {
+    const blob = new Blob([template.content], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href = url; a.download = 'product-import-template.csv'; a.click();
+    const link = document.createElement('a');
+
+    link.href = url;
+    link.download = template.fileName;
+    link.click();
     URL.revokeObjectURL(url);
+    setSelectedTemplate(template.title);
+    setSaveMessage(`${template.title} downloaded.`);
   };
 
-  const handleUpload = () => {
-    if (!file) return;
-    setSuccess(true);
-    setTimeout(() => { setSuccess(false); setFile(null); }, 2500);
-  };
+  const handleSave = () => {
+    if (!selectedFile && !selectedTemplate) {
+      setSaveMessage('Please select a file or download a template first.');
+      return;
+    }
 
-  const handleExport = (format) => {
-    const header = selectedFields.join(',');
-    const sampleRow = selectedFields.map(() => 'Sample Value').join(',');
-    const csv = `${header}\n${sampleRow}`;
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href = url; a.download = `products-export.${format}`; a.click();
-    URL.revokeObjectURL(url);
+    setSaveMessage(selectedFile ? `${selectedFile.name} saved for upload.` : `${selectedTemplate} saved.`);
   };
-
-  const toggleField = (field) => setSelectedFields(prev =>
-    prev.includes(field) ? prev.filter(f => f !== field) : [...prev, field]
-  );
 
   return (
     <AdminLayout>
       <div className="admin-page-container">
-        {/* Hero */}
-        <section className="admin-hero" style={{ marginBottom: '24px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-            <div style={{ width: '48px', height: '48px', background: 'linear-gradient(135deg,#fff4ed,#ffe5cc)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Package size={24} color="#ff6600" />
-            </div>
-            <div>
-              <h1 style={{ margin: 0, fontSize: '22px', fontWeight: '800', color: '#111' }}>Product Import / Export</h1>
-              <p style={{ margin: 0, color: '#667085', fontSize: '13px' }}>Bulk manage your product catalog using CSV or Excel files</p>
-            </div>
-          </div>
-        </section>
+      <section className="admin-hero" style={{ marginBottom: '24px' }}>
+        <div>
+          <h1>Bulk Upload</h1>
+          <p>Upload products, images, and categories in bulk via CSV</p>
+        </div>
+        <button
+          className="admin-primary-button"
+          type="button"
+          onClick={() => window.location.reload()}
+        >
+          <RefreshCcw size={18} />
+          Refresh Data
+        </button>
+      </section>
 
-        {/* Tabs */}
-        <div style={{ display: 'flex', gap: '8px', marginBottom: '24px', background: '#f3f4f6', padding: '4px', borderRadius: '10px', width: 'fit-content' }}>
-          {['import', 'export'].map(t => (
-            <button key={t} onClick={() => setTab(t)} style={{ padding: '8px 28px', borderRadius: '8px', border: 'none', cursor: 'pointer', fontWeight: '600', fontSize: '14px', background: tab === t ? '#ff6600' : 'transparent', color: tab === t ? 'white' : '#667085', transition: 'all 0.2s' }}>
-              {t === 'import' ? '⬆️ Import' : '⬇️ Export'}
-            </button>
-          ))}
+      <div style={{ display: 'flex', gap: '24px' }}>
+        <div style={{ flex: 1, background: 'white', borderRadius: '12px', border: '1px solid #e5e7eb', padding: '32px', textAlign: 'center' }}>
+          <div style={{ width: '64px', height: '64px', background: '#fff4ed', color: '#ff6600', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px auto' }}>
+            <UploadCloud size={32} />
+          </div>
+          <h2 style={{ fontSize: '18px', margin: '0 0 8px 0' }}>Upload CSV/Excel File</h2>
+          <p style={{ color: '#667085', fontSize: '14px', margin: '0 0 24px 0' }}>Drag and drop your file here or click to browse</p>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".csv,.xls,.xlsx"
+            onChange={handleFileChange}
+            style={{ display: 'none' }}
+          />
+          <button
+            type="button"
+            onClick={handleBrowseFile}
+            style={{ padding: '10px 24px', background: 'white', border: '1px solid #d1d5db', borderRadius: '8px', cursor: 'pointer', fontWeight: '500' }}
+          >
+            Browse File
+          </button>
+          {selectedFile && (
+            <p style={{ color: '#344054', fontSize: '14px', margin: '16px 0 0 0', fontWeight: '500' }}>
+              Selected: {selectedFile.name}
+            </p>
+          )}
         </div>
 
-        {tab === 'import' ? (
-          <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
-            {/* Upload Box */}
-            <div style={{ flex: 1, minWidth: '300px', background: 'white', borderRadius: '16px', border: '2px dashed #e5e7eb', padding: '40px', textAlign: 'center' }}>
-              {success ? (
+        <div style={{ width: '350px', background: 'white', borderRadius: '12px', border: '1px solid #e5e7eb', padding: '24px' }}>
+          <h3 style={{ fontSize: '16px', margin: '0 0 16px 0', borderBottom: '1px solid #e5e7eb', paddingBottom: '12px' }}>Templates</h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {templates.map((template) => (
+              <button
+                key={template.fileName}
+                type="button"
+                onClick={() => handleTemplateDownload(template)}
+                style={{ padding: '12px', display: 'flex', alignItems: 'center', gap: '12px', background: selectedTemplate === template.title ? '#fff4ed' : '#f9fafb', border: `1px solid ${selectedTemplate === template.title ? '#ff6600' : '#e5e7eb'}`, borderRadius: '8px', cursor: 'pointer', textAlign: 'left' }}
+              >
+                <FileText size={20} color={template.color} />
                 <div>
-                  <CheckCircle size={56} color="#12b76a" style={{ margin: '0 auto 16px' }} />
-                  <h3 style={{ color: '#12b76a', fontWeight: '700' }}>Products Imported Successfully!</h3>
-                  <p style={{ color: '#667085' }}>{file?.name} has been processed.</p>
+                  <span style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#111' }}>{template.title}</span>
+                  <span style={{ fontSize: '12px', color: '#667085' }}>{template.subtitle}</span>
                 </div>
-              ) : (
-                <>
-                  <div style={{ width: '72px', height: '72px', background: '#fff4ed', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
-                    <UploadCloud size={36} color="#ff6600" />
-                  </div>
-                  <h3 style={{ margin: '0 0 8px', fontWeight: '700', fontSize: '18px' }}>Upload Product File</h3>
-                  <p style={{ color: '#667085', fontSize: '13px', margin: '0 0 24px' }}>Supports .csv, .xls, .xlsx — Max 20MB</p>
-                  <input ref={fileInputRef} type="file" accept=".csv,.xls,.xlsx" style={{ display: 'none' }} onChange={e => setFile(e.target.files?.[0] || null)} />
-                  <button onClick={() => fileInputRef.current?.click()} style={{ padding: '10px 28px', background: 'white', border: '1px solid #d1d5db', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', marginBottom: '12px' }}>
-                    {file ? `📄 ${file.name}` : 'Browse File'}
-                  </button>
-                  {file && (
-                    <button onClick={handleUpload} style={{ display: 'block', width: '100%', marginTop: '16px', padding: '12px', background: '#ff6600', color: 'white', border: 'none', borderRadius: '10px', cursor: 'pointer', fontWeight: '700', fontSize: '15px' }}>
-                      ⬆️ Import Products Now
-                    </button>
-                  )}
-                </>
-              )}
-            </div>
-
-            {/* Info & Template */}
-            <div style={{ width: '320px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <div style={{ background: 'white', borderRadius: '16px', border: '1px solid #e5e7eb', padding: '24px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px', borderBottom: '1px solid #f0f0f0', paddingBottom: '12px' }}>
-                  <FileSpreadsheet size={20} color="#ff6600" />
-                  <strong>Required Columns</strong>
-                </div>
-                <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '13px', color: '#475569', lineHeight: '1.9' }}>
-                  <li><strong>sku</strong> — Unique product code</li>
-                  <li><strong>name</strong> — Product display name</li>
-                  <li><strong>category</strong> — Category name</li>
-                  <li><strong>brand</strong> — Brand name</li>
-                  <li><strong>price</strong> — Selling price (₹)</li>
-                  <li><strong>stock</strong> — Available units</li>
-                </ul>
-              </div>
-              <button onClick={handleDownloadTemplate} style={{ padding: '12px', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '12px', cursor: 'pointer', color: '#16a34a', fontWeight: '700', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                <Download size={18} /> Download Sample Template
               </button>
-            </div>
+            ))}
           </div>
-        ) : (
-          <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
-            {/* Field Selector */}
-            <div style={{ flex: 1, minWidth: '300px', background: 'white', borderRadius: '16px', border: '1px solid #e5e7eb', padding: '28px' }}>
-              <h3 style={{ margin: '0 0 16px', fontWeight: '700' }}>Select Fields to Export</h3>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-                {EXPORT_FIELDS.map(field => (
-                  <button key={field} onClick={() => toggleField(field)} style={{ padding: '6px 14px', borderRadius: '20px', border: '1px solid', fontWeight: '500', fontSize: '13px', cursor: 'pointer', background: selectedFields.includes(field) ? '#fff4ed' : '#f9fafb', borderColor: selectedFields.includes(field) ? '#ff6600' : '#e5e7eb', color: selectedFields.includes(field) ? '#ff6600' : '#667085' }}>
-                    {selectedFields.includes(field) ? '✓ ' : ''}{field}
-                  </button>
-                ))}
-              </div>
-              <p style={{ margin: '16px 0 0', fontSize: '12px', color: '#9ca3af' }}>{selectedFields.length} field(s) selected</p>
-            </div>
-
-            {/* Export Actions */}
-            <div style={{ width: '280px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <div style={{ background: 'white', borderRadius: '16px', border: '1px solid #e5e7eb', padding: '24px' }}>
-                <h4 style={{ margin: '0 0 16px', fontWeight: '700' }}>Export Format</h4>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                  <button onClick={() => handleExport('csv')} style={{ padding: '12px', background: '#eff8ff', border: '1px solid #bae6fd', borderRadius: '10px', cursor: 'pointer', color: '#0369a1', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <Download size={18} /> Export as CSV
-                  </button>
-                  <button onClick={() => handleExport('xlsx')} style={{ padding: '12px', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '10px', cursor: 'pointer', color: '#16a34a', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <Download size={18} /> Export as Excel (.xlsx)
-                  </button>
-                </div>
-              </div>
-              <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '12px', padding: '14px', fontSize: '12px', color: '#92400e' }}>
-                💡 <strong>Tip:</strong> Export is based on current filter/search selection in the Products module.
-              </div>
-            </div>
-          </div>
-        )}
+        </div>
       </div>
+
+      <div style={{ marginTop: '24px', background: 'white', borderRadius: '12px', border: '1px solid #e5e7eb', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px' }}>
+        <div>
+          <h3 style={{ margin: '0 0 4px 0', fontSize: '16px' }}>Save Bulk Upload</h3>
+          <p style={{ margin: 0, fontSize: '14px', color: saveMessage.includes('Please') ? '#f04438' : '#667085' }}>
+            {saveMessage || 'Select a file or template, then save.'}
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={handleSave}
+          style={{ padding: '10px 18px', background: '#ff6600', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '8px' }}
+        >
+          <Save size={18} />
+          Save
+        </button>
+      </div>
+    </div>
     </AdminLayout>
   );
 };

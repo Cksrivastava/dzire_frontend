@@ -17,8 +17,8 @@
   max-width: 1300px;
   width: 100%;
   margin: 0 auto;
-  padding: 0 20px;
-  /* Restored standard left padding to align with other page containers */
+  padding: 0 32px;
+  /* Aligned padding with navbar container */
   display: grid;
   grid-template-columns: 280px minmax(0, 1fr);
   /* minmax prevents grid from expanding due to overflowing flex track */
@@ -458,9 +458,9 @@
   width: 100%;
   max-width: 1300px;
   margin: 15px auto 5px;
-  padding: 0 20px;
+  padding: 15px 32px 5px 32px;
   border-top: 1px solid #eef2f6;
-  padding-top: 15px;
+  box-sizing: border-box;
 }
 
 .brands-slider-container {
@@ -548,7 +548,15 @@
   }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 992px) {
+  .reviews-container,
+  .brands-slider-section {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+@media (max-width: 768px) {
   .brand-slide-item {
     width: 80px;
     height: 60px;
@@ -556,8 +564,10 @@
     margin: 0;
   }
 
+  .reviews-container,
   .brands-slider-section {
-    padding: 0 16px;
+    padding-left: 10px;
+    padding-right: 10px;
     padding-top: 15px;
   }
 }

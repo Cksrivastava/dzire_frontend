@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 850" width="100%" height="100%">
+  <defs>
+    <linearGradient id="itaBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="50%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#334155"/>
+    </linearGradient>
+    <linearGradient id="snowGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#cbd5e1"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="850" fill="url(#itaBg)"/>
+  <!-- Mountain silhouette -->
+  <polygon points="100,550 300,200 500,550" fill="#090d16"/>
+  <polygon points="300,200 300,550 500,550" fill="url(#snowGrad2)"/>
+  <path d="M0,600 Q300,520 600,600 L600,850 L0,850 Z" fill="#0f172a"/>
+  
+  <!-- Banner Top -->
+  <rect x="0" y="0" width="600" height="220" fill="#030712" opacity="0.9"/>
+  <text x="300" y="50" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#94a3b8" text-anchor="middle" letter-spacing="3">NATIONAL BESTSELLER</text>
+  <text x="300" y="130" font-family="'Arial Black', sans-serif" font-size="52" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="3">INTO THIN AIR</text>
+  <text x="300" y="175" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#f97316" text-anchor="middle" letter-spacing="4">A PERSONAL ACCOUNT OF THE MOUNT EVEREST DISASTER</text>
+  
+  <!-- Bottom Banner -->
+  <rect x="0" y="720" width="600" height="130" fill="#030712"/>
+  <text x="300" y="775" font-family="'Arial Black', sans-serif" font-size="32" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="4">JON KRAKAUER</text>
+  <text x="300" y="805" font-family="Arial, sans-serif" font-size="14" fill="#64748b" text-anchor="middle">AUTHOR OF INTO THE WILD</text>
+</svg>

@@ -1,9 +1,7 @@
 import { cn, Button, Input, AuthShell, toast, apiUrl, getAuthHeaders, getAuthToken, getAuthUser, useAuth, getProductImage, getAudienceMeta, PRODUCT_AUDIENCES, parsePriceInput, PRICE_INPUT_HINT } from "../AdminShims";
 import { useEffect, useMemo, useState } from "react";
 import { BellRing, RefreshCcw, Send, ShieldAlert } from "lucide-react";
-
-
-
+import ExportDropdown from "../components/ExportDropdown";
 import AdminLayout from "./AdminLayout";
 const normalizeStockAlertRequest = (item) => {
 	const product = item?.product_id && typeof item.product_id === "object" ? item.product_id : null;
@@ -286,18 +284,34 @@ const AdminStockAlerts = () => {
 	return <AdminLayout>
 		<style>{adminStockAlertsStyles}</style>
 		<div className="admin-stock-alerts-page">
-<section className="admin-hero">
-        <div>
-          <h1>Notify customers</h1>
-          <p>
-Separate workspace for saved stock alerts. Review pending requests, check delivery status, and notify customers once products are restocked.
-          </p>
-        </div>
-        <button className="admin-primary-button" type="button" onClick={() => window.location.reload()}>
-          <RefreshCcw size={18} />
-          Refresh Data
-        </button>
-      </section>
+			<section className="admin-hero">
+				<div>
+					<h1>Notify customers</h1>
+					<p>
+						Separate workspace for saved stock alerts. Review pending requests, check delivery status, and notify customers once products are restocked.
+					</p>
+				</div>
+				<div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+					<ExportDropdown
+						fileName="Stock_Alerts_Report"
+						title="Customer Stock Notification Requests"
+						headers={['Product Name', 'Brand', 'Current Stock', 'Customer Name', 'Customer Email', 'Status', 'Requested At']}
+						rows={stockAlerts.map((req) => [
+							req.product_name || '',
+							req.product_brand || '',
+							String(req.product_stock || 0),
+							req.name || '',
+							req.email || '',
+							req.status || '',
+							formatDateTime(req.created_at)
+						])}
+					/>
+					<button className="admin-primary-button" type="button" onClick={() => window.location.reload()}>
+						<RefreshCcw size={18} />
+						Refresh Data
+					</button>
+				</div>
+			</section>
 
 			<section className="admin-stock-metrics grid gap-4 md:grid-cols-2 2xl:grid-cols-4">
 				{[

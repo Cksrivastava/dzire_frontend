@@ -1,11 +1,17 @@
 .auth-page {
   min-height: 100vh;
   background: radial-gradient(circle at 10% 20%, #ffffff 0%, #fff7f2 55%, #f0f4f8 100%);
-  padding: 40px 16px 80px;
+  padding: 32px 16px 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
 }
 
 .auth-wrapper {
-  max-width: 540px;
+  max-width: 520px;
+  width: 100%;
   margin: 0 auto;
 }
 
@@ -153,6 +159,57 @@
   font-size: 15px;
 }
 
+.auth-alert-error {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 16px;
+  animation: authAlertFade 0.2s ease-in-out;
+}
+
+.auth-alert-success {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #15803d;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 16px;
+  animation: authAlertFade 0.2s ease-in-out;
+}
+
+@keyframes authAlertFade {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.auth-input-eye-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+}
+
+.auth-input-eye-btn:hover {
+  color: #334155;
+}
+
 .auth-primary-btn {
   width: 100%;
   margin-top: 4px;
@@ -166,10 +223,34 @@
   letter-spacing: 0.5px;
   border-radius: 12px;
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
-.auth-primary-btn:hover {
-  background: #ff6600;
+.auth-primary-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.auth-btn-spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2.5px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+  border-top-color: #ffffff;
+  animation: authSpin 0.7s linear infinite;
+}
+
+@keyframes authSpin {
+  to { transform: rotate(360deg); }
+}
+
+.auth-primary-btn:hover:not(:disabled) {
+  background: #e65c00;
   transform: translateY(-1px);
 }
 

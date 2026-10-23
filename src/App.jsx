@@ -49,25 +49,32 @@ import ReturnRequestDetail from "./pages/ReturnRequestDetail";
 import StorePickup from "./pages/StorePickup";
 import AdminRouter from "../admin/AdminRouter";
 import Compare from "./pages/Compare";
+import Bookstore from "./pages/Bookstore";
+import BookDetail from "./pages/BookDetail";
+import PhoneVerificationModal from "./components/PhoneVerificationModal";
 
 const App = () => {
-  const { pathname } = useLocation();
+  const location = useLocation();
 
   useEffect(() => {
     if ('scrollRestoration' in window.history) {
       window.history.scrollRestoration = 'manual';
     }
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(location.search);
     if (!params.has("scrollTarget")) {
       window.scrollTo(0, 0);
     }
-  }, [pathname]);
+  }, [location.pathname, location.search]);
 
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
+    <>
+      <PhoneVerificationModal />
+      <Routes>
+        <Route path="/" element={<Home />} />
       <Route path="/shop" element={<Shop />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Login initialMode="signup" />} />
+      <Route path="/signup" element={<Login initialMode="signup" />} />
       <Route path="/cart" element={<Cart />} />
       <Route path="/wishlist" element={<Wishlist />} />
       <Route path="/compare" element={<Compare />} />
@@ -75,15 +82,19 @@ const App = () => {
       <Route path="/store" element={<MyStore />} />
       <Route path="/about" element={<About />} />
       <Route path="/contact" element={<Contact />} />
+      <Route path="/contact-us" element={<Contact />} />
+      <Route path="/contactus" element={<Contact />} />
       <Route path="/blog" element={<BlogPage />} />
       <Route path="/blog/:slug" element={<BlogDetail />} />
       <Route path="/privacy" element={<Privacy />} />
       <Route path="/terms" element={<Terms />} />
 
       <Route path="/product/:id" element={<Product />} />
+      <Route path="/bookstore" element={<Bookstore />} />
+      <Route path="/bookstore/:id" element={<BookDetail />} />
 
       <Route path="/event" element={<Event />} />
-      <Route path="/event/:id" element={<EventDetail />} />
+      <Route path="/event/:slug" element={<EventDetail />} />
 
       <Route path="/events/camping" element={<Camping />} />
       <Route path="/events/climbing" element={<Climbing />} />
@@ -104,21 +115,29 @@ const App = () => {
       <Route path="/rental-booking" element={<RentalBookingForm />} />
       <Route path="/category/:id" element={<CategoryProducts />} />
       <Route path="/order-details" element={<OrderDetails />} />
+      <Route path="/event-register/:slug" element={<EventRegister />} />
       <Route path="/event-register/:id" element={<EventRegister />} />
+      <Route path="/event-step-2/:slug" element={<EventStep2 />} />
       <Route path="/event-step-2/:id" element={<EventStep2 />} />
+      <Route path="/event-step-3/:slug" element={<EventStep3 />} />
       <Route path="/event-step-3/:id" element={<EventStep3 />} />
+      <Route path="/event-step-4/:slug" element={<EventStep4 />} />
       <Route path="/event-step-4/:id" element={<EventStep4 />} />
+      <Route path="/event-success/:slug" element={<EventSuccess />} />
       <Route path="/event-success/:id" element={<EventSuccess />} />
       <Route path="/checkout" element={<Checkout />} />
       <Route path="/account" element={<CustomerAccount />} />
+      <Route path="/profile" element={<CustomerAccount />} />
       <Route path="/account/orders" element={<OrderHistory />} />
       <Route path="/account/addresses" element={<SavedAddresses />} />
       <Route path="/account/wallet" element={<WalletLoyalty />} />
       <Route path="/offers" element={<OffersCoupons />} />
+      <Route path="/return-request" element={<ReturnRequestDetail />} />
       <Route path="/return-request/:id" element={<ReturnRequestDetail />} />
       <Route path="/store-pickup" element={<StorePickup />} />
       <Route path="/admin/*" element={<AdminRouter />} />
     </Routes>
+    </>
   );
 };
 

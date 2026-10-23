@@ -1,17 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation, useParams, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { allEvents } from "../data/eventDetail";
+import { eventAPI } from "../services/api";
 import "./EventRegister.css";
 
 const EventRegister = () => {
-  const { id } = useParams();
+  const { id, slug } = useParams();
+  const eventIdentifier = slug || id;
   const location = useLocation();
   const navigate = useNavigate();
 
+  const [remoteEvent, setRemoteEvent] = useState(null);
+
+  useEffect(() => {
+    if (!location.state?.event && eventIdentifier) {
+      eventAPI
+        .getById(eventIdentifier)
+        .then((res) => {
+          if (res && res.event) setRemoteEvent(res.event);
+        })
+        .catch(() => {});
+    }
+  }, [eventIdentifier, location.state?.event]);
+
   const event =
-    location.state?.event || allEvents.find((item) => item.id === Number(id));
+    location.state?.event ||
+    remoteEvent ||
+    allEvents.find(
+      (item) =>
+        String(item.slug) === String(eventIdentifier) ||
+        String(item.id) === String(eventIdentifier) ||
+        String(item._id) === String(eventIdentifier)
+    );
 
   const [adult, setAdult] = useState(1);
   const [child, setChild] = useState(0);
@@ -22,7 +44,6 @@ const EventRegister = () => {
     email: "",
     phone: "",
     isMember: false,
-    buyForOthers: false,
   });
 
   const handleChange = (e) => {
@@ -41,9 +62,7 @@ const EventRegister = () => {
     formData.firstName.trim() !== "" &&
     formData.lastName.trim() !== "" &&
     validateEmail(formData.email) &&
-    formData.phone.trim() !== "" &&
-    formData.isMember &&
-    formData.buyForOthers;
+    formData.phone.trim() !== "";
 
   if (!event) {
     return (
@@ -63,7 +82,7 @@ const EventRegister = () => {
 
       <main className="register-page">
         <div className="register-container">
-          <Link to={`/event/${event.id}`} className="continue-link">
+          <Link to={`/event/${event.slug || event.id || eventIdentifier}`} className="continue-link">
             ‹ Continue Browsing
           </Link>
 
@@ -148,16 +167,6 @@ const EventRegister = () => {
                   <span>I am an Dzire Member</span>
                 </div>
 
-                <div className="check-row">
-                  <input
-                    type="checkbox"
-                    name="buyForOthers"
-                    checked={formData.buyForOthers}
-                    onChange={handleChange}
-                  />
-                  <span>I would like to buy this activity but will not be participating</span>
-                </div>
-
               </div>
             </div>
 
@@ -182,7 +191,7 @@ const EventRegister = () => {
               <button
                 type="button"
                 className={`continue-btn ${!isFormValid ? "disabled" : ""}`}
-                onClick={() => isFormValid && navigate(`/event-step-2/${id}`, { state: { event } })}
+                onClick={() => isFormValid && navigate(`/event-step-2/${event.slug || event.id || eventIdentifier}`, { state: { event } })}
                 disabled={!isFormValid}
               >
                 Continue

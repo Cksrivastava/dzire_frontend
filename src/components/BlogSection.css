@@ -20,7 +20,7 @@
 }
 
 .blog-section-subtitle {
-  color: #f24f0a;
+  color: #FF6600;
   font-weight: 800;
   font-size: 12px;
   letter-spacing: 1.5px;
@@ -55,7 +55,7 @@
   /* Firefox */
   -ms-overflow-style: none;
   /* IE and Edge */
-  padding: 10px 5px 15px;
+  padding: 10px 0 15px;
   /* prevents card lift zoom/shadow clipping */
   scroll-snap-type: x mandatory;
 }
@@ -96,7 +96,7 @@
 }
 
 .blog-dot.active {
-  background: #f24f0a !important;
+  background: #FF6600 !important;
   transform: scale(1.1);
   width: 20px;
   border-radius: 5px;
@@ -168,7 +168,7 @@
   position: absolute;
   top: 14px;
   left: 14px;
-  background-color: #f24f0a;
+  background-color: #FF6600;
   color: #ffffff;
   font-size: 10px;
   font-weight: 800;
@@ -238,7 +238,7 @@
 }
 
 .readmore-arrow {
-  color: #f24f0a;
+  color: #FF6600;
   font-weight: 800;
   font-size: 18px;
 }
@@ -257,9 +257,9 @@
   display: inline-block;
   padding: 10px 24px;
   background-color: transparent;
-  border: 1px solid #f24f0a;
+  border: 1px solid #FF6600;
   border-radius: 6px;
-  color: #f24f0a;
+  color: #FF6600;
   text-decoration: none;
   font-size: 12.5px;
   font-weight: 700;
@@ -268,8 +268,8 @@
 }
 
 .view-all-blogs-btn:hover {
-  background-color: #f24f0a;
-  border-color: #f24f0a;
+  background-color: #FF6600;
+  border-color: #FF6600;
   color: #ffffff;
 }
 

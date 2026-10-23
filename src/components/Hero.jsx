@@ -3,17 +3,41 @@ import "./Hero.css";
 import image1 from "../assets/image.png";
 import image2 from "../assets/image2.png";
 import image3 from "../assets/image3.png";
+import { offerAPI } from "../services/api";
+
+const defaultImages = [image1, image2, image3];
 
 const Hero = () => {
-  const images = [image1, image2, image3];
+  const [slides, setSlides] = useState(defaultImages);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
+    let mounted = true;
+    offerAPI
+      .getAll()
+      .then((res) => {
+        if (mounted && res && Array.isArray(res.offers)) {
+          const bannerImages = res.offers
+            .filter((o) => o.status === "Active" && (o.bannerImage || o.image))
+            .map((o) => o.bannerImage || o.image);
+          if (bannerImages.length > 0) {
+            setSlides(bannerImages);
+          }
+        }
+      })
+      .catch(() => {});
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (slides.length <= 1) return;
     const timer = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % slides.length);
     }, 4000);
     return () => clearInterval(timer);
-  }, [images.length]);
+  }, [slides.length]);
 
   return (
     <div className="hero-slider-container">
@@ -21,14 +45,14 @@ const Hero = () => {
         className="hero-slider-track"
         style={{ transform: `translateX(-${currentIndex * 100}%)` }}
       >
-        {images.map((img, index) => (
+        {slides.map((img, index) => (
           <div className="hero-slide" key={index}>
             <img src={img} alt={`Sports banner ${index + 1}`} />
           </div>
         ))}
       </div>
       <div className="hero-dots">
-        {images.map((_, index) => (
+        {slides.map((_, index) => (
           <button
             key={index}
             className={`hero-dot ${index === currentIndex ? "active" : ""}`}
