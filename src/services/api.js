@@ -1,7 +1,10 @@
 import wsClient from "./websocket.js";
 
-const API_BASE_URL =
+const rawApiUrl =
   import.meta.env.VITE_API_URL || "https://dzire-backend.onrender.com/api";
+const API_BASE_URL = rawApiUrl.replace(/\/+$/, "").endsWith("/api")
+  ? rawApiUrl.replace(/\/+$/, "")
+  : `${rawApiUrl.replace(/\/+$/, "")}/api`;
 
 const CACHE_TTL_MS = 3 * 60 * 1000; // 3 minutes default TTL
 const cache = new Map();

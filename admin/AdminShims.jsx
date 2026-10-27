@@ -56,9 +56,15 @@ export const toast = {
 export const apiUrl = (path) => {
   if (typeof path !== "string") return path;
   if (path.startsWith("http://") || path.startsWith("https://")) return path;
+  const rawBase =
+    import.meta.env.VITE_API_URL || "https://dzire-backend.onrender.com/api";
+  const cleanBase = rawBase.replace(/\/+$/, "");
+  const baseWithoutApi = cleanBase.endsWith("/api")
+    ? cleanBase.slice(0, -4)
+    : cleanBase;
   const clean = path.startsWith("/") ? path : `/${path}`;
-  if (clean.startsWith("/api/")) return `https://dzire-backend.onrender.com${clean}`;
-  return `https://dzire-backend.onrender.com/api${clean}`;
+  if (clean.startsWith("/api/")) return `${baseWithoutApi}${clean}`;
+  return `${baseWithoutApi}/api${clean}`;
 };
 
 const ADMIN_SESSION_KEY = "dzire_demo_admin_session";

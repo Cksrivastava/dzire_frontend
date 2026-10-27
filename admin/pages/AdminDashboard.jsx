@@ -29,11 +29,41 @@ import ExportDropdown from "../components/ExportDropdown";
 import { apiUrl } from "../AdminShims";
 import "./AdminDashboard.css";
 
+const TIMEFRAME_OPTIONS = [
+  { value: "all", label: "All Time" },
+  { value: "1m", label: "1 Month" },
+  { value: "2m", label: "2 Months" },
+  { value: "3m", label: "3 Months" },
+  { value: "6m", label: "6 Months" },
+  { value: "1y", label: "1 Year" },
+];
+
+const TIMEFRAME_LABELS = Object.fromEntries(
+  TIMEFRAME_OPTIONS.map((option) => [option.value, option.label])
+);
+
+// const AdminDashboard = () => {
+
 const AdminDashboard = () => {
   const navigate = useNavigate();
 
   const [metrics, setMetrics] = React.useState(null);
   const [storeInfo, setStoreInfo] = React.useState(null);
+
+  //
+  const [metricsCache, setMetricsCache] = React.useState({});
+
+const [cardTimeframes, setCardTimeframes] = React.useState({
+  totalSales: "all",
+  onlineOrders: "all",
+  instoreOrders: "all",
+  totalPurchases: "all",
+  lowStock: "all",
+  outOfStock: "all",
+  salesOverview: "all",
+}); 
+  // 
+
   const [recentOrders, setRecentOrders] = React.useState([]);
   const [recentPurchases, setRecentPurchases] = React.useState([]);
   const [recentReturns, setRecentReturns] = React.useState([]);
@@ -46,6 +76,8 @@ const AdminDashboard = () => {
   const [appliedTo, setAppliedTo] = React.useState("");
   const [activePreset, setActivePreset] = React.useState("all");
   const [loading, setLoading] = React.useState(false);
+
+  
 
   const formatDateYMD = (d) => {
     const year = d.getFullYear();

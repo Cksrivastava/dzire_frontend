@@ -145,12 +145,16 @@ const navigationSections = [
       { to: "/admin/roles-permissions", label: "Roles & Permissions", icon: ShieldCheck },
       { to: "/admin/payments", label: "Payment", icon: CreditCard },
       {
-        to: "/admin/reports/gst",
+        to: "/admin/reports/sales",
         label: "Reports",
         icon: FileText,
         subItems: [
+          { to: "/admin/reports/sales", label: "Sales" },
           { to: "/admin/reports/gst", label: "GST" },
-          { to: "/admin/reports/profit", label: "Profit" }
+          { to: "/admin/reports/products", label: "Product" },
+          { to: "/admin/reports/profit", label: "Profit" },
+          { to: "/admin/reports/purchase", label: "Purchase" },
+          { to: "/admin/reports/customers", label: "Customer" },
         ]
       }
     ]
@@ -317,19 +321,31 @@ const pageCopy = {
   },
   "/admin/reports/sales": {
     title: "Sales Reports",
-    subtitle: "Daily, monthly, yearly sales trends",
+    subtitle: "Daily, monthly, yearly channel sales and revenue performance metrics",
   },
   "/admin/reports/gst": {
     title: "GST Reports",
     subtitle: "GST filing data, turnover, and Input Tax Credit (ITC) summaries",
   },
+  "/admin/reports/products": {
+    title: "Product Reports",
+    subtitle: "SKU sales volume, stock turnover, margins, and catalog performance",
+  },
   "/admin/reports/profit": {
     title: "Profitability Reports",
     subtitle: "Channel-wise margins, operating costs, and revenue",
   },
+  "/admin/reports/purchase": {
+    title: "Purchase Reports",
+    subtitle: "Vendor procurement expenditures, invoices, and input tax breakdown",
+  },
+  "/admin/reports/customers": {
+    title: "Customer Reports",
+    subtitle: "Customer demographics, retention, order frequency, and lifetime value",
+  },
   "/admin/reports": {
-    title: "All Reports",
-    subtitle: "Central hub for all business intelligence reports",
+    title: "Reports & Analytics Hub",
+    subtitle: "Central directory for all business intelligence and financial reports",
   },
   "/admin/returns": {
     title: "Returns Management",

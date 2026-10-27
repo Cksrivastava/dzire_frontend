@@ -47,6 +47,9 @@ import AdminCreatePaymentOut from "./pages/AdminCreatePaymentOut";
 import AdminDebitNote from "./pages/AdminDebitNote";
 import AdminCreateDebitNote from "./pages/AdminCreateDebitNote";
 import AdminReports from "./pages/AdminReports";
+import AdminSalesReports from "./pages/AdminSalesReports";
+import AdminProductReports from "./pages/AdminProductReports";
+import AdminPurchaseReports from "./pages/AdminPurchaseReports";
 import AdminInventoryReports from "./pages/AdminInventoryReports";
 import AdminCustomerReports from "./pages/AdminCustomerReports";
 import AdminVendorReports from "./pages/AdminVendorReports";
@@ -170,12 +173,14 @@ const AdminRouter = () => {
       <Route path="debit-note/add" element={<RequireAdmin><AdminCreateDebitNote /></RequireAdmin>} />
       <Route path="offline-sales" element={<RequireAdmin><AdminOfflineSales /></RequireAdmin>} />
       <Route path="invoices" element={<RequireAdmin><AdminInvoices /></RequireAdmin>} />
-      <Route path="reports" element={<Navigate to="/admin/reports/gst" replace />} />
-      <Route path="reports/sales" element={<Navigate to="/admin/reports/gst" replace />} />
+      <Route path="reports" element={<Navigate to="/admin/reports/sales" replace />} />
+      <Route path="reports/sales" element={<RequireAdmin><AdminSalesReports /></RequireAdmin>} />
       <Route path="reports/gst" element={<RequireAdmin><AdminGSTReports /></RequireAdmin>} />
+      <Route path="reports/products" element={<RequireAdmin><AdminProductReports /></RequireAdmin>} />
       <Route path="reports/profit" element={<RequireAdmin><AdminProfitReports /></RequireAdmin>} />
-      <Route path="reports/inventory" element={<RequireAdmin><AdminInventoryReports /></RequireAdmin>} />
+      <Route path="reports/purchase" element={<RequireAdmin><AdminPurchaseReports /></RequireAdmin>} />
       <Route path="reports/customers" element={<RequireAdmin><AdminCustomerReports /></RequireAdmin>} />
+      <Route path="reports/inventory" element={<RequireAdmin><AdminInventoryReports /></RequireAdmin>} />
       <Route path="reports/vendors" element={<RequireAdmin><AdminVendorReports /></RequireAdmin>} />
       <Route path="offers" element={<RequireAdmin><AdminOffers /></RequireAdmin>} />
       <Route path="coupons" element={<RequireAdmin><AdminCoupons /></RequireAdmin>} />
