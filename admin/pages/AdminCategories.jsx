@@ -362,12 +362,12 @@ const AdminCategories = () => {
           <div style={{ overflowX: "auto" }}>
             <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "14px" }}>
               <thead>
-                <tr style={{ background: "#f8fafc", borderBottom: "1px solid #e2e8f0", color: "#475569", fontWeight: "700", fontSize: "12px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                  <th style={{ padding: "14px 20px", width: "60px" }}>#</th>
-                  <th style={{ padding: "14px 20px" }}>Category</th>
-                  <th style={{ padding: "14px 20px", width: "190px" }}>Section / Type</th>
-                  <th style={{ padding: "14px 20px", width: "140px" }}>Status</th>
-                  <th style={{ padding: "14px 20px", width: "120px", textAlign: "right" }}>Actions</th>
+                <tr style={{ background: "#ff6600", borderBottom: "1px solid #ff6600", color: "#ffffff", fontWeight: "700", fontSize: "12px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                  <th style={{ padding: "14px 20px", width: "60px", color: "#ffffff" }}>#</th>
+                  <th style={{ padding: "14px 20px", color: "#ffffff" }}>Category</th>
+                  <th style={{ padding: "14px 20px", width: "190px", color: "#ffffff" }}>Section / Type</th>
+                  <th style={{ padding: "14px 20px", width: "140px", color: "#ffffff" }}>Status</th>
+                  <th style={{ padding: "14px 20px", width: "120px", textAlign: "right", color: "#ffffff" }}>Actions</th>
                 </tr>
               </thead>
               <tbody>

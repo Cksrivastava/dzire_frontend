@@ -3,6 +3,7 @@ import AdminLayout from './AdminLayout';
 import ExportDropdown from '../components/ExportDropdown';
 import { Search, RefreshCcw, Filter, Undo2, CheckCircle2, Clock, XCircle, Eye, Printer, Download, Plus, X, Trash2 } from 'lucide-react';
 import './AdminDashboard.css';
+import './AdminReturns.css';
 
 const AdminInstoreReturn = () => {
   const [returnsList, setReturnsList] = useState([]);
@@ -175,7 +176,7 @@ const AdminInstoreReturn = () => {
 
   return (
     <AdminLayout>
-      <div className="dashboard-wrapper" style={{ position: 'relative' }}>
+      <div className="returns-page-wrapper">
 
         {/* Toast Alert */}
         {toastMessage && (
@@ -201,19 +202,8 @@ const AdminInstoreReturn = () => {
 
         {/* View Details Modal */}
         {selectedReturn && (
-          <div style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0,0,0,0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 9998
-          }}>
-            <div style={{ background: '#fff', borderRadius: '12px', width: '520px', maxWidth: '90%', padding: '24px', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)' }}>
+          <div className="returns-modal-overlay">
+            <div className="returns-modal-box">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px', marginBottom: '16px' }}>
                 <h3 style={{ margin: 0, fontSize: '18px', color: '#0f172a' }}>Instore Return Details</h3>
                 <button onClick={() => setSelectedReturn(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748b' }}>
@@ -221,7 +211,7 @@ const AdminInstoreReturn = () => {
                 </button>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', fontSize: '13px' }}>
+              <div className="returns-modal-grid">
                 <div>
                   <p style={{ margin: '0 0 4px', color: '#64748b', fontSize: '11px' }}>Return ID</p>
                   <p style={{ margin: 0, fontWeight: '700', color: '#2563eb' }}>{selectedReturn.id}</p>
@@ -273,14 +263,14 @@ const AdminInstoreReturn = () => {
                 </div>
               </div>
 
-              <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
                 <button
                   onClick={() => handleDelete(selectedReturn.id)}
                   style={{ background: '#fef2f2', color: '#ef4444', border: '1px solid #fecaca', padding: '8px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
                 >
                   <Trash2 size={14} /> Delete
                 </button>
-                <div style={{ display: 'flex', gap: '8px' }}>
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                   {selectedReturn.status !== 'Approved' && selectedReturn.status !== 'Completed' && (
                     <button
                       onClick={() => handleUpdateStatus(selectedReturn.id, 'Approved')}
@@ -311,19 +301,8 @@ const AdminInstoreReturn = () => {
 
         {/* Process Return Modal */}
         {showAddModal && (
-          <div style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0,0,0,0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 9998
-          }}>
-            <div style={{ background: '#fff', borderRadius: '12px', width: '500px', maxWidth: '90%', padding: '24px', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)' }}>
+          <div className="returns-modal-overlay">
+            <div className="returns-modal-box">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px', marginBottom: '16px' }}>
                 <h3 style={{ margin: 0, fontSize: '18px', color: '#0f172a' }}>Process In-Store Return</h3>
                 <button onClick={() => setShowAddModal(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748b' }}>
@@ -332,7 +311,7 @@ const AdminInstoreReturn = () => {
               </div>
 
               <form onSubmit={handleCreateReturn} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <div className="returns-modal-grid">
                   <div>
                     <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: '#475569', marginBottom: '4px' }}>Customer Name *</label>
                     <input
@@ -356,7 +335,7 @@ const AdminInstoreReturn = () => {
                   </div>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <div className="returns-modal-grid">
                   <div>
                     <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: '#475569', marginBottom: '4px' }}>Invoice No (POS)</label>
                     <input
@@ -408,7 +387,7 @@ const AdminInstoreReturn = () => {
                   </select>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <div className="returns-modal-grid">
                   <div>
                     <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: '#475569', marginBottom: '4px' }}>Refund Mode</label>
                     <select
@@ -446,7 +425,7 @@ const AdminInstoreReturn = () => {
                   </button>
                   <button
                     type="submit"
-                    style={{ background: '#ff6600', color: '#fff', border: 'none', padding: '8px 20px', borderRadius: '6px', fontSize: '13px', fontWeight: '600', cursor: 'pointer' }}
+                    className="returns-btn-primary"
                   >
                     Submit Return
                   </button>
@@ -456,15 +435,15 @@ const AdminInstoreReturn = () => {
           </div>
         )}
 
-        <div style={{ background: '#fff', borderRadius: '12px', border: '1px solid #eef2f6', overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>
+        <div className="returns-card-container">
 
           {/* Header */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 24px', borderBottom: '1px solid #eef2f6', background: '#fafafa' }}>
-            <div>
-              <h2 style={{ margin: 0, fontSize: '18px', fontWeight: '700', color: '#0f172a' }}>Instore Returns Data Sheet</h2>
-              <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#64748b' }}>Track and manage physical store product returns, refunds, and credit notes</p>
+          <div className="returns-header-bar">
+            <div className="returns-header-title">
+              <h2>Instore Returns Data Sheet</h2>
+              <p>Track and manage physical store product returns, refunds, and credit notes</p>
             </div>
-            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <div className="returns-header-actions">
               <ExportDropdown
                 fileName="Instore_Returns_Report"
                 title="Instore Returns Data Sheet Report"
@@ -486,12 +465,12 @@ const AdminInstoreReturn = () => {
               />
               <button 
                 onClick={() => setShowAddModal(true)} 
-                style={{ background: '#ff6600', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '6px', fontSize: '13px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+                className="returns-btn-primary"
               >
                 <Plus size={16} /> Process Return
               </button>
               <button 
-                style={{ background: '#f8fafc', color: '#334155', border: '1px solid #cbd5e1', padding: '8px 16px', borderRadius: '6px', fontSize: '13px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }} 
+                className="returns-btn-secondary"
                 onClick={() => {
                   fetchReturns();
                   showToast('Data refreshed successfully!');
@@ -503,42 +482,42 @@ const AdminInstoreReturn = () => {
           </div>
 
           {/* Stats Bar */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1px', background: '#eef2f6', borderBottom: '1px solid #eef2f6' }}>
-            <div style={{ padding: '16px 24px', background: '#fff' }}>
-              <span style={{ fontSize: '12px', color: '#64748b', fontWeight: '500' }}>Total Return Requests</span>
-              <h3 style={{ margin: '4px 0 0 0', fontSize: '22px', fontWeight: '700', color: '#111' }}>{stats.totalRequests}</h3>
+          <div className="returns-stats-grid">
+            <div className="returns-stat-card">
+              <span className="returns-stat-label">Total Return Requests</span>
+              <h3 className="returns-stat-val">{stats.totalRequests}</h3>
             </div>
-            <div style={{ padding: '16px 24px', background: '#fff' }}>
-              <span style={{ fontSize: '12px', color: '#dc2626', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <div className="returns-stat-card">
+              <span className="returns-stat-label" style={{ color: '#dc2626' }}>
                 <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#dc2626' }}></div> Total Refund Amount
               </span>
-              <h3 style={{ margin: '4px 0 0 0', fontSize: '22px', fontWeight: '700', color: '#dc2626' }}>{stats.totalRefundAmount}</h3>
+              <h3 className="returns-stat-val" style={{ color: '#dc2626' }}>{stats.totalRefundAmount}</h3>
             </div>
-            <div style={{ padding: '16px 24px', background: '#fff' }}>
-              <span style={{ fontSize: '12px', color: '#16a34a', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <div className="returns-stat-card">
+              <span className="returns-stat-label" style={{ color: '#16a34a' }}>
                 <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#16a34a' }}></div> Completed / Approved
               </span>
-              <h3 style={{ margin: '4px 0 0 0', fontSize: '22px', fontWeight: '700', color: '#16a34a' }}>{stats.completedApproved}</h3>
+              <h3 className="returns-stat-val" style={{ color: '#16a34a' }}>{stats.completedApproved}</h3>
             </div>
-            <div style={{ padding: '16px 24px', background: '#fff' }}>
-              <span style={{ fontSize: '12px', color: '#f59e0b', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <div className="returns-stat-card">
+              <span className="returns-stat-label" style={{ color: '#f59e0b' }}>
                 <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#f59e0b' }}></div> Pending Audit
               </span>
-              <h3 style={{ margin: '4px 0 0 0', fontSize: '22px', fontWeight: '700', color: '#f59e0b' }}>{stats.pendingAudit}</h3>
+              <h3 className="returns-stat-val" style={{ color: '#f59e0b' }}>{stats.pendingAudit}</h3>
             </div>
           </div>
 
-          <div style={{ padding: '24px' }}>
+          <div className="returns-content-area">
             {/* Search & Filter Toolbar */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', gap: '12px', flexWrap: 'wrap' }}>
-              <div style={{ position: 'relative' }}>
-                <Search size={16} style={{ position: 'absolute', left: '12px', top: '10px', color: '#667085' }} />
+            <div className="returns-filter-bar">
+              <div className="returns-search-wrap">
+                <Search size={16} className="returns-search-icon" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search Return ID, Invoice, Customer..."
-                  style={{ padding: '8px 12px 8px 36px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '13px', width: '320px', outline: 'none' }}
+                  className="returns-search-input"
                 />
               </div>
 
@@ -546,7 +525,7 @@ const AdminInstoreReturn = () => {
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  style={{ padding: '8px 12px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '13px', outline: 'none', background: '#fff', color: '#334155' }}
+                  className="returns-filter-select"
                 >
                   <option value="All">All Statuses</option>
                   <option value="Completed">Completed</option>
@@ -557,85 +536,87 @@ const AdminInstoreReturn = () => {
             </div>
 
             {/* Data Table */}
-            <div style={{ borderRadius: '8px', border: '1px solid #eef2f6', overflow: 'hidden' }}>
-              <div className="table-responsive">
-                <table className="dash-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
-                  <thead>
-                    <tr style={{ background: '#ff6600', textAlign: 'left', fontSize: '12px', color: '#ffffff', textTransform: 'uppercase' }}>
-                      <th style={{ padding: '14px 16px', fontWeight: '700' }}>Return ID & Date</th>
-                      <th style={{ padding: '14px 16px', fontWeight: '700' }}>Customer</th>
-                      <th style={{ padding: '14px 16px', fontWeight: '700' }}>Original Inv No.</th>
-                      <th style={{ padding: '14px 16px', fontWeight: '700' }}>Item & Reason</th>
-                      <th style={{ padding: '14px 16px', fontWeight: '700' }}>Refund Amount</th>
-                      <th style={{ padding: '14px 16px', fontWeight: '700' }}>Status</th>
-                      <th style={{ padding: '14px 16px', fontWeight: '700', textAlign: 'center' }}>Action</th>
+            <div className="returns-table-wrapper">
+              <table className="returns-table">
+                <thead>
+                  <tr>
+                    <th style={{ minWidth: '160px' }}>Return ID & Date</th>
+                    <th style={{ minWidth: '150px' }}>Customer</th>
+                    <th style={{ minWidth: '140px' }}>Original Inv No.</th>
+                    <th style={{ minWidth: '180px' }}>Item & Reason</th>
+                    <th style={{ minWidth: '130px' }}>Refund Amount</th>
+                    <th style={{ minWidth: '140px' }}>Status</th>
+                    <th style={{ minWidth: '90px', textAlign: 'center' }}>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredReturns.map((ret) => (
+                    <tr key={ret.id}>
+                      <td>
+                        <div style={{ fontWeight: '700', color: '#1e293b', fontSize: '13px' }}>{ret.id}</div>
+                        <div style={{ fontSize: '11px', color: '#64748b' }}>{ret.dateTime}</div>
+                      </td>
+                      <td>
+                        <div style={{ fontWeight: '600', color: '#1e293b', fontSize: '13px' }}>{ret.customer}</div>
+                        <div style={{ fontSize: '11px', color: '#64748b' }}>{ret.mobile}</div>
+                      </td>
+                      <td style={{ fontWeight: '600', color: '#2563eb' }}>
+                        {ret.invoiceNo}
+                      </td>
+                      <td>
+                        <div style={{ fontWeight: '600', color: '#334155', fontSize: '13px' }}>{ret.item}</div>
+                        <span style={{ fontSize: '11px', color: '#ef4444', background: '#fef2f2', padding: '2px 6px', borderRadius: '4px', display: 'inline-block', marginTop: '2px' }}>
+                          Reason: {ret.reason}
+                        </span>
+                      </td>
+                      <td>
+                        <div style={{ fontWeight: '700', color: '#dc2626', fontSize: '13px' }}>{ret.refundAmount}</div>
+                        <span style={{ fontSize: '11px', color: '#475569', background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px' }}>
+                          {ret.refundMode}
+                        </span>
+                      </td>
+                      <td>
+                        <span style={{
+                          background: ret.status === 'Completed' ? '#f0fdf4' : ret.status === 'Approved' ? '#eff6ff' : '#fffbeb',
+                          color: ret.status === 'Completed' ? '#16a34a' : ret.status === 'Approved' ? '#2563eb' : '#d97706',
+                          border: `1px solid ${ret.status === 'Completed' ? '#bbf7d0' : ret.status === 'Approved' ? '#bfdbfe' : '#fef08a'}`,
+                          padding: '4px 10px',
+                          borderRadius: '12px',
+                          fontSize: '12px',
+                          fontWeight: '600',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '4px'
+                        }}>
+                          {ret.status === 'Completed' && <CheckCircle2 size={13} />}
+                          {ret.status === 'Approved' && <CheckCircle2 size={13} />}
+                          {ret.status === 'Pending Audit' && <Clock size={13} />}
+                          {ret.status}
+                        </span>
+                      </td>
+                      <td style={{ textAlign: 'center' }}>
+                        <button
+                          style={{ background: '#f8fafc', border: '1px solid #cbd5e1', padding: '5px 10px', borderRadius: '6px', fontSize: '12px', fontWeight: '600', color: '#334155', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                          onClick={() => setSelectedReturn(ret)}
+                        >
+                          <Eye size={13} /> View
+                        </button>
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {filteredReturns.map((ret) => (
-                      <tr key={ret.id} style={{ borderTop: '1px solid #eef2f6' }}>
-                        <td style={{ padding: '14px 16px' }}>
-                          <div style={{ fontWeight: '700', color: '#1e293b', fontSize: '13px' }}>{ret.id}</div>
-                          <div style={{ fontSize: '11px', color: '#64748b' }}>{ret.dateTime}</div>
-                        </td>
-                        <td style={{ padding: '14px 16px' }}>
-                          <div style={{ fontWeight: '600', color: '#1e293b', fontSize: '13px' }}>{ret.customer}</div>
-                          <div style={{ fontSize: '11px', color: '#64748b' }}>{ret.mobile}</div>
-                        </td>
-                        <td style={{ padding: '14px 16px', fontWeight: '600', color: '#2563eb', fontSize: '13px' }}>
-                          {ret.invoiceNo}
-                        </td>
-                        <td style={{ padding: '14px 16px' }}>
-                          <div style={{ fontWeight: '600', color: '#334155', fontSize: '13px' }}>{ret.item}</div>
-                          <span style={{ fontSize: '11px', color: '#ef4444', background: '#fef2f2', padding: '2px 6px', borderRadius: '4px', display: 'inline-block', marginTop: '2px' }}>
-                            Reason: {ret.reason}
-                          </span>
-                        </td>
-                        <td style={{ padding: '14px 16px' }}>
-                          <div style={{ fontWeight: '700', color: '#dc2626', fontSize: '13px' }}>{ret.refundAmount}</div>
-                          <span style={{ fontSize: '11px', color: '#475569', background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px' }}>
-                            {ret.refundMode}
-                          </span>
-                        </td>
-                        <td style={{ padding: '14px 16px' }}>
-                          <span style={{
-                            background: ret.status === 'Completed' ? '#f0fdf4' : ret.status === 'Approved' ? '#eff6ff' : '#fffbeb',
-                            color: ret.status === 'Completed' ? '#16a34a' : ret.status === 'Approved' ? '#2563eb' : '#d97706',
-                            border: `1px solid ${ret.status === 'Completed' ? '#bbf7d0' : ret.status === 'Approved' ? '#bfdbfe' : '#fef08a'}`,
-                            padding: '4px 10px',
-                            borderRadius: '12px',
-                            fontSize: '12px',
-                            fontWeight: '600',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '4px'
-                          }}>
-                            {ret.status === 'Completed' && <CheckCircle2 size={13} />}
-                            {ret.status === 'Approved' && <CheckCircle2 size={13} />}
-                            {ret.status === 'Pending Audit' && <Clock size={13} />}
-                            {ret.status}
-                          </span>
-                        </td>
-                        <td style={{ padding: '14px 16px', textAlign: 'center' }}>
-                          <button
-                            style={{ background: '#f8fafc', border: '1px solid #cbd5e1', padding: '5px 10px', borderRadius: '6px', fontSize: '12px', fontWeight: '600', color: '#334155', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
-                            onClick={() => setSelectedReturn(ret)}
-                          >
-                            <Eye size={13} /> View
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                    {filteredReturns.length === 0 && (
-                      <tr>
-                        <td colSpan="7" style={{ textAlign: 'center', padding: '36px', color: '#94a3b8', fontSize: '13px' }}>
-                          No instore returns found matching your search.
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
+                  ))}
+                  {filteredReturns.length === 0 && (
+                    <tr>
+                      <td colSpan="7" style={{ padding: 0, border: 'none' }}>
+                        <div className="returns-empty-state">
+                          <Undo2 size={36} color="#cbd5e1" style={{ marginBottom: '10px' }} />
+                          <p style={{ margin: 0, fontWeight: '600', color: '#64748b', fontSize: '14px' }}>No instore returns found</p>
+                          <p style={{ margin: '4px 0 0', color: '#94a3b8', fontSize: '12px' }}>Try adjusting your search terms</p>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>

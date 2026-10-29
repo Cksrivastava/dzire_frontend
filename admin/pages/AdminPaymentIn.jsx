@@ -3,6 +3,7 @@ import AdminLayout from './AdminLayout';
 import ExportDropdown from '../components/ExportDropdown';
 import { Search, RefreshCcw, HandCoins, CheckCircle2, Clock, Download, Eye, Printer, MoreVertical, Edit2, Trash2, X } from 'lucide-react';
 import './AdminDashboard.css';
+import './AdminPaymentIn.css';
 
 const fallbackPaymentsData = [];
 
@@ -129,7 +130,7 @@ const AdminPaymentIn = () => {
 
   return (
     <AdminLayout>
-      <div className="dashboard-wrapper" style={{ position: 'relative' }}>
+      <div className="dashboard-wrapper payin-page-wrapper" style={{ position: 'relative' }}>
 
         {/* Toast Alert */}
         {toastMessage && (
@@ -155,19 +156,8 @@ const AdminPaymentIn = () => {
 
         {/* View Modal */}
         {selectedItem && (
-          <div style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0,0,0,0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 9998
-          }}>
-            <div style={{ background: '#fff', borderRadius: '12px', width: '500px', maxWidth: '90%', padding: '24px', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)' }}>
+          <div className="payin-modal-overlay">
+            <div className="payin-modal-box">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px', marginBottom: '16px' }}>
                 <h3 style={{ margin: 0, fontSize: '18px', color: '#0f172a' }}>Payment Receipt Details</h3>
                 <button onClick={() => setSelectedItem(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748b' }}>
@@ -175,7 +165,7 @@ const AdminPaymentIn = () => {
                 </button>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', fontSize: '13px' }}>
+              <div className="payin-modal-grid">
                 <div>
                   <p style={{ margin: '0 0 4px', color: '#64748b', fontSize: '11px' }}>Payment ID</p>
                   <p style={{ margin: 0, fontWeight: '700', color: '#2563eb' }}>{selectedItem.id}</p>
@@ -244,19 +234,8 @@ const AdminPaymentIn = () => {
 
         {/* Edit Modal */}
         {editingItem && (
-          <div style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0,0,0,0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 9998
-          }}>
-            <div style={{ background: '#fff', borderRadius: '12px', width: '500px', maxWidth: '90%', padding: '24px', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)' }}>
+          <div className="payin-modal-overlay">
+            <div className="payin-modal-box">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px', marginBottom: '16px' }}>
                 <h3 style={{ margin: 0, fontSize: '18px', color: '#0f172a' }}>Edit Payment Record</h3>
                 <button onClick={() => setEditingItem(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748b' }}>
@@ -264,7 +243,7 @@ const AdminPaymentIn = () => {
                 </button>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', fontSize: '13px' }}>
+              <div className="payin-modal-grid">
                 <div>
                   <label style={{ display: 'block', marginBottom: '4px', fontSize: '11px', color: '#64748b' }}>Customer Name</label>
                   <input
@@ -327,15 +306,17 @@ const AdminPaymentIn = () => {
           </div>
         )}
 
-        <div style={{ background: '#fff', borderRadius: '12px', border: '1px solid #eef2f6', overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>
+        <div className="payin-card-container">
 
           {/* Header */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 24px', borderBottom: '1px solid #eef2f6', background: '#fafafa' }}>
-            <div>
-              <h2 style={{ margin: 0, fontSize: '18px', fontWeight: '700', color: '#0f172a' }}>Payment In Data Sheet</h2>
-              <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#64748b' }}>Record and manage incoming customer payments, UPI, Cash, and Card settlements</p>
+          <div className="payin-header-bar">
+            <div className="payin-title-group">
+              <div className="payin-title-text">
+                <h2>Payment In Data Sheet</h2>
+                <p>Record and manage incoming customer payments, UPI, Cash, and Card settlements</p>
+              </div>
             </div>
-            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <div className="payin-header-actions">
               <ExportDropdown
                 fileName="Payment_In_Report"
                 title="Payment In Transactions Report"
@@ -355,7 +336,7 @@ const AdminPaymentIn = () => {
                 onExportSuccess={(format) => showToast(`Exported ${format} successfully!`)}
               />
               <button 
-                style={{ background: '#ff6600', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '6px', fontSize: '13px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }} 
+                className="payin-btn-primary" 
                 onClick={() => {
                   fetchPayments();
                   showToast('Data refreshed!');
@@ -367,59 +348,49 @@ const AdminPaymentIn = () => {
           </div>
 
           {/* Metrics Summary */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1px', background: '#eef2f6', borderBottom: '1px solid #eef2f6' }}>
-            <div style={{ padding: '16px 24px', background: '#fff' }}>
-              <span style={{ fontSize: '12px', color: '#64748b', fontWeight: '500' }}>Total Incoming Payments</span>
-              <h3 style={{ margin: '4px 0 0 0', fontSize: '22px', fontWeight: '700', color: '#111' }}>₹ {totalIncoming.toLocaleString('en-IN')}</h3>
+          <div className="payin-metrics-grid">
+            <div className="payin-metric-card">
+              <span className="payin-metric-label">Total Incoming Payments</span>
+              <h3 className="payin-metric-val" style={{ color: '#111' }}>₹ {totalIncoming.toLocaleString('en-IN')}</h3>
             </div>
-            <div style={{ padding: '16px 24px', background: '#fff' }}>
-              <span style={{ fontSize: '12px', color: '#16a34a', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <div className="payin-metric-card">
+              <span className="payin-metric-label" style={{ color: '#16a34a' }}>
                 <CheckCircle2 size={14} color="#16a34a" /> Received (Cleared)
               </span>
-              <h3 style={{ margin: '4px 0 0 0', fontSize: '22px', fontWeight: '700', color: '#16a34a' }}>₹ {receivedCleared.toLocaleString('en-IN')}</h3>
+              <h3 className="payin-metric-val" style={{ color: '#16a34a' }}>₹ {receivedCleared.toLocaleString('en-IN')}</h3>
             </div>
-            <div style={{ padding: '16px 24px', background: '#fff' }}>
-              <span style={{ fontSize: '12px', color: '#d97706', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <div className="payin-metric-card">
+              <span className="payin-metric-label" style={{ color: '#d97706' }}>
                 <Clock size={14} color="#d97706" /> Pending Clearance
               </span>
-              <h3 style={{ margin: '4px 0 0 0', fontSize: '22px', fontWeight: '700', color: '#d97706' }}>₹ {pendingClearance.toLocaleString('en-IN')}</h3>
+              <h3 className="payin-metric-val" style={{ color: '#d97706' }}>₹ {pendingClearance.toLocaleString('en-IN')}</h3>
             </div>
-            <div style={{ padding: '16px 24px', background: '#fff' }}>
-              <span style={{ fontSize: '12px', color: '#64748b', fontWeight: '500' }}>Total Receipts</span>
-              <h3 style={{ margin: '4px 0 0 0', fontSize: '22px', fontWeight: '700', color: '#111' }}>{paymentsData.length}</h3>
+            <div className="payin-metric-card">
+              <span className="payin-metric-label">Total Receipts</span>
+              <h3 className="payin-metric-val" style={{ color: '#111' }}>{paymentsData.length}</h3>
             </div>
           </div>
 
           {/* Table Container */}
-          <div style={{ padding: '24px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', gap: '16px' }}>
-              <div style={{ display: 'flex', gap: '12px', flex: 1 }}>
-                <div style={{ position: 'relative', width: '320px' }}>
+          <div className="payin-content-area">
+            <div className="payin-filter-bar">
+              <div className="payin-search-group">
+                <div className="payin-search-wrap">
                   <Search size={16} color="#94a3b8" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
                   <input
                     type="text"
                     placeholder="Search by Payment ID, Customer, Invoice..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    style={{ width: '100%', padding: '9px 12px 9px 36px', border: '1px solid #cbd5e1', borderRadius: '6px', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }}
+                    className="payin-search-input"
                   />
                 </div>
-                <div style={{ display: 'flex', gap: '8px' }}>
+                <div className="payin-modes-wrap">
                   {['All', 'UPI', 'Cash', 'Card', 'Bank'].map(mode => (
                     <button
                       key={mode}
                       onClick={() => setModeFilter(mode)}
-                      style={{
-                        padding: '6px 14px',
-                        borderRadius: '6px',
-                        fontSize: '12px',
-                        fontWeight: '600',
-                        border: '1px solid',
-                        borderColor: modeFilter === mode ? '#ff6600' : '#e2e8f0',
-                        background: modeFilter === mode ? '#fff7ed' : '#fff',
-                        color: modeFilter === mode ? '#ff6600' : '#64748b',
-                        cursor: 'pointer'
-                      }}
+                      className={`payin-mode-btn ${modeFilter === mode ? 'active' : ''}`}
                     >
                       {mode}
                     </button>
@@ -429,17 +400,17 @@ const AdminPaymentIn = () => {
             </div>
 
             {/* Table */}
-            <div style={{ border: '1px solid #eef2f6', borderRadius: '8px' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+            <div className="payin-table-wrapper">
+              <table className="payin-table">
                 <thead>
-                  <tr style={{ background: '#ff6600', borderBottom: '1px solid #eef2f6' }}>
-                    <th style={{ padding: '14px 16px', fontSize: '12px', fontWeight: '700', color: '#ffffff' }}>Payment ID</th>
-                    <th style={{ padding: '14px 16px', fontSize: '12px', fontWeight: '700', color: '#ffffff' }}>Date & Time</th>
-                    <th style={{ padding: '14px 16px', fontSize: '12px', fontWeight: '700', color: '#ffffff' }}>Customer Name</th>
-                    <th style={{ padding: '14px 16px', fontSize: '12px', fontWeight: '700', color: '#ffffff' }}>Invoice Ref</th>
-                    <th style={{ padding: '14px 16px', fontSize: '12px', fontWeight: '700', color: '#ffffff' }}>Payment Mode</th>
-                    <th style={{ padding: '14px 16px', fontSize: '12px', fontWeight: '700', color: '#ffffff' }}>Amount</th>
-                    <th style={{ padding: '14px 16px', fontSize: '12px', fontWeight: '700', color: '#ffffff' }}>Status</th>
+                  <tr>
+                    <th>Payment ID</th>
+                    <th>Date & Time</th>
+                    <th>Customer Name</th>
+                    <th>Invoice Ref</th>
+                    <th>Payment Mode</th>
+                    <th>Amount</th>
+                    <th>Status</th>
                   </tr>
                 </thead>
                 <tbody>

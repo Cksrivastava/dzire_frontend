@@ -24,6 +24,7 @@ import {
   Copy
 } from "lucide-react";
 import { rentalProducts } from "../../src/data/rentalCatalogData";
+import "./AdminRentals.css";
 
 export const RENTALS_STORAGE_KEY = "dzire_admin_rentals_list";
 export const RENTALS_UPDATE_EVENT = "dzire_rentals_updated";
@@ -59,7 +60,7 @@ const AdminRentals = () => {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) return parsed;
       }
-    } catch (_) {}
+    } catch (_) { }
     return rentalProducts || [];
   });
 
@@ -264,53 +265,23 @@ const AdminRentals = () => {
 
   return (
     <AdminLayout>
-      <div style={{ padding: "24px 32px 60px 32px", width: "100%", boxSizing: "border-box" }}>
+      <div className="rentals-page-wrapper">
         {/* Floating Toast Notification */}
         {toastMessage && (
-          <div
-            style={{
-              position: "fixed",
-              top: "24px",
-              right: "24px",
-              backgroundColor: BRAND_ORANGE,
-              color: "#ffffff",
-              padding: "12px 22px",
-              borderRadius: "8px",
-              boxShadow: "0 10px 25px -5px rgba(255, 102, 0, 0.4)",
-              zIndex: 9999,
-              display: "flex",
-              alignItems: "center",
-              gap: "10px",
-              fontWeight: "600",
-              fontSize: "14px"
-            }}
-          >
+          <div className="rentals-toast">
             <CheckCircle2 size={18} />
             <span>{toastMessage}</span>
           </div>
         )}
 
         {/* Top Header Bar */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: "16px",
-            marginBottom: "24px",
-            backgroundColor: "#ffffff",
-            padding: "20px 24px",
-            borderRadius: "12px",
-            border: "1px solid #fee2e2",
-            boxShadow: "0 1px 3px rgba(0, 0, 0, 0.05)"
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+        <div className="rentals-header-card">
+          <div className="rentals-header-info">
             <div
               style={{
                 width: "44px",
                 height: "44px",
+                minWidth: "44px",
                 borderRadius: "10px",
                 backgroundColor: "#fff7ed",
                 color: BRAND_ORANGE,
@@ -322,7 +293,7 @@ const AdminRentals = () => {
               <Layers size={24} />
             </div>
             <div>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
                 <h1 style={{ margin: 0, fontSize: "20px", fontWeight: "700", color: "#1e293b" }}>
                   Rentals Catalog Management
                 </h1>
@@ -345,7 +316,7 @@ const AdminRentals = () => {
             </div>
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <div className="rentals-header-actions">
             <a
               href="/rental"
               target="_blank"
@@ -414,81 +385,47 @@ const AdminRentals = () => {
         </div>
 
         {/* 4 Stat Cards */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-            gap: "16px",
-            marginBottom: "24px"
-          }}
-        >
-          <div style={{ backgroundColor: "#ffffff", padding: "18px 20px", borderRadius: "10px", border: "1px solid #e2e8f0" }}>
+        <div className="rentals-stats-grid">
+          <div className="rentals-stat-card">
             <span style={{ fontSize: "12px", fontWeight: "600", color: "#64748b" }}>Total Rental Gear</span>
             <div style={{ fontSize: "24px", fontWeight: "800", color: "#0f172a", marginTop: "4px" }}>{totalCount}</div>
           </div>
-          <div style={{ backgroundColor: "#ffffff", padding: "18px 20px", borderRadius: "10px", border: "1px solid #e2e8f0" }}>
+          <div className="rentals-stat-card">
             <span style={{ fontSize: "12px", fontWeight: "600", color: "#16a34a" }}>Available for Rent</span>
             <div style={{ fontSize: "24px", fontWeight: "800", color: "#16a34a", marginTop: "4px" }}>{availableCount}</div>
           </div>
-          <div style={{ backgroundColor: "#ffffff", padding: "18px 20px", borderRadius: "10px", border: "1px solid #e2e8f0" }}>
+          <div className="rentals-stat-card">
             <span style={{ fontSize: "12px", fontWeight: "600", color: "#ea580c" }}>Currently Rented</span>
             <div style={{ fontSize: "24px", fontWeight: "800", color: "#ea580c", marginTop: "4px" }}>{rentedCount}</div>
           </div>
-          <div style={{ backgroundColor: "#ffffff", padding: "18px 20px", borderRadius: "10px", border: "1px solid #e2e8f0" }}>
+          <div className="rentals-stat-card">
             <span style={{ fontSize: "12px", fontWeight: "600", color: "#6366f1" }}>Gear Categories</span>
             <div style={{ fontSize: "24px", fontWeight: "800", color: "#6366f1", marginTop: "4px" }}>{categoriesCount}</div>
           </div>
         </div>
 
         {/* Search & Category Filter Toolbar */}
-        <div
-          style={{
-            backgroundColor: "#ffffff",
-            borderRadius: "10px",
-            border: "1px solid #e2e8f0",
-            padding: "16px 20px",
-            marginBottom: "20px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: "14px"
-          }}
-        >
+        <div className="rentals-toolbar">
           {/* Search Box */}
-          <div style={{ position: "relative", minWidth: "280px", flex: "1 1 280px" }}>
-            <Search size={16} style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "#94a3b8" }} />
+          <div className="rentals-search-wrap">
+            <Search size={16} className="rentals-search-icon" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search gear name, category, capacity..."
-              style={{
-                width: "100%",
-                padding: "9px 12px 9px 36px",
-                fontSize: "13px",
-                borderRadius: "6px",
-                border: "1px solid #cbd5e1",
-                outline: "none",
-                boxSizing: "border-box"
-              }}
+              className="rentals-search-input"
             />
           </div>
 
           {/* Filters */}
-          <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-              <span style={{ fontSize: "12px", fontWeight: "600", color: "#64748b" }}>Category:</span>
+          <div className="rentals-filters-group">
+            <div className="rentals-filter-item">
+              <span className="rentals-filter-label">Category:</span>
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                style={{
-                  padding: "8px 12px",
-                  fontSize: "13px",
-                  borderRadius: "6px",
-                  border: "1px solid #cbd5e1",
-                  backgroundColor: "#ffffff"
-                }}
+                className="rentals-select"
               >
                 {CATEGORIES.map((cat) => (
                   <option key={cat} value={cat}>{cat}</option>
@@ -496,18 +433,12 @@ const AdminRentals = () => {
               </select>
             </div>
 
-            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-              <span style={{ fontSize: "12px", fontWeight: "600", color: "#64748b" }}>Status:</span>
+            <div className="rentals-filter-item">
+              <span className="rentals-filter-label">Status:</span>
               <select
                 value={selectedStatus}
                 onChange={(e) => setSelectedStatus(e.target.value)}
-                style={{
-                  padding: "8px 12px",
-                  fontSize: "13px",
-                  borderRadius: "6px",
-                  border: "1px solid #cbd5e1",
-                  backgroundColor: "#ffffff"
-                }}
+                className="rentals-select"
               >
                 <option value="All">All Status</option>
                 <option value="Available">Available</option>
@@ -519,34 +450,28 @@ const AdminRentals = () => {
         </div>
 
         {/* Rentals Table */}
-        <div
-          style={{
-            backgroundColor: "#ffffff",
-            borderRadius: "10px",
-            border: "1px solid #e2e8f0",
-            overflow: "hidden",
-            boxShadow: "0 1px 3px rgba(0,0,0,0.05)"
-          }}
-        >
-          <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "13px" }}>
+        <div className="rentals-table-container">
+          <div className="rentals-table-wrapper">
+            <table className="rentals-table">
               <thead>
-                <tr style={{ backgroundColor: "#f8fafc", borderBottom: "1px solid #e2e8f0", color: "#475569" }}>
-                  <th style={{ padding: "12px 18px", fontWeight: "700" }}>Gear Item</th>
-                  <th style={{ padding: "12px 16px", fontWeight: "700" }}>Category</th>
-                  <th style={{ padding: "12px 16px", fontWeight: "700" }}>Daily Rent</th>
-                  <th style={{ padding: "12px 16px", fontWeight: "700" }}>Security Deposit</th>
-                  <th style={{ padding: "12px 16px", fontWeight: "700" }}>Status</th>
-                  <th style={{ padding: "12px 18px", fontWeight: "700", textAlign: "right" }}>Actions</th>
+                <tr>
+                  <th style={{ minWidth: "240px" }}>Gear Item</th>
+                  <th style={{ minWidth: "120px" }}>Category</th>
+                  <th style={{ minWidth: "120px" }}>Daily Rent</th>
+                  <th style={{ minWidth: "130px" }}>Security Deposit</th>
+                  <th style={{ minWidth: "120px" }}>Status</th>
+                  <th style={{ minWidth: "110px", textAlign: "right" }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredRentals.length === 0 ? (
                   <tr>
                     <td colSpan={6} style={{ padding: "48px 20px", textAlign: "center", color: "#64748b" }}>
-                      <Layers size={32} color="#cbd5e1" style={{ margin: "0 auto 8px auto", display: "block" }} />
-                      <p style={{ margin: 0, fontWeight: "600", fontSize: "14px" }}>Koi rental items nahi mile</p>
-                      <span style={{ fontSize: "12px" }}>Search filter clear karein ya "Add Rental Item" par click karein.</span>
+                      <div className="rentals-empty-state">
+                        <Layers size={32} color="#cbd5e1" style={{ margin: "0 auto 8px auto", display: "block" }} />
+                        <p style={{ margin: 0, fontWeight: "600", fontSize: "14px" }}>Koi rental items nahi mile</p>
+                        <span style={{ fontSize: "12px" }}>Search filter clear karein ya "Add Rental Item" par click karein.</span>
+                      </div>
                     </td>
                   </tr>
                 ) : (
@@ -717,31 +642,8 @@ const AdminRentals = () => {
 
         {/* Modal: Add / Edit Rental Item */}
         {isModalOpen && (
-          <div
-            style={{
-              position: "fixed",
-              inset: 0,
-              backgroundColor: "rgba(15, 23, 42, 0.6)",
-              backdropFilter: "blur(4px)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              zIndex: 99999,
-              padding: "20px"
-            }}
-          >
-            <div
-              style={{
-                backgroundColor: "#ffffff",
-                borderRadius: "14px",
-                maxWidth: "640px",
-                width: "100%",
-                maxHeight: "90vh",
-                overflowY: "auto",
-                boxShadow: "0 20px 40px rgba(0, 0, 0, 0.2)",
-                boxSizing: "border-box"
-              }}
-            >
+          <div className="rentals-modal-overlay">
+            <div className="rentals-modal-box">
               {/* Modal Header */}
               <div
                 style={{
@@ -787,7 +689,7 @@ const AdminRentals = () => {
                   </div>
 
                   {/* Category & Badge */}
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px" }}>
+                  <div className="rentals-form-grid">
                     <div>
                       <label style={{ display: "block", fontSize: "12px", fontWeight: "700", color: "#1e293b", marginBottom: "4px" }}>
                         Category
@@ -817,7 +719,7 @@ const AdminRentals = () => {
                   </div>
 
                   {/* Price & Deposit */}
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px" }}>
+                  <div className="rentals-form-grid">
                     <div>
                       <label style={{ display: "block", fontSize: "12px", fontWeight: "700", color: "#1e293b", marginBottom: "4px" }}>
                         Daily Rent Price (₹ / day)
@@ -846,7 +748,7 @@ const AdminRentals = () => {
                   </div>
 
                   {/* Capacity & Status */}
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px" }}>
+                  <div className="rentals-form-grid">
                     <div>
                       <label style={{ display: "block", fontSize: "12px", fontWeight: "700", color: "#1e293b", marginBottom: "4px" }}>
                         Capacity / Fit
@@ -997,17 +899,7 @@ const AdminRentals = () => {
                 </div>
 
                 {/* Modal Footer */}
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "flex-end",
-                    gap: "10px",
-                    marginTop: "24px",
-                    paddingTop: "16px",
-                    borderTop: "1px solid #e2e8f0"
-                  }}
-                >
+                <div className="rentals-modal-footer">
                   <button
                     type="button"
                     onClick={() => setIsModalOpen(false)}

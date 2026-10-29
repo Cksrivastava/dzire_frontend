@@ -4,6 +4,7 @@ import AdminLayout from './AdminLayout';
 import ExportDropdown from '../components/ExportDropdown';
 import { Plus, Search, UserCircle, Download, Building2 } from 'lucide-react';
 import './AdminDashboard.css';
+import './AdminVendors.css';
 
 const AdminVendorsDataSheet = () => {
   const navigate = useNavigate();
@@ -95,22 +96,22 @@ const AdminVendorsDataSheet = () => {
     <AdminLayout>
       <div className="dashboard-wrapper">
         {/* Data Sheet Container */}
-        <div style={{ background: '#fff', borderRadius: '10px', border: '1px solid #eef2f6', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
+        <div className="vendors-card-container">
 
           {/* Header Bar */}
-          <div style={{ padding: '18px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #eef2f6', flexWrap: 'wrap', gap: '14px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div style={{ width: '38px', height: '38px', borderRadius: '8px', background: '#fff0e6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ff6600' }}>
+          <div className="vendors-header-bar">
+            <div className="vendors-title-group">
+              <div className="vendors-title-icon">
                 <Building2 size={20} />
               </div>
-              <div>
-                <h4 style={{ margin: 0, fontSize: '16px', fontWeight: '700', color: '#1e293b' }}>Vendor Data Records Sheet</h4>
-                <p style={{ margin: '2px 0 0 0', fontSize: '13px', color: '#64748b' }}>View all vendor data records, balances, and profiles</p>
+              <div className="vendors-title-text">
+                <h4>Vendor Data Records Sheet</h4>
+                <p>View all vendor data records, balances, and profiles</p>
               </div>
             </div>
 
             {/* Action Buttons (Add Vendors + Export Sheet) */}
-            <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+            <div className="vendors-action-buttons">
               <ExportDropdown
                 fileName="Vendors_Data_Sheet"
                 title="Vendor Data Records Sheet"
@@ -128,66 +129,51 @@ const AdminVendorsDataSheet = () => {
 
               <button
                 onClick={() => navigate('/admin/vendors/manage')}
-                style={{
-                  background: '#ff6600',
-                  color: '#fff',
-                  border: 'none',
-                  padding: '9px 18px',
-                  borderRadius: '6px',
-                  fontSize: '13px',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  boxShadow: '0 2px 6px rgba(255, 102, 0, 0.25)',
-                  transition: 'background 0.15s ease'
-                }}
-                onMouseOver={(e) => (e.currentTarget.style.background = '#e65c00')}
-                onMouseOut={(e) => (e.currentTarget.style.background = '#ff6600')}
+                className="vendors-btn-primary"
               >
-                <Plus size={16} /> Add Vendors
+                <Plus size={16} />
+                <span>Add Vendors</span>
               </button>
             </div>
           </div>
 
           {/* Metric Summary Bar */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1px', background: '#eef2f6', borderBottom: '1px solid #eef2f6' }}>
-            <div style={{ padding: '16px 24px', background: '#fff' }}>
-              <span style={{ fontSize: '12px', color: '#64748b', fontWeight: '500' }}>All Parties / Vendors</span>
-              <h3 style={{ margin: '4px 0 0 0', fontSize: '22px', fontWeight: '700', color: '#111' }}>{totalPartiesCount}</h3>
+          <div className="vendors-metrics-grid">
+            <div className="vendors-metric-card">
+              <span className="vendors-metric-label">All Parties / Vendors</span>
+              <h3 className="vendors-metric-value" style={{ color: '#111' }}>{totalPartiesCount}</h3>
             </div>
-            <div style={{ padding: '16px 24px', background: '#fff' }}>
-              <span style={{ fontSize: '12px', color: '#16a34a', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#16a34a' }}></div> To Collect
+            <div className="vendors-metric-card">
+              <span className="vendors-metric-label" style={{ color: '#16a34a' }}>
+                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#16a34a', display: 'inline-block' }}></span> To Collect
               </span>
-              <h3 style={{ margin: '4px 0 0 0', fontSize: '22px', fontWeight: '700', color: '#16a34a' }}>₹ {totalToCollect.toLocaleString('en-IN')}</h3>
+              <h3 className="vendors-metric-value" style={{ color: '#16a34a' }}>₹ {totalToCollect.toLocaleString('en-IN')}</h3>
             </div>
-            <div style={{ padding: '16px 24px', background: '#fff' }}>
-              <span style={{ fontSize: '12px', color: '#dc2626', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#dc2626' }}></div> To Pay
+            <div className="vendors-metric-card">
+              <span className="vendors-metric-label" style={{ color: '#dc2626' }}>
+                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#dc2626', display: 'inline-block' }}></span> To Pay
               </span>
-              <h3 style={{ margin: '4px 0 0 0', fontSize: '22px', fontWeight: '700', color: '#dc2626' }}>₹ {totalToPay.toLocaleString('en-IN')}</h3>
+              <h3 className="vendors-metric-value" style={{ color: '#dc2626' }}>₹ {totalToPay.toLocaleString('en-IN')}</h3>
             </div>
           </div>
 
           {/* Search & Filter Bar */}
-          <div style={{ padding: '16px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#f8fafc', borderBottom: '1px solid #eef2f6' }}>
-            <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-              <div style={{ position: 'relative', width: '260px' }}>
+          <div className="vendors-filter-bar">
+            <div className="vendors-search-group">
+              <div className="vendors-search-wrap">
                 <Search size={15} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
                 <input
                   type="text"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="Search party or GSTIN..."
-                  style={{ width: '100%', padding: '7px 12px 7px 32px', border: '1px solid #cbd5e1', borderRadius: '6px', fontSize: '13px', outline: 'none', background: '#fff' }}
+                  className="vendors-search-input"
                 />
               </div>
               <select
                 value={categoryFilter}
                 onChange={(e) => setCategoryFilter(e.target.value)}
-                style={{ padding: '7px 12px', border: '1px solid #cbd5e1', borderRadius: '6px', fontSize: '13px', outline: 'none', background: '#fff', color: '#334155' }}
+                className="vendors-category-select"
               >
                 <option value="All">All Categories</option>
                 <option value="Bag & Accessories">Bag & Accessories</option>
@@ -197,88 +183,93 @@ const AdminVendorsDataSheet = () => {
                 <option value="Camping & Tents">Camping & Tents</option>
               </select>
             </div>
+            <div style={{ fontSize: '13px', color: '#64748b', fontWeight: '500' }}>
+              Showing <strong style={{ color: '#0f172a' }}>{filteredVendors.length}</strong> of {vendorsData.length} vendors
+            </div>
           </div>
 
-          {/* Data Sheet Table */}
-          <table className="dash-table">
-            <thead>
-              <tr>
-                <th>Party Name</th>
-                <th>Category</th>
-                <th>Mobile Number</th>
-                <th>GSTIN</th>
-                <th>Party Type</th>
-                <th>Balance</th>
-                <th style={{ textAlign: 'center' }}>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredVendors.length === 0 ? (
+          {/* Desktop Data Sheet Table (>= 768px) */}
+          <div className="vendors-desktop-view">
+            <table className="dash-table">
+              <thead>
                 <tr>
-                  <td colSpan={7} style={{ textAlign: 'center', padding: '30px', color: '#64748b', fontSize: '13px' }}>
-                    No vendor records found matching your filter criteria.
-                  </td>
+                  <th>Party Name</th>
+                  <th>Category</th>
+                  <th>Mobile Number</th>
+                  <th>GSTIN</th>
+                  <th>Party Type</th>
+                  <th>Balance</th>
+                  <th style={{ textAlign: 'center' }}>Actions</th>
                 </tr>
-              ) : (
-                filteredVendors.map((vendor) => (
-                  <tr key={vendor.id}>
-                    <td>
-                      <div style={{ fontWeight: '600', color: '#1e293b' }}>{vendor.name}</div>
-                    </td>
-                    <td>
-                      <span style={{ fontSize: '12px', background: '#f1f5f9', color: '#475569', padding: '3px 8px', borderRadius: '4px' }}>
-                        {vendor.category}
-                      </span>
-                    </td>
-                    <td style={{ color: '#475569', fontSize: '13px' }}>{vendor.mobile || '-'}</td>
-                    <td style={{ color: '#475569', fontSize: '13px', fontFamily: 'monospace' }}>{vendor.gstin || '-'}</td>
-                    <td>
-                      <span style={{
-                        fontSize: '12px',
-                        fontWeight: '600',
-                        padding: '3px 8px',
-                        borderRadius: '4px',
-                        background: '#f1f5f9',
-                        color: '#334155'
-                      }}>
-                        {vendor.type || 'Supplier'}
-                      </span>
-                    </td>
-                    <td>
-                      <span style={{
-                        fontWeight: '700',
-                        color: vendor.balanceType === 'collect' ? '#16a34a' : vendor.balanceType === 'pay' ? '#dc2626' : '#64748b'
-                      }}>
-                        {vendor.balance || '₹ 0'}
-                      </span>
-                    </td>
-                    <td style={{ textAlign: 'center' }}>
-                      <button
-                        onClick={() => navigate('/admin/vendors/profile', { state: { vendor } })}
-                        style={{
-                          background: '#eef2ff',
-                          color: '#4f46e5',
-                          border: '1px solid #c7d2fe',
-                          padding: '5px 12px',
-                          borderRadius: '6px',
-                          fontSize: '12px',
-                          fontWeight: '600',
-                          cursor: 'pointer',
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '6px'
-                        }}
-                        onMouseOver={(e) => e.currentTarget.style.background = '#e0e7ff'}
-                        onMouseOut={(e) => e.currentTarget.style.background = '#eef2ff'}
-                      >
-                        <UserCircle size={14} /> Vendor Profile
-                      </button>
+              </thead>
+              <tbody>
+                {filteredVendors.length === 0 ? (
+                  <tr>
+                    <td colSpan={7} style={{ textAlign: 'center', padding: '30px', color: '#64748b', fontSize: '13px' }}>
+                      No vendor records found matching your filter criteria.
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                ) : (
+                  filteredVendors.map((vendor) => (
+                    <tr key={vendor.id}>
+                      <td>
+                        <div style={{ fontWeight: '600', color: '#1e293b' }}>{vendor.name}</div>
+                      </td>
+                      <td>
+                        <span style={{ fontSize: '12px', background: '#f1f5f9', color: '#475569', padding: '3px 8px', borderRadius: '4px' }}>
+                          {vendor.category}
+                        </span>
+                      </td>
+                      <td style={{ color: '#475569', fontSize: '13px' }}>{vendor.mobile || '-'}</td>
+                      <td style={{ color: '#475569', fontSize: '13px', fontFamily: 'monospace' }}>{vendor.gstin || '-'}</td>
+                      <td>
+                        <span style={{
+                          fontSize: '12px',
+                          fontWeight: '600',
+                          padding: '3px 8px',
+                          borderRadius: '4px',
+                          background: '#f1f5f9',
+                          color: '#334155'
+                        }}>
+                          {vendor.type || 'Supplier'}
+                        </span>
+                      </td>
+                      <td>
+                        <span style={{
+                          fontWeight: '700',
+                          color: vendor.balanceType === 'collect' ? '#16a34a' : vendor.balanceType === 'pay' ? '#dc2626' : '#64748b'
+                        }}>
+                          {vendor.balance || '₹ 0'}
+                        </span>
+                      </td>
+                      <td style={{ textAlign: 'center' }}>
+                        <button
+                          onClick={() => navigate('/admin/vendors/profile', { state: { vendor } })}
+                          style={{
+                            background: '#eef2ff',
+                            color: '#4f46e5',
+                            border: '1px solid #c7d2fe',
+                            padding: '5px 12px',
+                            borderRadius: '6px',
+                            fontSize: '12px',
+                            fontWeight: '600',
+                            cursor: 'pointer',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '6px'
+                          }}
+                          onMouseOver={(e) => e.currentTarget.style.background = '#e0e7ff'}
+                          onMouseOut={(e) => e.currentTarget.style.background = '#eef2ff'}
+                        >
+                          <UserCircle size={14} /> Vendor Profile
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
 
         </div>
       </div>

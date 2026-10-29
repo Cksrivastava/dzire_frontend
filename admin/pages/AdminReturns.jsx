@@ -2,7 +2,8 @@ import React, { useMemo, useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import AdminLayout from './AdminLayout';
 import ExportDropdown from '../components/ExportDropdown';
-import { Search, Filter, Eye, CheckCircle, XCircle, RefreshCcw, X, CheckCircle2, Plus, Trash2 } from 'lucide-react';
+import { Search, Filter, Eye, CheckCircle, XCircle, RefreshCcw, X, CheckCircle2, Plus, Trash2, Undo2 } from 'lucide-react';
+import './AdminReturns.css';
 
 const statusOptions = ['All Statuses', 'Pending Approval', 'Refunded (Wallet)', 'Approved', 'Rejected'];
 const typeOptions = ['All Types', 'Defective', 'Size Issue', 'Return / Refund', 'Size/Fit issue'];
@@ -178,7 +179,7 @@ const AdminReturns = () => {
 
   return (
     <AdminLayout>
-      <div className="dashboard-wrapper" style={{ position: 'relative' }}>
+      <div className="returns-page-wrapper">
 
         {/* Toast Alert */}
         {toastMessage && (
@@ -204,19 +205,8 @@ const AdminReturns = () => {
 
         {/* View Details Modal */}
         {selectedItem && (
-          <div style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0,0,0,0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 9998
-          }}>
-            <div style={{ background: '#fff', borderRadius: '12px', width: '500px', maxWidth: '90%', padding: '24px', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)' }}>
+          <div className="returns-modal-overlay">
+            <div className="returns-modal-box">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px', marginBottom: '16px' }}>
                 <h3 style={{ margin: 0, fontSize: '18px', color: '#0f172a' }}>Return Request Details</h3>
                 <button onClick={() => setSelectedItem(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748b' }}>
@@ -224,7 +214,7 @@ const AdminReturns = () => {
                 </button>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', fontSize: '13px' }}>
+              <div className="returns-modal-grid">
                 <div>
                   <p style={{ margin: '0 0 4px', color: '#64748b', fontSize: '11px' }}>Request ID</p>
                   <p style={{ margin: 0, fontWeight: '700', color: '#2563eb' }}>{selectedItem.id}</p>
@@ -279,14 +269,14 @@ const AdminReturns = () => {
                 )}
               </div>
 
-              <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
                 <button
                   onClick={() => handleDelete(selectedItem.id)}
                   style={{ background: '#fef2f2', color: '#ef4444', border: '1px solid #fecaca', padding: '8px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
                 >
                   <Trash2 size={14} /> Delete
                 </button>
-                <div style={{ display: 'flex', gap: '8px' }}>
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                   {(selectedItem.status || '').includes('Pending') && (
                     <>
                       <button
@@ -325,19 +315,8 @@ const AdminReturns = () => {
 
         {/* Add Return Modal */}
         {showAddModal && (
-          <div style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0,0,0,0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 9998
-          }}>
-            <div style={{ background: '#fff', borderRadius: '12px', width: '480px', maxWidth: '90%', padding: '24px', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)' }}>
+          <div className="returns-modal-overlay">
+            <div className="returns-modal-box">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px', marginBottom: '16px' }}>
                 <h3 style={{ margin: 0, fontSize: '18px', color: '#0f172a' }}>
                   {isDefective ? 'Record Defective Return' : 'Create Return Request'}
@@ -371,7 +350,7 @@ const AdminReturns = () => {
                   />
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <div className="returns-modal-grid">
                   <div>
                     <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: '#475569', marginBottom: '4px' }}>Return Type</label>
                     <select
@@ -418,7 +397,7 @@ const AdminReturns = () => {
                   </button>
                   <button
                     type="submit"
-                    style={{ background: '#ff6600', color: '#fff', border: 'none', padding: '8px 20px', borderRadius: '6px', fontSize: '13px', fontWeight: '600', cursor: 'pointer' }}
+                    className="returns-btn-primary"
                   >
                     Save Return
                   </button>
@@ -428,14 +407,17 @@ const AdminReturns = () => {
           </div>
         )}
 
-        <div style={{ background: '#fff', borderRadius: '8px', border: '1px solid #eef2f6', overflow: 'hidden' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 24px', borderBottom: '1px solid #eef2f6' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-              <h2 style={{ margin: 0, fontSize: '18px', fontWeight: '700', color: '#1e293b' }}>
+        <div className="returns-card-container">
+          <div className="returns-header-bar">
+            <div className="returns-header-title">
+              <h2>
                 {isDefective ? 'Defective & Damaged Returns' : 'Return Requests'}
               </h2>
+              <p>
+                {isDefective ? 'Inspect and process defective product returns' : 'Manage online customer return requests and wallet refunds'}
+              </p>
             </div>
-            <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+            <div className="returns-header-actions">
               <ExportDropdown
                 fileName={isDefective ? "Defective_Returns_Report" : "Inventory_Returns_Report"}
                 title={isDefective ? "Defective Returns Report" : "Inventory & Defective Return Requests Report"}
@@ -455,7 +437,7 @@ const AdminReturns = () => {
               <button
                 type="button"
                 onClick={() => setShowAddModal(true)}
-                style={{ background: '#ff6600', color: '#fff', border: 'none', padding: '8px 14px', borderRadius: '4px', fontSize: '13px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+                className="returns-btn-primary"
               >
                 <Plus size={16} /> {isDefective ? 'Add Defective Return' : 'Add Return'}
               </button>
@@ -465,41 +447,42 @@ const AdminReturns = () => {
                   fetchReturns();
                   showToast("Return requests refreshed!");
                 }}
-                style={{ background: '#f1f5f9', color: '#334155', border: '1px solid #cbd5e1', padding: '8px 14px', borderRadius: '4px', fontSize: '13px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+                className="returns-btn-secondary"
               >
                 <RefreshCcw size={16} /> Refresh Data
               </button>
             </div>
           </div>
-          <div style={{ padding: '24px', background: '#fafafa' }}>
-            <div style={{ background: 'white', borderRadius: '12px', border: '1px solid #e5e7eb', overflow: 'hidden' }}>
-              <div style={{ padding: '16px 20px', borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-                <div style={{ position: 'relative' }}>
-                  <Search size={16} style={{ position: 'absolute', left: '12px', top: '10px', color: '#667085' }} />
+          <div className="returns-content-area" style={{ background: '#fafafa' }}>
+            <div className="returns-card-container">
+              <div className="returns-filter-bar" style={{ padding: '16px 20px', borderBottom: '1px solid #e5e7eb', marginBottom: 0 }}>
+                <div className="returns-search-wrap">
+                  <Search size={16} className="returns-search-icon" />
                   <input
                     type="text"
                     value={searchQuery}
                     onChange={(event) => setSearchQuery(event.target.value)}
                     placeholder="Search Request ID or Order..."
-                    style={{ padding: '8px 12px 8px 36px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', width: '300px' }}
+                    className="returns-search-input"
                   />
                 </div>
                 <button
                   type="button"
                   onClick={() => setShowFilters((value) => !value)}
-                  style={{ padding: '8px 12px', background: showFilters ? '#fff4ed' : 'white', border: `1px solid ${showFilters ? '#ff6600' : '#d1d5db'}`, borderRadius: '6px', cursor: 'pointer' }}
+                  className="returns-filter-btn"
+                  style={{ background: showFilters ? '#fff4ed' : 'white', border: `1px solid ${showFilters ? '#ff6600' : '#d1d5db'}` }}
                   aria-label="Toggle return filters"
                 >
-                  <Filter size={16} color="#667085" />
+                  <Filter size={16} color={showFilters ? '#ff6600' : '#667085'} />
                 </button>
               </div>
 
               {showFilters && (
-                <div style={{ padding: '16px 20px', borderBottom: '1px solid #e5e7eb', display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap', background: '#f9fafb' }}>
+                <div style={{ padding: '14px 20px', borderBottom: '1px solid #e5e7eb', display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap', background: '#f8fafc' }}>
                   <select
                     value={statusFilter}
                     onChange={(event) => setStatusFilter(event.target.value)}
-                    style={{ padding: '8px 12px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', background: 'white' }}
+                    className="returns-filter-select"
                   >
                     {statusOptions.map((status) => (
                       <option key={status} value={status}>{status}</option>
@@ -509,7 +492,7 @@ const AdminReturns = () => {
                   <select
                     value={typeFilter}
                     onChange={(event) => setTypeFilter(event.target.value)}
-                    style={{ padding: '8px 12px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', background: 'white' }}
+                    className="returns-filter-select"
                   >
                     {typeOptions.map((type) => (
                       <option key={type} value={type}>{type}</option>
@@ -519,88 +502,94 @@ const AdminReturns = () => {
                   <button
                     type="button"
                     onClick={clearFilters}
-                    style={{ padding: '8px 12px', background: 'white', border: '1px solid #d1d5db', borderRadius: '6px', cursor: 'pointer', fontSize: '14px', color: '#344054' }}
+                    style={{ padding: '8px 14px', background: 'white', border: '1px solid #d1d5db', borderRadius: '6px', cursor: 'pointer', fontSize: '13px', color: '#344054', fontWeight: '500' }}
                   >
                     Clear
                   </button>
                 </div>
               )}
 
-              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                <thead>
-                  <tr style={{ background: '#ff6600', textAlign: 'left', fontSize: '12px', color: '#ffffff', textTransform: 'uppercase' }}>
-                    <th style={{ padding: '12px 20px', fontWeight: '600' }}>Req ID & Date</th>
-                    <th style={{ padding: '12px 20px', fontWeight: '600' }}>Customer</th>
-                    <th style={{ padding: '12px 20px', fontWeight: '600' }}>Items</th>
-                    <th style={{ padding: '12px 20px', fontWeight: '600' }}>Amount</th>
-                    <th style={{ padding: '12px 20px', fontWeight: '600' }}>Type</th>
-                    <th style={{ padding: '12px 20px', fontWeight: '600' }}>Status</th>
-                    <th style={{ padding: '12px 20px', fontWeight: '600', textAlign: 'right' }}>Actions</th>
-                  </tr>
-                </thead>
+              <div className="returns-table-wrapper" style={{ border: 'none', borderRadius: 0 }}>
+                <table className="returns-table">
+                  <thead>
+                    <tr>
+                      <th style={{ minWidth: '150px' }}>Req ID & Date</th>
+                      <th style={{ minWidth: '150px' }}>Customer</th>
+                      <th style={{ minWidth: '110px' }}>Items</th>
+                      <th style={{ minWidth: '120px' }}>Amount</th>
+                      <th style={{ minWidth: '130px' }}>Type</th>
+                      <th style={{ minWidth: '140px' }}>Status</th>
+                      <th style={{ minWidth: '100px', textAlign: 'right' }}>Actions</th>
+                    </tr>
+                  </thead>
 
-                <tbody>
-                  {filteredRequests.map((item) => (
-                    <tr key={item.id} style={{ borderTop: '1px solid #e5e7eb' }}>
-                      <td style={{ padding: '16px 20px' }}>
-                        <p style={{ margin: '0 0 4px 0', fontSize: '14px', fontWeight: '500', color: '#111' }}>{item.id}</p>
-                        <p style={{ margin: '0 0 2px 0', fontSize: '12px', color: '#667085' }}>{item.orderId}</p>
-                        <p style={{ margin: 0, fontSize: '12px', color: '#667085' }}>{item.date}</p>
-                      </td>
+                  <tbody>
+                    {filteredRequests.map((item) => (
+                      <tr key={item.id}>
+                        <td>
+                          <p style={{ margin: '0 0 4px 0', fontSize: '13px', fontWeight: '600', color: '#1e293b' }}>{item.id}</p>
+                          <p style={{ margin: '0 0 2px 0', fontSize: '12px', color: '#64748b' }}>{item.orderId}</p>
+                          <p style={{ margin: 0, fontSize: '11px', color: '#94a3b8' }}>{item.date}</p>
+                        </td>
 
-                      <td style={{ padding: '16px 20px', fontSize: '14px', color: '#111' }}>{item.cust}</td>
-                      <td style={{ padding: '16px 20px', fontSize: '14px', color: '#667085' }}>{Array.isArray(item.items) ? item.items.length : (item.items || 1)} Item(s)</td>
-                      <td style={{ padding: '16px 20px', fontSize: '14px', fontWeight: '600' }}>{item.amount}</td>
-                      <td style={{ padding: '16px 20px', fontSize: '14px', color: '#f04438' }}>{item.type}</td>
+                        <td style={{ color: '#1e293b', fontWeight: '500' }}>{item.cust}</td>
+                        <td style={{ color: '#64748b' }}>{Array.isArray(item.items) ? item.items.length : (item.items || 1)} Item(s)</td>
+                        <td style={{ fontWeight: '600', color: '#16a34a' }}>{item.amount}</td>
+                        <td style={{ color: '#f04438' }}>{item.type}</td>
 
-                      <td style={{ padding: '16px 20px' }}>
-                        <span
-                          style={{
-                            padding: '4px 8px',
-                            borderRadius: '20px',
-                            fontSize: '12px',
-                            fontWeight: '500',
-                            background: (item.status || '').includes('Pending') ? '#fef0c7' : '#e3fcef',
-                            color: (item.status || '').includes('Pending') ? '#f79009' : '#12b76a'
-                          }}
-                        >
-                          {item.status}
-                        </span>
-                      </td>
-
-                      <td style={{ padding: '16px 20px', textAlign: 'right' }}>
-                        <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', alignItems: 'center' }}>
-                          <button 
-                            onClick={() => setSelectedItem(item)} 
-                            title="View Details"
-                            style={{ color: '#667085', background: 'none', border: 'none', cursor: 'pointer', padding: '4px' }}
+                        <td>
+                          <span
+                            style={{
+                              padding: '4px 10px',
+                              borderRadius: '20px',
+                              fontSize: '12px',
+                              fontWeight: '600',
+                              background: (item.status || '').includes('Pending') ? '#fef0c7' : '#e3fcef',
+                              color: (item.status || '').includes('Pending') ? '#f79009' : '#12b76a'
+                            }}
                           >
-                            <Eye size={18} />
-                          </button>
+                            {item.status}
+                          </span>
+                        </td>
 
-                          {(item.status || '').includes('Pending') && (
-                            <>
-                              <button onClick={() => handleApprove(item.id)} title="Approve Request" style={{ color: '#12b76a', background: 'none', border: 'none', cursor: 'pointer', padding: '4px' }}>
-                                <CheckCircle size={18} />
-                              </button>
-                              <button onClick={() => handleReject(item.id)} title="Reject Request" style={{ color: '#f04438', background: 'none', border: 'none', cursor: 'pointer', padding: '4px' }}>
-                                <XCircle size={18} />
-                              </button>
-                            </>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                  {filteredRequests.length === 0 && (
-                    <tr style={{ borderTop: '1px solid #e5e7eb' }}>
-                      <td colSpan="7" style={{ padding: '28px 20px', textAlign: 'center', fontSize: '14px', color: '#667085' }}>
-                        No return requests found.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
+                        <td style={{ textAlign: 'right' }}>
+                          <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', alignItems: 'center' }}>
+                            <button 
+                              onClick={() => setSelectedItem(item)} 
+                              title="View Details"
+                              style={{ color: '#64748b', background: 'none', border: 'none', cursor: 'pointer', padding: '4px' }}
+                            >
+                              <Eye size={18} />
+                            </button>
+
+                            {(item.status || '').includes('Pending') && (
+                              <>
+                                <button onClick={() => handleApprove(item.id)} title="Approve Request" style={{ color: '#12b76a', background: 'none', border: 'none', cursor: 'pointer', padding: '4px' }}>
+                                  <CheckCircle size={18} />
+                                </button>
+                                <button onClick={() => handleReject(item.id)} title="Reject Request" style={{ color: '#f04438', background: 'none', border: 'none', cursor: 'pointer', padding: '4px' }}>
+                                  <XCircle size={18} />
+                                </button>
+                              </>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                    {filteredRequests.length === 0 && (
+                      <tr>
+                        <td colSpan="7" style={{ padding: 0, border: 'none' }}>
+                          <div className="returns-empty-state">
+                            <Undo2 size={36} color="#cbd5e1" style={{ marginBottom: '10px' }} />
+                            <p style={{ margin: 0, fontWeight: '600', color: '#64748b', fontSize: '14px' }}>No return requests found</p>
+                            <p style={{ margin: '4px 0 0', color: '#94a3b8', fontSize: '12px' }}>Try adjusting your search or filters</p>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>

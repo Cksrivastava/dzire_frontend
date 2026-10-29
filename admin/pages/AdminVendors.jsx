@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import AdminLayout from './AdminLayout';
 import { ChevronDown, Plus, Search, HelpCircle, ArrowLeft, UserCircle, CheckCircle2 } from 'lucide-react';
 import './AdminDashboard.css';
+import './AdminVendors.css';
 
 const AdminVendors = () => {
   const navigate = useNavigate();
@@ -191,7 +192,7 @@ const AdminVendors = () => {
 
       <div className="dashboard-wrapper">
         {/* Top Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+        <div className="vendor-form-header">
           <div>
             <h1 style={{ fontSize: '20px', fontWeight: '700', margin: '0 0 4px 0', color: '#111' }}>Manage Vendors (Add / Create Party)</h1>
             <button 
@@ -201,18 +202,18 @@ const AdminVendors = () => {
               <ArrowLeft size={14} /> Back to Vendor Data Sheet
             </button>
           </div>
-          <div style={{ display: 'flex', gap: '8px' }}>
+          <div className="vendor-form-header-actions">
             <button 
               type="button"
               onClick={() => handleSave(true)}
-              style={{ background: '#fff', border: '1px solid #cbd5e1', padding: '6px 16px', borderRadius: '4px', fontSize: '13px', fontWeight: '600', color: '#334155', cursor: 'pointer' }}
+              style={{ background: '#fff', border: '1px solid #cbd5e1', padding: '8px 16px', borderRadius: '4px', fontSize: '13px', fontWeight: '600', color: '#334155', cursor: 'pointer' }}
             >
               Save & New
             </button>
             <button 
               type="button"
               onClick={() => handleSave(false)}
-              style={{ background: '#ff6600', color: '#fff', border: 'none', padding: '6px 16px', borderRadius: '4px', fontSize: '13px', fontWeight: '600', cursor: 'pointer' }}
+              style={{ background: '#ff6600', color: '#fff', border: 'none', padding: '8px 18px', borderRadius: '4px', fontSize: '13px', fontWeight: '600', cursor: 'pointer' }}
             >
               Save Vendor
             </button>
@@ -220,10 +221,10 @@ const AdminVendors = () => {
         </div>
 
         {/* Create Vendor Form Container */}
-        <div style={{ background: '#fff', borderRadius: '8px', border: '1px solid #eef2f6', overflow: 'hidden', padding: '24px', marginBottom: '24px' }}>
+        <div style={{ background: '#fff', borderRadius: '8px', border: '1px solid #eef2f6', overflow: 'hidden', padding: 'clamp(14px, 4vw, 24px)', marginBottom: '24px' }}>
           <h4 style={{ margin: '0 0 20px 0', fontSize: '15px', fontWeight: '600', color: '#1e293b', borderBottom: '1px solid #f1f5f9', paddingBottom: '10px' }}>General Details</h4>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginBottom: '20px' }}>
+          <div className="vendor-form-grid-4">
             <div>
               <label style={{ display: 'block', fontSize: '12px', color: '#64748b', marginBottom: '8px' }}>Party Name *</label>
               <input 
@@ -277,16 +278,16 @@ const AdminVendors = () => {
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px', marginBottom: '20px' }}>
+          <div className="vendor-form-grid-2">
             <div>
               <label style={{ display: 'block', fontSize: '12px', color: '#64748b', marginBottom: '8px' }}>GSTIN</label>
-              <div style={{ display: 'flex', gap: '8px' }}>
+              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                 <input 
                   type="text" 
                   value={formData.gstin}
                   onChange={(e) => handleInputChange('gstin', e.target.value)}
                   placeholder="ex: 09AAACT1234F1Z5" 
-                  style={{ flex: 1, padding: '10px', border: '1px solid #cbd5e1', borderRadius: '4px', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }} 
+                  style={{ flex: '1 1 180px', padding: '10px', border: '1px solid #cbd5e1', borderRadius: '4px', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }} 
                 />
                 <button 
                   type="button"
@@ -309,7 +310,7 @@ const AdminVendors = () => {
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px', marginBottom: '20px' }}>
+          <div className="vendor-form-grid-2">
             <div>
               <label style={{ display: 'block', fontSize: '12px', color: '#64748b', marginBottom: '8px' }}>Party Type *</label>
               <select 
@@ -340,7 +341,7 @@ const AdminVendors = () => {
           </div>
 
           <h4 style={{ margin: '30px 0 20px 0', fontSize: '14px', color: '#1e293b', borderBottom: '1px solid #f1f5f9', paddingBottom: '10px' }}>Address Details</h4>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px', marginBottom: '20px' }}>
+          <div className="vendor-form-grid-2">
             <div>
               <label style={{ display: 'block', fontSize: '12px', color: '#64748b', marginBottom: '8px' }}>Billing Address</label>
               <textarea 
@@ -351,7 +352,7 @@ const AdminVendors = () => {
               ></textarea>
             </div>
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '4px' }}>
                 <label style={{ display: 'block', fontSize: '12px', color: '#64748b', marginBottom: '8px' }}>Shipping Address</label>
                 <label style={{ fontSize: '12px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
                   <input 
@@ -371,7 +372,7 @@ const AdminVendors = () => {
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginBottom: '20px' }}>
+          <div className="vendor-form-grid-4">
             <div>
               <label style={{ display: 'block', fontSize: '12px', color: '#64748b', marginBottom: '8px' }}>Credit Period</label>
               <div style={{ display: 'flex' }}>
@@ -401,7 +402,7 @@ const AdminVendors = () => {
           </div>
 
           <h4 style={{ margin: '30px 0 20px 0', fontSize: '14px', color: '#1e293b', borderBottom: '1px solid #f1f5f9', paddingBottom: '10px' }}>Contact Person Details</h4>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginBottom: '20px' }}>
+          <div className="vendor-form-grid-4">
             <div>
               <label style={{ display: 'block', fontSize: '12px', color: '#64748b', marginBottom: '8px' }}>Contact Person Name</label>
               <input 
@@ -425,7 +426,7 @@ const AdminVendors = () => {
           </div>
 
           <h4 style={{ margin: '30px 0 20px 0', fontSize: '14px', color: '#1e293b', borderBottom: '1px solid #f1f5f9', paddingBottom: '10px' }}>Party Bank Account</h4>
-          <div style={{ border: '1px dashed #cbd5e1', borderRadius: '8px', padding: '30px', textAlign: 'center', background: '#f8fafc' }}>
+          <div style={{ border: '1px dashed #cbd5e1', borderRadius: '8px', padding: 'clamp(16px, 4vw, 30px)', textAlign: 'center', background: '#f8fafc' }}>
             <div style={{ display: 'inline-block', padding: '12px', background: '#e0e7ff', borderRadius: '50%', color: '#4f46e5', marginBottom: '12px' }}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="22" x2="21" y2="22"></line><line x1="6" y1="18" x2="6" y2="11"></line><line x1="10" y1="18" x2="10" y2="11"></line><line x1="14" y1="18" x2="14" y2="11"></line><line x1="18" y1="18" x2="18" y2="11"></line><polygon points="12 2 20 7 4 7 12 2"></polygon></svg>
             </div>
@@ -443,7 +444,7 @@ const AdminVendors = () => {
             )}
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '30px' }}>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '30px', flexWrap: 'wrap' }}>
             <button 
               type="button"
               onClick={() => navigate('/admin/vendors')}

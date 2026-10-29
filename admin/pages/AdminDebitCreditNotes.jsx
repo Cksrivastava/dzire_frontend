@@ -54,14 +54,14 @@ const AdminDebitCreditNotes = () => {
 
       <div style={{ background: 'white', borderRadius: '12px', border: '1px solid #e5e7eb', overflow: 'hidden' }}>
         <div style={{ padding: '16px 20px', borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-          <div style={{ position: 'relative' }}>
+          <div style={{ position: 'relative', width: '100%', maxWidth: '300px' }}>
             <Search size={16} style={{ position: 'absolute', left: '12px', top: '10px', color: '#667085' }} />
             <input
               type="text"
               value={searchQuery}
               onChange={(event) => setSearchQuery(event.target.value)}
               placeholder="Search Note No, Vendor or Reason..."
-              style={{ padding: '8px 12px 8px 36px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', width: '300px' }}
+              style={{ padding: '8px 12px 8px 36px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', width: '100%', boxSizing: 'border-box' }}
             />
           </div>
           <button
@@ -106,7 +106,8 @@ const AdminDebitCreditNotes = () => {
           </div>
         )}
 
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <div style={{ overflowX: 'auto', width: '100%', WebkitOverflowScrolling: 'touch' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '650px' }}>
           <thead>
             <tr style={{ background: '#f9fafb', textAlign: 'left', fontSize: '12px', color: '#667085', textTransform: 'uppercase' }}>
               <th style={{ padding: '12px 20px', fontWeight: '600' }}>Note No & Date</th>
@@ -162,6 +163,7 @@ const AdminDebitCreditNotes = () => {
             )}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
     </AdminLayout>

@@ -37,6 +37,19 @@ import "./AdminCustomers.css";
 
 const initialCustomers = [];
 
+const getPageNumbers = (current, total) => {
+  if (total <= 5) {
+    return Array.from({ length: total }, (_, i) => i + 1);
+  }
+  if (current <= 3) {
+    return [1, 2, 3, 4, "...", total];
+  }
+  if (current >= total - 2) {
+    return [1, "...", total - 3, total - 2, total - 1, total];
+  }
+  return [1, "...", current - 1, current, current + 1, "...", total];
+};
+
 const AdminCustomers = () => {
   const [customers, setCustomers] = useState(initialCustomers);
   const [selectedCustomerId, setSelectedCustomerId] = useState(null);
@@ -586,11 +599,11 @@ const AdminCustomers = () => {
         {/* Main Content: Customer Table */}
         <div className="cust-main-split">
           <div className="cust-table-area">
-            <div style={{ overflowX: "auto" }}>
+            <div className="cust-table-wrapper">
               <table className="cust-table">
                 <thead>
                   <tr>
-                    <th style={{ width: "36px", textAlign: "center" }}>
+                    <th style={{ width: "36px", minWidth: "36px", textAlign: "center" }}>
                       <input
                         type="checkbox"
                         checked={selectedRowIds.length === filteredCustomers.length && filteredCustomers.length > 0}
@@ -598,24 +611,24 @@ const AdminCustomers = () => {
                         style={{ cursor: "pointer", accentColor: "#ff5722" }}
                       />
                     </th>
-                    <th>Customer</th>
-                    <th>Contact</th>
-                    <th>Type</th>
-                    <th>Channel</th>
-                    <th style={{ textAlign: "center" }}>Total Orders</th>
-                    <th>Total Spent</th>
-                    <th style={{ textAlign: "center" }}>Credits</th>
-                    <th>Last Purchase</th>
-                    <th>Status</th>
-                    <th style={{ textAlign: "center", width: "70px" }}>Actions</th>
+                    <th style={{ minWidth: "180px" }}>Customer</th>
+                    <th style={{ minWidth: "150px" }}>Contact</th>
+                    <th style={{ minWidth: "90px" }}>Type</th>
+                    <th style={{ minWidth: "95px" }}>Channel</th>
+                    <th style={{ minWidth: "105px", textAlign: "center" }}>Total Orders</th>
+                    <th style={{ minWidth: "110px" }}>Total Spent</th>
+                    <th style={{ minWidth: "90px", textAlign: "center" }}>Credits</th>
+                    <th style={{ minWidth: "120px" }}>Last Purchase</th>
+                    <th style={{ minWidth: "90px" }}>Status</th>
+                    <th style={{ minWidth: "70px", textAlign: "center" }}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {paginatedCustomers.length === 0 ? (
                     <tr>
-                      <td colSpan="11" style={{ textAlign: "center", padding: "40px 20px", color: "#64748b" }}>
-                        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "8px" }}>
-                          <Users size={32} style={{ color: "#94a3b8" }} />
+                      <td colSpan="11" style={{ textAlign: "center", padding: "40px 16px", color: "#64748b" }}>
+                        <div className="cust-empty-state-wrap">
+                          <Users size={34} style={{ color: "#94a3b8" }} />
                           <p style={{ margin: 0, fontWeight: "600", fontSize: "14px", color: "#334155" }}>
                             No customers found matching your filters
                           </p>
@@ -623,7 +636,7 @@ const AdminCustomers = () => {
                             type="button"
                             className="cust-btn cust-btn-secondary"
                             onClick={handleClearFilters}
-                            style={{ marginTop: "6px", fontSize: "12px", padding: "6px 14px" }}
+                            style={{ marginTop: "4px", fontSize: "12px", padding: "6px 14px" }}
                           >
                             Clear Filters
                           </button>
@@ -788,7 +801,7 @@ const AdminCustomers = () => {
 
             {/* Pagination footer */}
             <div className="cust-pagination">
-              <div>
+              <div className="cust-pagination-info">
                 Showing {filteredCustomers.length === 0 ? 0 : startIndex + 1} -{" "}
                 {Math.min(startIndex + rowsPerPage, filteredCustomers.length)} of {filteredCustomers.length} customers
               </div>
@@ -798,34 +811,45 @@ const AdminCustomers = () => {
                   className="cust-page-btn"
                   disabled={currentPage === 1}
                   onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+                  title="Previous Page"
                 >
                   <ChevronLeft size={14} />
                 </button>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                  <button
-                    key={p}
-                    type="button"
-                    className={`cust-page-btn ${currentPage === p ? "active" : ""}`}
-                    onClick={() => setCurrentPage(p)}
-                  >
-                    {p}
-                  </button>
-                ))}
+                {getPageNumbers(currentPage, totalPages).map((p, idx) =>
+                  p === "..." ? (
+                    <span key={`dots-${idx}`} style={{ padding: "0 4px", color: "#94a3b8", fontSize: "12px" }}>
+                      ...
+                    </span>
+                  ) : (
+                    <button
+                      key={p}
+                      type="button"
+                      className={`cust-page-btn ${currentPage === p ? "active" : ""}`}
+                      onClick={() => setCurrentPage(p)}
+                    >
+                      {p}
+                    </button>
+                  )
+                )}
                 <button
                   type="button"
                   className="cust-page-btn"
                   disabled={currentPage === totalPages || totalPages === 0}
                   onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+                  title="Next Page"
                 >
                   <ChevronRight size={14} />
                 </button>
               </div>
-              <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+              <div className="cust-pagination-size">
                 <select
                   className="cust-filter-select"
-                  style={{ padding: "5px 24px 5px 8px", fontSize: "12px" }}
+                  style={{ padding: "6px 26px 6px 10px", fontSize: "12px" }}
                   value={rowsPerPage}
-                  onChange={(e) => setRowsPerPage(Number(e.target.value))}
+                  onChange={(e) => {
+                    setRowsPerPage(Number(e.target.value));
+                    setCurrentPage(1);
+                  }}
                 >
                   <option value={10}>10 per page</option>
                   <option value={25}>25 per page</option>
@@ -899,10 +923,8 @@ const AdminCustomers = () => {
             <div style={{ padding: "20px", overflowY: "auto", display: "grid", gap: "16px" }}>
               {/* Quick Stats Grid */}
               <div
+                className="cust-modal-grid-4"
                 style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(4, 1fr)",
-                  gap: "10px",
                   background: "#f8fafc",
                   padding: "12px",
                   borderRadius: "12px",
@@ -946,7 +968,7 @@ const AdminCustomers = () => {
                 <div style={{ fontSize: "12px", fontWeight: "700", color: "#475569", marginBottom: "8px" }}>
                   Contact Information
                 </div>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", fontSize: "12.5px" }}>
+                <div className="cust-modal-grid-2" style={{ gap: "10px", fontSize: "12.5px" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "6px", color: "#334155" }}>
                     <Phone size={14} style={{ color: "#ff5722" }} />
                     <span>{viewCustomer.phone}</span>
@@ -1111,7 +1133,7 @@ const AdminCustomers = () => {
                 />
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+              <div className="cust-modal-grid-2">
                 <div>
                   <label style={{ display: "block", fontSize: "12.5px", fontWeight: "600", color: "#334155", marginBottom: "4px" }}>
                     Phone Number *
@@ -1137,7 +1159,7 @@ const AdminCustomers = () => {
                 </div>
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
+              <div className="cust-modal-grid-3">
                 <div>
                   <label style={{ display: "block", fontSize: "12.5px", fontWeight: "600", color: "#334155", marginBottom: "4px" }}>
                     Customer Type
@@ -1298,7 +1320,7 @@ const AdminCustomers = () => {
                 />
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+              <div className="cust-modal-grid-2">
                 <div>
                   <label style={{ display: "block", fontSize: "12.5px", fontWeight: "600", color: "#334155", marginBottom: "4px" }}>
                     Phone Number *
@@ -1326,7 +1348,7 @@ const AdminCustomers = () => {
                 </div>
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+              <div className="cust-modal-grid-2">
                 <div>
                   <label style={{ display: "block", fontSize: "12.5px", fontWeight: "600", color: "#334155", marginBottom: "4px" }}>
                     Customer Type
@@ -1449,7 +1471,7 @@ const AdminCustomers = () => {
                 </div>
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+              <div className="cust-modal-grid-2">
                 <div>
                   <label style={{ display: "block", fontSize: "12.5px", fontWeight: "600", color: "#334155", marginBottom: "4px" }}>
                     Action

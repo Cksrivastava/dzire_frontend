@@ -41,6 +41,7 @@ import {
   HelpCircle
 } from 'lucide-react';
 import { initialStaffData } from '../components/AdminStaffView';
+import './AdminStaffProfile.css';
 
 const monthNames = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -674,25 +675,10 @@ const AdminStaffProfile = () => {
 
   return (
     <AdminLayout>
-      <div style={{ backgroundColor: '#f8fafc', minHeight: '100vh', padding: '24px 28px', color: '#1e293b', fontFamily: 'Inter, system-ui, -apple-system, sans-serif' }}>
+      <div className="staff-profile-container">
         {/* Toast */}
         {toastMessage && (
-          <div style={{
-            position: 'fixed',
-            top: '24px',
-            right: '28px',
-            backgroundColor: '#1e293b',
-            color: '#ffffff',
-            padding: '12px 20px',
-            borderRadius: '8px',
-            boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '10px',
-            zIndex: 9999,
-            fontSize: '13.5px',
-            fontWeight: '500'
-          }}>
+          <div className="staff-profile-toast">
             <Check size={16} color="#22c55e" />
             <span>{toastMessage}</span>
           </div>
@@ -723,21 +709,9 @@ const AdminStaffProfile = () => {
         </div>
 
         {/* Main Staff Profile Card Header */}
-        <div style={{
-          backgroundColor: '#ffffff',
-          borderRadius: '16px',
-          border: '1px solid #e2e8f0',
-          padding: '24px 28px',
-          marginBottom: '24px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.02)',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          gap: '20px'
-        }}>
+        <div className="staff-profile-header-card">
           {/* Left: Avatar & Info */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          <div className="staff-profile-header-left">
             <div style={{ position: 'relative' }}>
               <img
                 src={formData.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'}
@@ -860,7 +834,7 @@ const AdminStaffProfile = () => {
           </div>
 
           {/* Right: Actions */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div className="staff-profile-header-actions">
             <button
               onClick={handleToggleStatus}
               style={{
@@ -1018,27 +992,21 @@ const AdminStaffProfile = () => {
         </div>
 
         {/* Tab Navigation Strip */}
-        <div style={{ display: 'flex', borderBottom: '1px solid #e2e8f0', marginBottom: '24px', gap: '28px', backgroundColor: '#ffffff', padding: '0 24px', borderRadius: '12px 12px 0 0' }}>
+        <div className="staff-profile-tabs-strip">
           {[
             { id: 'profile', label: 'Basic Info & Store' },
             { id: 'attendance', label: 'Attendance & Leaves' },
             { id: 'salary', label: 'Salary & Compensation' },
-            { id: 'roles', label: 'Roles & Permissions' },
             { id: 'documents', label: 'KYC & Documents' }
           ].map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
+              className="staff-profile-tab-btn"
               style={{
-                background: 'none',
-                border: 'none',
                 borderBottom: activeTab === tab.id ? '2px solid #ff6600' : '2px solid transparent',
-                padding: '14px 4px',
-                fontSize: '13.5px',
                 fontWeight: activeTab === tab.id ? '700' : '500',
-                color: activeTab === tab.id ? '#ff6600' : '#64748b',
-                cursor: 'pointer',
-                transition: 'all 0.15s ease'
+                color: activeTab === tab.id ? '#ff6600' : '#64748b'
               }}
             >
               {tab.label}
@@ -1048,14 +1016,14 @@ const AdminStaffProfile = () => {
 
         {/* TAB 1: BASIC INFO & STORE */}
         {activeTab === 'profile' && (
-          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px' }}>
+          <div className="staff-profile-grid-2fr">
             {/* Left Card: General Fields */}
             <div style={{ backgroundColor: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.02)' }}>
               <h3 style={{ margin: '0 0 18px 0', fontSize: '15px', fontWeight: '800', color: '#0f172a' }}>
                 Personal & Employment Information
               </h3>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '18px' }}>
+              <div className="staff-profile-grid-2">
                 <div>
                   <label style={{ display: 'block', fontSize: '12.5px', fontWeight: '700', color: '#475569', marginBottom: '6px' }}>
                     Full Name
@@ -1261,7 +1229,7 @@ const AdminStaffProfile = () => {
                   <FileText size={15} color="#ff6600" />
                   <span>Identity & KYC Details</span>
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                <div className="staff-profile-grid-2">
                   <div>
                     <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#475569', marginBottom: '5px' }}>
                       Aadhaar Card Number
@@ -1834,31 +1802,11 @@ const AdminStaffProfile = () => {
             {isLeaveModalOpen && (
               <div
                 onClick={() => setIsLeaveModalOpen(false)}
-                style={{
-                  position: 'fixed',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  backgroundColor: 'rgba(15, 23, 42, 0.6)',
-                  backdropFilter: 'blur(3px)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  zIndex: 1000,
-                  padding: '20px'
-                }}
+                className="staff-profile-modal-overlay"
               >
                 <div
                   onClick={e => e.stopPropagation()}
-                  style={{
-                    backgroundColor: '#ffffff',
-                    borderRadius: '14px',
-                    width: '100%',
-                    maxWidth: '480px',
-                    boxShadow: '0 20px 40px rgba(0,0,0,0.2)',
-                    overflow: 'hidden'
-                  }}
+                  className="staff-profile-modal-box"
                 >
                   <div style={{ padding: '18px 20px', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -1877,7 +1825,7 @@ const AdminStaffProfile = () => {
                       Mark leave or update attendance for <strong>{formData.name}</strong>.
                     </p>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                    <div className="staff-profile-grid-2" style={{ gap: '12px' }}>
                       <div>
                         <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#334155', marginBottom: '5px' }}>
                           From Date *
@@ -1988,7 +1936,7 @@ const AdminStaffProfile = () => {
                       </div>
                     </div>
 
-                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
+                    <div className="staff-profile-modal-footer">
                       <button
                         type="button"
                         onClick={() => setIsLeaveModalOpen(false)}
@@ -2012,13 +1960,13 @@ const AdminStaffProfile = () => {
 
         {/* TAB 3: SALARY & COMPENSATION */}
         {activeTab === 'salary' && (
-          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px' }}>
+          <div className="staff-profile-grid-2fr">
             <div style={{ backgroundColor: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '24px' }}>
               <h3 style={{ margin: '0 0 18px 0', fontSize: '15px', fontWeight: '800', color: '#0f172a' }}>
                 Salary Structure & Bank Payout Details
               </h3>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '18px' }}>
+              <div className="staff-profile-grid-2">
                 <div>
                   <label style={{ display: 'block', fontSize: '12.5px', fontWeight: '700', color: '#475569', marginBottom: '6px' }}>
                     Monthly Basic Salary (₹)
@@ -2251,66 +2199,7 @@ const AdminStaffProfile = () => {
           </div>
         )}
 
-        {/* TAB 4: ROLES & PERMISSIONS */}
-        {activeTab === 'roles' && (
-          <div style={{ backgroundColor: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '24px' }}>
-            <h3 style={{ margin: '0 0 6px 0', fontSize: '16px', fontWeight: '800', color: '#0f172a' }}>
-              Module Access & Permissions
-            </h3>
-            <p style={{ margin: '0 0 20px 0', fontSize: '13px', color: '#64748b' }}>
-              Select which areas of Dzire Admin and POS {formData.name} is authorized to manage.
-            </p>
-
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
-              {[
-                { name: 'Sales & Billing', key: 'Sales', desc: 'Can process customer sales, create bills, and view invoices' },
-                { name: 'Inventory & Stock', key: 'Inventory', desc: 'Can inspect stock counts, transfers, and warehouse balances' },
-                { name: 'Point of Sale (POS)', key: 'POS', desc: 'Terminal POS access, cashier functions, and quick barcode search' },
-                { name: 'Reports & Business Analytics', key: 'Reports', desc: 'Can view profit/loss, GST filing, and daily store registers' },
-                { name: 'Discounts & Offers', key: 'Discounts', desc: 'Can create promotional coupons and edit discount rules' },
-                { name: 'Website Management', key: 'Website', desc: 'Can change storefront banners, catalogs, and customer inquiries' }
-              ].map(item => {
-                const isChecked = (formData.permissions || []).includes(item.key);
-                return (
-                  <div
-                    key={item.key}
-                    onClick={() => isEditing && togglePermission(item.key)}
-                    style={{
-                      padding: '16px 18px',
-                      borderRadius: '10px',
-                      border: isChecked ? '1px solid #93c5fd' : '1px solid #e2e8f0',
-                      backgroundColor: isChecked ? '#eff6ff' : '#f8fafc',
-                      display: 'flex',
-                      alignItems: 'flex-start',
-                      justifyContent: 'space-between',
-                      cursor: isEditing ? 'pointer' : 'default',
-                      transition: 'all 0.15s ease'
-                    }}
-                  >
-                    <div>
-                      <div style={{ fontSize: '13.5px', fontWeight: '700', color: isChecked ? '#1e3a8a' : '#0f172a' }}>
-                        {item.name}
-                      </div>
-                      <div style={{ fontSize: '12px', color: '#64748b', marginTop: '4px', lineHeight: 1.4 }}>
-                        {item.desc}
-                      </div>
-                    </div>
-
-                    <input
-                      type="checkbox"
-                      checked={isChecked}
-                      disabled={!isEditing}
-                      onChange={() => togglePermission(item.key)}
-                      style={{ accentColor: '#ff6600', marginTop: '2px', cursor: isEditing ? 'pointer' : 'default' }}
-                    />
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {/* TAB 5: KYC & DOCUMENTS */}
+        {/* TAB 4: KYC & DOCUMENTS */}
         {activeTab === 'documents' && (
           <div style={{ backgroundColor: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '24px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
@@ -2341,7 +2230,7 @@ const AdminStaffProfile = () => {
               </label>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
+            <div className="staff-profile-grid-3">
               {(formData.documents || []).map((doc, idx) => (
                 <div
                   key={idx}
@@ -2386,20 +2275,7 @@ const AdminStaffProfile = () => {
         {isPasswordModalOpen && (
           <div
             onClick={() => setIsPasswordModalOpen(false)}
-            style={{
-              position: 'fixed',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              backgroundColor: 'rgba(15, 23, 42, 0.6)',
-              backdropFilter: 'blur(3px)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              zIndex: 1000,
-              padding: '20px'
-            }}
+            className="staff-profile-modal-overlay"
           >
             <div
               onClick={e => e.stopPropagation()}
@@ -2457,7 +2333,7 @@ const AdminStaffProfile = () => {
                   />
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
+                <div className="staff-profile-modal-footer">
                   <button
                     type="button"
                     onClick={() => setIsPasswordModalOpen(false)}
@@ -2480,34 +2356,11 @@ const AdminStaffProfile = () => {
         {isRolesModalOpen && (
           <div
             onClick={() => setIsRolesModalOpen(false)}
-            style={{
-              position: 'fixed',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              backgroundColor: 'rgba(15, 23, 42, 0.6)',
-              backdropFilter: 'blur(3px)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              zIndex: 1000,
-              padding: '20px'
-            }}
+            className="staff-profile-modal-overlay"
           >
             <div
               onClick={e => e.stopPropagation()}
-              style={{
-                backgroundColor: '#ffffff',
-                borderRadius: '16px',
-                width: '100%',
-                maxWidth: '560px',
-                maxHeight: '90vh',
-                display: 'flex',
-                flexDirection: 'column',
-                boxShadow: '0 20px 40px rgba(0,0,0,0.2)',
-                overflow: 'hidden'
-              }}
+              className="staff-profile-modal-box"
             >
               {/* Modal Header */}
               <div style={{ padding: '18px 24px', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#fafbfc' }}>
@@ -2595,7 +2448,7 @@ const AdminStaffProfile = () => {
                     </div>
                   </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
+                  <div className="staff-profile-grid-roles" style={{ gap: '10px' }}>
                     {[
                       { name: 'Sales & Billing', key: 'Sales', desc: 'Bills, invoices & sales' },
                       { name: 'Inventory & Stock', key: 'Inventory', desc: 'Stock counts & warehouse' },
@@ -2642,7 +2495,7 @@ const AdminStaffProfile = () => {
                 </div>
 
                 {/* Footer Buttons */}
-                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px', paddingTop: '16px', borderTop: '1px solid #f1f5f9' }}>
+                <div className="staff-profile-modal-footer">
                   <button
                     type="button"
                     onClick={() => setIsRolesModalOpen(false)}

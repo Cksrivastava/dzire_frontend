@@ -4,6 +4,7 @@ import AdminLayout from './AdminLayout';
 import ExportDropdown from '../components/ExportDropdown';
 import { Search, Calendar, ChevronDown, MoreVertical, FileText, Printer, Plus, Eye, Edit2, Trash2, X, CheckCircle2 } from 'lucide-react';
 import './AdminDashboard.css';
+import './AdminQuotation.css';
 
 const fallbackQuotations = [];
 
@@ -108,7 +109,7 @@ const AdminQuotationDataSheet = () => {
 
   return (
     <AdminLayout>
-      <div style={{ background: '#fff', minHeight: '100vh', padding: '0', position: 'relative' }}>
+      <div className="qtn-page-wrapper">
 
         {/* Toast Alert */}
         {toastMessage && (
@@ -134,19 +135,8 @@ const AdminQuotationDataSheet = () => {
 
         {/* View Modal */}
         {selectedItem && (
-          <div style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0,0,0,0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 9998
-          }}>
-            <div style={{ background: '#fff', borderRadius: '12px', width: '500px', maxWidth: '90%', padding: '24px', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)' }}>
+          <div className="qtn-modal-overlay">
+            <div className="qtn-modal-box">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px', marginBottom: '16px' }}>
                 <h3 style={{ margin: 0, fontSize: '18px', color: '#0f172a' }}>Quotation Details</h3>
                 <button onClick={() => setSelectedItem(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748b' }}>
@@ -154,7 +144,7 @@ const AdminQuotationDataSheet = () => {
                 </button>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', fontSize: '13px' }}>
+              <div className="qtn-modal-grid">
                 <div>
                   <p style={{ margin: '0 0 4px', color: '#64748b', fontSize: '11px' }}>Quotation Number</p>
                   <p style={{ margin: 0, fontWeight: '700', color: '#2563eb' }}>{selectedItem.qtnNo}</p>
@@ -196,20 +186,20 @@ const AdminQuotationDataSheet = () => {
                 </div>
               )}
 
-              <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+              <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'flex-end', gap: '10px', flexWrap: 'wrap' }}>
                 <button
                   onClick={() => {
                     const item = selectedItem;
                     setSelectedItem(null);
                     handleEdit(item);
                   }}
-                  style={{ background: '#ff6600', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '6px', fontSize: '13px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+                  className="qtn-btn-primary"
                 >
                   <Edit2 size={14} /> Edit Quotation
                 </button>
                 <button
                   onClick={() => setSelectedItem(null)}
-                  style={{ background: '#f1f5f9', border: '1px solid #cbd5e1', padding: '8px 16px', borderRadius: '6px', fontSize: '13px', fontWeight: '600', color: '#475569', cursor: 'pointer' }}
+                  className="qtn-btn-secondary"
                 >
                   Close
                 </button>
@@ -218,105 +208,115 @@ const AdminQuotationDataSheet = () => {
           </div>
         )}
 
-        {/* Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 24px', borderBottom: '1px solid #e2e8f0' }}>
-          <h2 style={{ margin: 0, fontSize: '18px', fontWeight: '700', color: '#1e293b' }}>Quotations</h2>
-          <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-            <ExportDropdown
-              fileName="Quotations_Report"
-              title="Quotations Summary Report"
-              buttonLabel="Export"
-              headers={['Date', 'Quotation No', 'Party Name', 'Valid Till', 'Amount', 'Status']}
-              rows={filteredQuotations.map(item => [
-                item.date,
-                item.qtnNo,
-                item.party,
-                item.validTill,
-                item.amount,
-                item.status
-              ])}
-              onExportSuccess={(format) => showToast(`Exported ${format} successfully!`)}
-            />
-            <button 
-              onClick={() => navigate('/admin/quotation/create')} 
-              style={{ background: '#ff6600', color: '#fff', border: 'none', padding: '7px 16px', borderRadius: '4px', fontSize: '13px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', boxShadow: '0 2px 4px rgba(255, 102, 0, 0.2)' }}
-            >
-              <Plus size={16} /> Create Quotation
-            </button>
-          </div>
-        </div>
-
-        <div style={{ padding: '24px' }}>
-
-          {/* Summary Cards */}
-          <div style={{ display: 'flex', gap: '24px', marginBottom: '24px' }}>
-            <div style={{ flex: '1', background: '#eef2ff', border: '1px solid #c7d2fe', borderRadius: '8px', padding: '16px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                <div style={{ background: '#e0e7ff', padding: '4px', borderRadius: '4px' }}>
-                  <FileText size={14} color="#4f46e5" />
-                </div>
-                <span style={{ fontSize: '13px', fontWeight: '600', color: '#4f46e5' }}>Total Quotations</span>
+        {/* Card Container */}
+        <div className="qtn-card-container">
+          {/* Header */}
+          <div className="qtn-header-bar">
+            <div className="qtn-title-group">
+              <div className="qtn-title-icon">
+                <FileText size={20} />
               </div>
-              <div style={{ fontSize: '18px', fontWeight: '700', color: '#1e293b' }}>₹ {totalQuotations.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+              <div className="qtn-title-text">
+                <h2>Quotations</h2>
+                <p>Manage customer estimates, pricing, and validity status</p>
+              </div>
             </div>
-
-            <div style={{ flex: '1', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '8px', padding: '16px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                <div style={{ background: '#dcfce7', padding: '4px', borderRadius: '4px' }}>
-                  <FileText size={14} color="#16a34a" />
-                </div>
-                <span style={{ fontSize: '13px', fontWeight: '600', color: '#16a34a' }}>Approved</span>
-              </div>
-              <div style={{ fontSize: '18px', fontWeight: '700', color: '#1e293b' }}>₹ {approvedAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-            </div>
-
-            <div style={{ flex: '1', background: '#fefce8', border: '1px solid #fef08a', borderRadius: '8px', padding: '16px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                <div style={{ background: '#fef9c3', padding: '4px', borderRadius: '4px' }}>
-                  <FileText size={14} color="#ca8a04" />
-                </div>
-                <span style={{ fontSize: '13px', fontWeight: '600', color: '#ca8a04' }}>Pending</span>
-              </div>
-              <div style={{ fontSize: '18px', fontWeight: '700', color: '#1e293b' }}>₹ {pendingAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-            </div>
-
-            <div style={{ flex: '1', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '8px', padding: '16px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                <div style={{ background: '#fee2e2', padding: '4px', borderRadius: '4px' }}>
-                  <FileText size={14} color="#dc2626" />
-                </div>
-                <span style={{ fontSize: '13px', fontWeight: '600', color: '#dc2626' }}>Expired</span>
-              </div>
-              <div style={{ fontSize: '18px', fontWeight: '700', color: '#1e293b' }}>₹ {expiredAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-            </div>
-          </div>
-
-          {/* Filters */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-            <div style={{ display: 'flex', gap: '12px' }}>
-              <div style={{ position: 'relative' }}>
-                <Search size={16} color="#64748b" style={{ position: 'absolute', left: '10px', top: '9px' }} />
-                <input
-                  type="text"
-                  placeholder="Search Quotations..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  style={{ padding: '6px 12px 6px 32px', border: '1px solid #cbd5e1', borderRadius: '4px', fontSize: '13px', outline: 'none', width: '220px' }}
-                />
-              </div>
+            <div className="qtn-header-actions">
+              <ExportDropdown
+                fileName="Quotations_Report"
+                title="Quotations Summary Report"
+                buttonLabel="Export"
+                headers={['Date', 'Quotation No', 'Party Name', 'Valid Till', 'Amount', 'Status']}
+                rows={filteredQuotations.map(item => [
+                  item.date,
+                  item.qtnNo,
+                  item.party,
+                  item.validTill,
+                  item.amount,
+                  item.status
+                ])}
+                onExportSuccess={(format) => showToast(`Exported ${format} successfully!`)}
+              />
               <button 
-                type="button"
-                onClick={() => fetchQuotations()}
-                style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#fff', border: '1px solid #cbd5e1', padding: '6px 12px', borderRadius: '4px', fontSize: '13px', color: '#64748b', cursor: 'pointer' }}
+                onClick={() => navigate('/admin/quotation/create')} 
+                className="qtn-btn-primary"
               >
-                <Calendar size={14} /> Last 365 Days <ChevronDown size={14} />
+                <Plus size={16} /> Create Quotation
               </button>
             </div>
           </div>
 
-          {/* Table */}
-          <div style={{ border: '1px solid #e2e8f0', borderRadius: '8px' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+          <div style={{ padding: '20px', boxSizing: 'border-box' }}>
+
+            {/* Summary Cards */}
+            <div className="qtn-metrics-grid">
+              <div className="qtn-metric-card total">
+                <div className="qtn-metric-header">
+                  <div className="qtn-metric-icon-wrap" style={{ background: '#e0e7ff' }}>
+                    <FileText size={14} color="#4f46e5" />
+                  </div>
+                  <span className="qtn-metric-label" style={{ color: '#4f46e5' }}>Total Quotations</span>
+                </div>
+                <div className="qtn-metric-val">₹ {totalQuotations.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+              </div>
+
+              <div className="qtn-metric-card approved">
+                <div className="qtn-metric-header">
+                  <div className="qtn-metric-icon-wrap" style={{ background: '#dcfce7' }}>
+                    <FileText size={14} color="#16a34a" />
+                  </div>
+                  <span className="qtn-metric-label" style={{ color: '#16a34a' }}>Approved</span>
+                </div>
+                <div className="qtn-metric-val">₹ {approvedAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+              </div>
+
+              <div className="qtn-metric-card pending">
+                <div className="qtn-metric-header">
+                  <div className="qtn-metric-icon-wrap" style={{ background: '#fef9c3' }}>
+                    <FileText size={14} color="#ca8a04" />
+                  </div>
+                  <span className="qtn-metric-label" style={{ color: '#ca8a04' }}>Pending</span>
+                </div>
+                <div className="qtn-metric-val">₹ {pendingAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+              </div>
+
+              <div className="qtn-metric-card expired">
+                <div className="qtn-metric-header">
+                  <div className="qtn-metric-icon-wrap" style={{ background: '#fee2e2' }}>
+                    <FileText size={14} color="#dc2626" />
+                  </div>
+                  <span className="qtn-metric-label" style={{ color: '#dc2626' }}>Expired</span>
+                </div>
+                <div className="qtn-metric-val">₹ {expiredAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+              </div>
+            </div>
+
+            {/* Filters */}
+            <div className="qtn-filter-bar">
+              <div className="qtn-filter-group">
+                <div className="qtn-search-wrap">
+                  <Search size={16} color="#64748b" style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+                  <input
+                    type="text"
+                    placeholder="Search Quotations..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="qtn-search-input"
+                  />
+                </div>
+                <button 
+                  type="button"
+                  onClick={() => fetchQuotations()}
+                  className="qtn-date-btn"
+                >
+                  <Calendar size={14} /> Last 365 Days <ChevronDown size={14} />
+                </button>
+              </div>
+            </div>
+
+            {/* Table */}
+            <div className="qtn-table-wrapper">
+              <table className="qtn-table">
               <thead>
                 <tr style={{ background: '#ff6600', borderBottom: '1px solid #e2e8f0' }}>
                   <th style={{ padding: '12px 16px', fontSize: '12px', fontWeight: '600', color: '#ffffff' }}>Date <span style={{ fontSize: '10px' }}>↕</span></th>
@@ -462,6 +462,7 @@ const AdminQuotationDataSheet = () => {
           </div>
 
         </div>
+      </div>
       </div>
     </AdminLayout>
   );

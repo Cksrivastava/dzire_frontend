@@ -5,6 +5,7 @@ import ExportDropdown from '../components/ExportDropdown';
 import DateRangeFilter from '../components/DateRangeFilter';
 import { Search, Calendar, ChevronDown, MoreVertical, FileText, Plus, Eye, Edit2, Trash2, X, CheckCircle2 } from 'lucide-react';
 import './AdminDashboard.css';
+import './AdminPurchase.css';
 
 const AdminPurchaseInvoices = () => {
   const navigate = useNavigate();
@@ -144,7 +145,7 @@ const AdminPurchaseInvoices = () => {
 
   return (
     <AdminLayout>
-      <div style={{ background: '#fff', minHeight: '100vh', position: 'relative' }}>
+      <div className="purchase-page-wrapper">
 
         {/* Toast Alert */}
         {toastMessage && (
@@ -170,27 +171,16 @@ const AdminPurchaseInvoices = () => {
 
         {/* View Modal */}
         {selectedItem && (
-          <div style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0,0,0,0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 9998
-          }}>
-            <div style={{ background: '#fff', borderRadius: '12px', width: '500px', maxWidth: '90%', padding: '24px', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)' }}>
+          <div className="purchase-modal-overlay">
+            <div className="purchase-modal-box">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px', marginBottom: '16px' }}>
-                <h3 style={{ margin: 0, fontSize: '18px', color: '#0f172a' }}>Purchase Invoice Details</h3>
+                <h3 style={{ margin: 0, fontSize: '18px', color: '#0f172a', fontWeight: '700' }}>Purchase Invoice Details</h3>
                 <button onClick={() => setSelectedItem(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748b' }}>
                   <X size={20} />
                 </button>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', fontSize: '13px' }}>
+              <div className="purchase-modal-grid">
                 <div>
                   <p style={{ margin: '0 0 4px', color: '#64748b', fontSize: '11px' }}>Invoice Number</p>
                   <p style={{ margin: 0, fontWeight: '700', color: '#2563eb' }}>{selectedItem.inv}</p>
@@ -233,7 +223,7 @@ const AdminPurchaseInvoices = () => {
                     setSelectedItem(null);
                     handleEdit(item);
                   }}
-                  style={{ background: '#ff6600', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '6px', fontSize: '13px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+                  className="purchase-btn-primary"
                 >
                   <Edit2 size={14} /> Edit Invoice
                 </button>
@@ -248,10 +238,13 @@ const AdminPurchaseInvoices = () => {
           </div>
         )}
 
-        {/* Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 24px', borderBottom: '1px solid #e2e8f0' }}>
-          <h2 style={{ margin: 0, fontSize: '18px', fontWeight: '700', color: '#1e293b' }}>Purchase Invoices</h2>
-          <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+        {/* Header Bar */}
+        <div className="purchase-header-bar">
+          <div className="purchase-header-title">
+            <h2>Purchase Invoices</h2>
+            <p>Manage supplier invoices, tracking payments, and billing details</p>
+          </div>
+          <div className="purchase-header-actions">
             <ExportDropdown
               fileName="Purchase_Invoices_Report"
               title="Purchase Invoices Report"
@@ -269,17 +262,17 @@ const AdminPurchaseInvoices = () => {
             />
             <button
               onClick={() => navigate('/admin/purchase-invoices/add')}
-              style={{ background: '#ff6600', color: '#fff', border: 'none', padding: '7px 16px', borderRadius: '4px', fontSize: '13px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', boxShadow: '0 2px 4px rgba(255, 102, 0, 0.2)' }}
+              className="purchase-btn-primary"
             >
               <Plus size={16} /> Add Purchase Invoice
             </button>
           </div>
         </div>
 
-        <div style={{ padding: '24px' }}>
+        <div className="purchase-content-area">
 
           {/* Date Filter Bar */}
-          <div style={{ marginBottom: '24px' }}>
+          <div style={{ marginBottom: '20px' }}>
             <DateRangeFilter
               title="Purchase Invoices Date Filter"
               idPrefix="purchase-invoices-date-filter"
@@ -289,93 +282,105 @@ const AdminPurchaseInvoices = () => {
             />
           </div>
 
-          {/* Summary Cards */}
-          <div style={{ display: 'flex', gap: '24px', marginBottom: '24px' }}>
-            <div style={{ flex: '1', background: '#eef2ff', border: '1px solid #c7d2fe', borderRadius: '8px', padding: '16px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                <div style={{ background: '#e0e7ff', padding: '4px', borderRadius: '4px' }}>
-                  <FileText size={14} color="#4f46e5" />
+          {/* Summary KPI Cards */}
+          <div className="purchase-kpi-grid">
+            <div className="purchase-kpi-card" style={{ background: '#eef2ff', border: '1px solid #c7d2fe' }}>
+              <div className="purchase-kpi-head">
+                <div className="purchase-kpi-icon" style={{ background: '#e0e7ff' }}>
+                  <FileText size={15} color="#4f46e5" />
                 </div>
-                <span style={{ fontSize: '13px', fontWeight: '600', color: '#4f46e5' }}>Total Purchase</span>
+                <span className="purchase-kpi-label" style={{ color: '#4f46e5' }}>Total Purchase</span>
               </div>
-              <div style={{ fontSize: '18px', fontWeight: '700', color: '#1e293b' }}>
+              <div className="purchase-kpi-val">
                 ₹ {totalPurchaseNum.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </div>
+              <span className="purchase-kpi-sub" style={{ color: '#4338ca' }}>
+                {invoicesInDateRange.length} Invoices
+              </span>
             </div>
 
-            <div style={{ flex: '1', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '8px', padding: '16px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                <div style={{ background: '#dcfce7', padding: '4px', borderRadius: '4px' }}>
-                  <FileText size={14} color="#16a34a" />
+            <div className="purchase-kpi-card" style={{ background: '#f0fdf4', border: '1px solid #bbf7d0' }}>
+              <div className="purchase-kpi-head">
+                <div className="purchase-kpi-icon" style={{ background: '#dcfce7' }}>
+                  <FileText size={15} color="#16a34a" />
                 </div>
-                <span style={{ fontSize: '13px', fontWeight: '600', color: '#16a34a' }}>Paid</span>
+                <span className="purchase-kpi-label" style={{ color: '#16a34a' }}>Paid</span>
               </div>
-              <div style={{ fontSize: '18px', fontWeight: '700', color: '#1e293b' }}>
+              <div className="purchase-kpi-val">
                 ₹ {totalPaidNum.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </div>
+              <span className="purchase-kpi-sub" style={{ color: '#15803d' }}>
+                Settled Invoices
+              </span>
             </div>
 
-            <div style={{ flex: '1', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '8px', padding: '16px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                <div style={{ background: '#fee2e2', padding: '4px', borderRadius: '4px' }}>
-                  <FileText size={14} color="#dc2626" />
+            <div className="purchase-kpi-card" style={{ background: '#fef2f2', border: '1px solid #fecaca' }}>
+              <div className="purchase-kpi-head">
+                <div className="purchase-kpi-icon" style={{ background: '#fee2e2' }}>
+                  <FileText size={15} color="#dc2626" />
                 </div>
-                <span style={{ fontSize: '13px', fontWeight: '600', color: '#dc2626' }}>Unpaid</span>
+                <span className="purchase-kpi-label" style={{ color: '#dc2626' }}>Unpaid</span>
               </div>
-              <div style={{ fontSize: '18px', fontWeight: '700', color: '#1e293b' }}>
+              <div className="purchase-kpi-val">
                 ₹ {totalUnpaidNum.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </div>
+              <span className="purchase-kpi-sub" style={{ color: '#b91c1c' }}>
+                Pending Due
+              </span>
             </div>
           </div>
 
-          {/* Filters */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-            <div style={{ display: 'flex', gap: '12px' }}>
-              <div style={{ position: 'relative' }}>
-                <Search size={16} color="#64748b" style={{ position: 'absolute', left: '10px', top: '9px' }} />
+          {/* Filters & Search Toolbar */}
+          <div className="purchase-filter-bar">
+            <div className="purchase-filter-left">
+              <div className="purchase-search-wrap">
+                <Search size={16} className="purchase-search-icon" />
                 <input
                   type="text"
                   placeholder="Search Purchase Invoices..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  style={{ padding: '6px 12px 6px 32px', border: '1px solid #cbd5e1', borderRadius: '4px', fontSize: '13px', outline: 'none', width: '260px' }}
+                  className="purchase-search-input"
                 />
               </div>
             </div>
+            <div className="purchase-record-count">
+              Showing <strong>{filteredInvoices.length}</strong> of <strong>{invoicesList.length}</strong> records
+            </div>
           </div>
 
-          {/* Table */}
-          <div style={{ border: '1px solid #e2e8f0', borderRadius: '8px' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+          {/* Responsive Table */}
+          <div className="purchase-table-wrapper">
+            <table className="purchase-table">
               <thead>
-                <tr style={{ background: '#ff6600', borderBottom: '1px solid #e2e8f0' }}>
-                  <th style={{ padding: '12px 16px', fontSize: '12px', fontWeight: '600', color: '#ffffff' }}>Date <span style={{ fontSize: '10px' }}>↕</span></th>
-                  <th style={{ padding: '12px 16px', fontSize: '12px', fontWeight: '600', color: '#ffffff' }}>Invoice Number</th>
-                  <th style={{ padding: '12px 16px', fontSize: '12px', fontWeight: '600', color: '#ffffff' }}>Party Name</th>
-                  <th style={{ padding: '12px 16px', fontSize: '12px', fontWeight: '600', color: '#ffffff' }}>Due In</th>
-                  <th style={{ padding: '12px 16px', fontSize: '12px', fontWeight: '600', color: '#ffffff' }}>Amount</th>
-                  <th style={{ padding: '12px 16px', fontSize: '12px', fontWeight: '600', color: '#ffffff' }}>Status</th>
+                <tr>
+                  <th style={{ minWidth: '105px' }}>Date <span style={{ fontSize: '10px' }}>↕</span></th>
+                  <th style={{ minWidth: '150px' }}>Invoice Number</th>
+                  <th style={{ minWidth: '160px' }}>Party Name</th>
+                  <th style={{ minWidth: '110px' }}>Due In</th>
+                  <th style={{ minWidth: '125px' }}>Amount</th>
+                  <th style={{ minWidth: '130px' }}>Status</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredInvoices.map((inv, idx) => (
-                  <tr key={idx} style={{ borderBottom: '1px solid #e2e8f0', position: 'relative' }}>
-                    <td style={{ padding: '12px 16px', fontSize: '13px', color: '#64748b' }}>{inv.date}</td>
+                  <tr key={idx}>
+                    <td style={{ color: '#64748b' }}>{inv.date}</td>
                     <td 
-                      style={{ padding: '12px 16px', fontSize: '13px', color: '#2563eb', fontWeight: '500', cursor: 'pointer' }}
+                      style={{ color: '#2563eb', fontWeight: '500', cursor: 'pointer' }}
                       onClick={() => handleView(inv)}
                     >
                       {inv.inv}
                     </td>
-                    <td style={{ padding: '12px 16px', fontSize: '13px', color: '#1e293b', fontWeight: '500' }}>{inv.party}</td>
-                    <td style={{ padding: '12px 16px', fontSize: '12px', color: inv.dueIn === 'Due Today' ? '#ef4444' : '#64748b', fontWeight: '500' }}>{inv.dueIn}</td>
-                    <td style={{ padding: '12px 16px', fontSize: '13px', color: '#1e293b', fontWeight: '500' }}>
+                    <td style={{ color: '#1e293b', fontWeight: '500' }}>{inv.party}</td>
+                    <td style={{ color: inv.dueIn === 'Due Today' ? '#ef4444' : '#64748b', fontWeight: '500' }}>{inv.dueIn}</td>
+                    <td style={{ color: '#1e293b', fontWeight: '500' }}>
                       {inv.amount}
                       {inv.status === 'Unpaid' && <div style={{ fontSize: '11px', color: '#64748b' }}>(₹ {inv.amount.replace('₹ ', '')} unpaid)</div>}
                     </td>
 
                     {/* Status with 3 dots and Dropdown */}
-                    <td style={{ padding: '12px 16px', position: 'relative' }}>
+                    <td style={{ position: 'relative' }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
                         <span style={{
                           padding: '4px 8px',
@@ -486,8 +491,13 @@ const AdminPurchaseInvoices = () => {
                 ))}
                 {filteredInvoices.length === 0 && (
                   <tr>
-                    <td colSpan="6" style={{ textAlign: 'center', padding: '32px', color: '#94a3b8' }}>
-                      No purchase invoices found matching your search.
+                    <td colSpan="6" style={{ padding: '0' }}>
+                      <div className="purchase-empty-state">
+                        <FileText size={32} style={{ color: '#94a3b8' }} />
+                        <p style={{ margin: 0, fontWeight: '600', fontSize: '14px', color: '#334155' }}>
+                          No purchase invoices found matching your filters
+                        </p>
+                      </div>
                     </td>
                   </tr>
                 )}

@@ -7,6 +7,7 @@ import AdminInventoryItemModal from '../components/AdminInventoryItemModal';
 import AdminInvoiceItemsTable from '../components/AdminInvoiceItemsTable';
 import AdminChangeBankModal from '../components/AdminChangeBankModal';
 import './AdminDashboard.css';
+import './AdminCreditNote.css';
 
 const AdminCreditNote = () => {
   const navigate = useNavigate();
@@ -300,17 +301,17 @@ const AdminCreditNote = () => {
           </div>
         )}
 
-        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px', overflow: 'hidden' }}>
+        <div className="cn-form-wrapper">
 
           {/* Header */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 20px', borderBottom: '1px solid #e2e8f0' }}>
+          <div className="cn-form-header">
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <ArrowLeft size={20} color="#334155" style={{ cursor: 'pointer' }} onClick={() => navigate('/admin/credit-note')} />
               <h2 style={{ margin: 0, fontSize: '16px', fontWeight: '600', color: '#1e293b' }}>
                 {editCnId ? `Edit Credit Note (${editCnId})` : 'Create Credit Note'}
               </h2>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
               <Keyboard size={20} color="#64748b" style={{ cursor: 'pointer' }} />
               <button 
                 type="button"
@@ -324,7 +325,7 @@ const AdminCreditNote = () => {
                 type="button"
                 onClick={() => handleSaveCreditNote(false)}
                 disabled={isSaving}
-                style={{ background: '#e0e7ff', border: 'none', padding: '6px 24px', borderRadius: '4px', fontSize: '13px', fontWeight: '600', color: '#4338ca', cursor: 'pointer' }}
+                style={{ background: '#ff6600', border: 'none', padding: '6px 24px', borderRadius: '4px', fontSize: '13px', fontWeight: '600', color: '#ffffff', cursor: 'pointer' }}
               >
                 {isSaving ? 'Saving...' : 'Save'}
               </button>
@@ -332,9 +333,9 @@ const AdminCreditNote = () => {
           </div>
 
           {/* Top Section */}
-          <div style={{ display: 'flex', borderBottom: '1px solid #e2e8f0', flexWrap: 'wrap' }}>
+          <div className="cn-form-top-section">
             {/* Left: Bill To */}
-            <div style={{ flex: '1 1 300px', padding: '16px 20px', borderRight: '1px solid #e2e8f0' }}>
+            <div className="cn-form-bill-to">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                 <p style={{ margin: 0, fontSize: '12px', fontWeight: '500', color: '#64748b' }}>Bill To</p>
                 {selectedCustomer && (
@@ -360,33 +361,14 @@ const AdminCreditNote = () => {
               {!selectedCustomer ? (
                 <div
                   onClick={() => setShowCustomerModal(true)}
-                  style={{
-                    border: '1px dashed #3b82f6',
-                    borderRadius: '6px',
-                    height: '80px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    background: '#f8fafc',
-                    width: '250px',
-                    transition: 'all 0.2s ease'
-                  }}
+                  className="cn-customer-add-btn"
                   onMouseOver={(e) => (e.currentTarget.style.background = '#eff6ff')}
                   onMouseOut={(e) => (e.currentTarget.style.background = '#f8fafc')}
                 >
                   <span style={{ color: '#3b82f6', fontSize: '13px', fontWeight: '500' }}>+ Add Customer</span>
                 </div>
               ) : (
-                <div
-                  style={{
-                    border: '1px solid #e2e8f0',
-                    borderRadius: '6px',
-                    padding: '10px 12px',
-                    background: '#f8fafc',
-                    width: '250px'
-                  }}
-                >
+                <div className="cn-customer-card">
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                     <User size={14} color="#ff5722" />
                     <span style={{ fontWeight: '600', fontSize: '13px', color: '#0f172a' }}>{selectedCustomer.name}</span>
@@ -405,9 +387,9 @@ const AdminCreditNote = () => {
             </div>
 
             {/* Right: Invoice Meta */}
-            <div style={{ flex: '1 1 450px', padding: '16px 20px' }}>
+            <div className="cn-form-meta">
               <div style={{ display: 'flex', gap: '16px', marginBottom: '16px', flexWrap: 'wrap' }}>
-                <div style={{ width: '120px' }}>
+                <div style={{ minWidth: '120px', flex: '1 1 120px' }}>
                   <label style={{ display: 'block', fontSize: '11px', color: '#94a3b8', marginBottom: '4px' }}>Invoice Prefix</label>
                   <input 
                     type="text" 
@@ -416,7 +398,7 @@ const AdminCreditNote = () => {
                     style={{ width: '100%', padding: '6px 8px', border: '1px solid #cbd5e1', borderRadius: '4px', fontSize: '12px', outline: 'none', background: '#e2e8f0', color: '#64748b', boxSizing: 'border-box' }} 
                   />
                 </div>
-                <div style={{ width: '100px' }}>
+                <div style={{ minWidth: '100px', flex: '1 1 100px' }}>
                   <label style={{ display: 'block', fontSize: '11px', color: '#94a3b8', marginBottom: '4px' }}>Invoice Number</label>
                   <input 
                     type="text" 
@@ -425,7 +407,7 @@ const AdminCreditNote = () => {
                     style={{ width: '100%', padding: '6px 8px', border: '1px solid #cbd5e1', borderRadius: '4px', fontSize: '12px', outline: 'none', background: '#e2e8f0', color: '#64748b', boxSizing: 'border-box' }} 
                   />
                 </div>
-                <div style={{ width: '140px' }}>
+                <div style={{ minWidth: '140px', flex: '1 1 140px' }}>
                   <label style={{ display: 'block', fontSize: '11px', color: '#94a3b8', marginBottom: '4px' }}>Credit Note Date</label>
                   <div style={{ position: 'relative' }}>
                     <input 
@@ -441,7 +423,7 @@ const AdminCreditNote = () => {
 
               <div>
                 <label style={{ display: 'block', fontSize: '11px', color: '#94a3b8', marginBottom: '4px' }}>Link to Invoice :</label>
-                <div style={{ position: 'relative', width: '380px' }}>
+                <div style={{ position: 'relative', width: '100%', maxWidth: '380px' }}>
                   <Search size={14} color="#94a3b8" style={{ position: 'absolute', left: '8px', top: '7px' }} />
                   <input 
                     type="text" 
@@ -464,9 +446,9 @@ const AdminCreditNote = () => {
           />
 
           {/* Bottom Section */}
-          <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+          <div className="cn-form-bottom-section">
             {/* Left Bottom */}
-            <div style={{ flex: '1 1 300px', padding: '20px', borderRight: '1px solid #e2e8f0' }}>
+            <div className="cn-form-bottom-left">
               <div style={{ marginBottom: '20px' }}>
                 {showNotes ? (
                   <div style={{ marginBottom: '14px', background: '#f8fafc', padding: '12px', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
@@ -587,7 +569,7 @@ const AdminCreditNote = () => {
             </div>
 
             {/* Right Bottom */}
-            <div style={{ flex: '1 1 450px', padding: '20px' }}>
+            <div className="cn-form-bottom-right">
 
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                 <span 
@@ -631,9 +613,9 @@ const AdminCreditNote = () => {
                 <label htmlFor="autoRound" style={{ fontSize: '12px', color: '#1e293b', cursor: 'pointer' }}>Auto Round Off</label>
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', gap: '16px', flexWrap: 'wrap' }}>
                 <span style={{ fontSize: '14px', fontWeight: '600', color: '#1e293b' }}>Total Amount</span>
-                <div style={{ background: '#f8fafc', border: '1px solid #cbd5e1', padding: '8px 12px', borderRadius: '4px', width: '200px', textAlign: 'right', fontSize: '14px', fontWeight: '700', color: '#0f172a' }}>
+                <div style={{ background: '#f8fafc', border: '1px solid #cbd5e1', padding: '8px 12px', borderRadius: '4px', width: '200px', maxWidth: '100%', textAlign: 'right', fontSize: '14px', fontWeight: '700', color: '#0f172a' }}>
                   ₹ {totalAmount.toFixed(2)}
                 </div>
               </div>
@@ -649,9 +631,9 @@ const AdminCreditNote = () => {
                 />
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', gap: '16px', flexWrap: 'wrap' }}>
                 <span style={{ fontSize: '12px', color: '#64748b' }}>Amount Received</span>
-                <div style={{ display: 'flex', border: '1px solid #cbd5e1', borderRadius: '4px', overflow: 'hidden', width: '220px', background: '#fff' }}>
+                <div style={{ display: 'flex', border: '1px solid #cbd5e1', borderRadius: '4px', overflow: 'hidden', width: '220px', maxWidth: '100%', background: '#fff' }}>
                   <span style={{ background: '#f8fafc', padding: '8px 10px', fontSize: '12px', color: '#64748b', borderRight: '1px solid #cbd5e1' }}>₹</span>
                   <input
                     type="number"
@@ -683,7 +665,7 @@ const AdminCreditNote = () => {
                 </div>
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px', gap: '16px', flexWrap: 'wrap' }}>
                 <span style={{ fontSize: '13px', fontWeight: '600', color: balanceAmount === 0 ? '#10b981' : '#f59e0b' }}>Balance Amount</span>
                 <span style={{ fontSize: '13px', fontWeight: '700', color: balanceAmount === 0 ? '#10b981' : '#f59e0b' }}>₹ {balanceAmount.toFixed(2)}</span>
               </div>

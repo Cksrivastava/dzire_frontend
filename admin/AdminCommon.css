@@ -619,6 +619,7 @@
 .admin-shell th {
   text-align: left;
   background-color: #ff6600;
+  color: #ffffff !important;
 }
 
 /* Dashboard overrides to match AdminDashboard.css */

@@ -321,7 +321,7 @@ const AdminPOS = () => {
         <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px', overflow: 'hidden' }}>
 
           {/* Header */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 20px', borderBottom: '1px solid #e2e8f0' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 20px', borderBottom: '1px solid #e2e8f0', flexWrap: 'wrap', gap: '12px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <ArrowLeft size={20} color="#334155" style={{ cursor: 'pointer' }} onClick={() => navigate('/admin/pos/sales-invoice')} />
               <h2 style={{ margin: 0, fontSize: '16px', fontWeight: '600', color: '#1e293b' }}>
@@ -388,6 +388,8 @@ const AdminPOS = () => {
                     cursor: 'pointer',
                     background: '#f8fafc',
                     width: '250px',
+                    maxWidth: '100%',
+                    boxSizing: 'border-box',
                     transition: 'all 0.2s ease'
                   }}
                   onMouseOver={(e) => (e.currentTarget.style.background = '#eff6ff')}
@@ -402,7 +404,9 @@ const AdminPOS = () => {
                     borderRadius: '6px',
                     padding: '10px 12px',
                     background: '#f8fafc',
-                    width: '250px'
+                    width: '250px',
+                    maxWidth: '100%',
+                    boxSizing: 'border-box'
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -676,7 +680,7 @@ const AdminPOS = () => {
 
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
                 <span style={{ fontSize: '14px', fontWeight: '600', color: '#1e293b' }}>Total Amount</span>
-                <div style={{ background: '#f8fafc', border: '1px solid #cbd5e1', padding: '8px 12px', borderRadius: '4px', width: '200px', textAlign: 'right', fontSize: '14px', fontWeight: '700', color: '#0f172a' }}>
+                <div style={{ background: '#f8fafc', border: '1px solid #cbd5e1', padding: '8px 12px', borderRadius: '4px', width: '200px', maxWidth: '100%', boxSizing: 'border-box', textAlign: 'right', fontSize: '14px', fontWeight: '700', color: '#0f172a' }}>
                   ₹ {totalAmount.toFixed(2)}
                 </div>
               </div>
@@ -694,7 +698,7 @@ const AdminPOS = () => {
 
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
                 <span style={{ fontSize: '12px', color: '#64748b' }}>Amount Received</span>
-                <div style={{ display: 'flex', border: '1px solid #cbd5e1', borderRadius: '4px', overflow: 'hidden', width: '220px', background: '#fff' }}>
+                <div style={{ display: 'flex', border: '1px solid #cbd5e1', borderRadius: '4px', overflow: 'hidden', width: '220px', maxWidth: '100%', boxSizing: 'border-box', background: '#fff' }}>
                   <span style={{ background: '#f8fafc', padding: '8px 10px', fontSize: '12px', color: '#64748b', borderRight: '1px solid #cbd5e1' }}>₹</span>
                   <input
                     type="number"

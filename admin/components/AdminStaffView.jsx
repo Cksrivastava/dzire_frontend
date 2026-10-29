@@ -38,6 +38,7 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import ExportDropdown from './ExportDropdown';
+import './AdminStaffView.css';
 
 export const initialStaffData = [];
 
@@ -61,7 +62,7 @@ const AdminStaffView = () => {
         setStaffList(json.staff);
         try {
           localStorage.setItem('dzire_staff_list', JSON.stringify(json.staff));
-        } catch (e) {}
+        } catch (e) { }
       }
     } catch (err) {
       console.error("Failed to load staff list:", err);
@@ -840,32 +841,17 @@ const AdminStaffView = () => {
   };
 
   return (
-    <div style={{ backgroundColor: '#f8fafc', minHeight: '100vh', padding: '24px 28px', color: '#1e293b', fontFamily: 'Inter, system-ui, -apple-system, sans-serif' }}>
+    <div className="staff-view-container">
       {/* Toast Notification */}
       {toastMessage && (
-        <div style={{
-          position: 'fixed',
-          top: '24px',
-          right: '28px',
-          backgroundColor: '#1e293b',
-          color: '#ffffff',
-          padding: '12px 20px',
-          borderRadius: '8px',
-          boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '10px',
-          zIndex: 9999,
-          fontSize: '13.5px',
-          fontWeight: '500'
-        }}>
+        <div className="staff-toast">
           <Check size={16} color="#22c55e" />
           <span>{toastMessage}</span>
         </div>
       )}
 
       {/* Top Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
+      <div className="staff-header">
         <div>
           <h1 style={{ fontSize: '24px', fontWeight: '800', color: '#0f172a', margin: '0 0 4px 0', letterSpacing: '-0.02em' }}>
             Staff Management
@@ -877,34 +863,18 @@ const AdminStaffView = () => {
 
         <button
           onClick={handleOpenAddModal}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            backgroundColor: '#ff6600',
-            color: '#ffffff',
-            border: 'none',
-            borderRadius: '8px',
-            padding: '10px 18px',
-            fontSize: '13.5px',
-            fontWeight: '700',
-            cursor: 'pointer',
-            boxShadow: '0 2px 8px rgba(255, 102, 0, 0.28)',
-            transition: 'background-color 0.15s ease'
-          }}
-          onMouseEnter={e => e.currentTarget.style.backgroundColor = '#e65c00'}
-          onMouseLeave={e => e.currentTarget.style.backgroundColor = '#ff6600'}
+          className="staff-header-btn"
         >
           <Plus size={16} />
-          <span>+ Add Staff</span>
+          <span>Add Staff</span>
         </button>
       </div>
 
       {/* 5 KPI Metric Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '14px', marginBottom: '24px' }}>
+      <div className="staff-stats-grid">
         {/* Card 1: Total Staff */}
-        <div style={{ backgroundColor: '#ffffff', borderRadius: '12px', padding: '16px 18px', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '14px' }}>
-          <div style={{ width: '42px', height: '42px', borderRadius: '10px', backgroundColor: '#fff7ed', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#f97316' }}>
+        <div className="staff-stat-card">
+          <div style={{ width: '42px', height: '42px', minWidth: '42px', borderRadius: '10px', backgroundColor: '#fff7ed', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#f97316' }}>
             <Users size={20} />
           </div>
           <div>
@@ -918,8 +888,8 @@ const AdminStaffView = () => {
         </div>
 
         {/* Card 2: Active */}
-        <div style={{ backgroundColor: '#ffffff', borderRadius: '12px', padding: '16px 18px', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '14px' }}>
-          <div style={{ width: '42px', height: '42px', borderRadius: '10px', backgroundColor: '#f0fdf4', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#22c55e' }}>
+        <div className="staff-stat-card">
+          <div style={{ width: '42px', height: '42px', minWidth: '42px', borderRadius: '10px', backgroundColor: '#f0fdf4', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#22c55e' }}>
             <UserCheck size={20} />
           </div>
           <div>
@@ -933,8 +903,8 @@ const AdminStaffView = () => {
         </div>
 
         {/* Card 3: Inactive */}
-        <div style={{ backgroundColor: '#ffffff', borderRadius: '12px', padding: '16px 18px', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '14px' }}>
-          <div style={{ width: '42px', height: '42px', borderRadius: '10px', backgroundColor: '#fef2f2', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ef4444' }}>
+        <div className="staff-stat-card">
+          <div style={{ width: '42px', height: '42px', minWidth: '42px', borderRadius: '10px', backgroundColor: '#fef2f2', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ef4444' }}>
             <UserX size={20} />
           </div>
           <div>
@@ -948,8 +918,8 @@ const AdminStaffView = () => {
         </div>
 
         {/* Card 4: On Leave Today */}
-        <div style={{ backgroundColor: '#ffffff', borderRadius: '12px', padding: '16px 18px', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '14px' }}>
-          <div style={{ width: '42px', height: '42px', borderRadius: '10px', backgroundColor: '#eff6ff', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#3b82f6' }}>
+        <div className="staff-stat-card">
+          <div style={{ width: '42px', height: '42px', minWidth: '42px', borderRadius: '10px', backgroundColor: '#eff6ff', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#3b82f6' }}>
             <UserMinus size={20} />
           </div>
           <div>
@@ -963,8 +933,8 @@ const AdminStaffView = () => {
         </div>
 
         {/* Card 5: Avg Attendance */}
-        <div style={{ backgroundColor: '#ffffff', borderRadius: '12px', padding: '16px 18px', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '14px' }}>
-          <div style={{ width: '42px', height: '42px', borderRadius: '10px', backgroundColor: '#f0f9ff', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#0284c7' }}>
+        <div className="staff-stat-card">
+          <div style={{ width: '42px', height: '42px', minWidth: '42px', borderRadius: '10px', backgroundColor: '#f0f9ff', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#0284c7' }}>
             <CalendarCheck size={20} />
           </div>
           <div>
@@ -979,549 +949,552 @@ const AdminStaffView = () => {
       </div>
 
       {/* Main Staff Master Table Card */}
-      <div style={{ backgroundColor: '#ffffff', borderRadius: '12px', border: '1px solid #e2e8f0', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.02)' }}>
-          {/* Filter Tabs */}
-          <div style={{ display: 'flex', borderBottom: '1px solid #e2e8f0', padding: '0 20px', gap: '24px' }}>
-            {[
-              { id: 'All', label: `All Staff (${stats.total})` },
-              { id: 'Active', label: `Active (${stats.active})` },
-              { id: 'Inactive', label: `Inactive (${stats.inactive})` }
-            ].map(tab => (
-              <button
-                key={tab.id}
-                onClick={() => setSelectedTab(tab.id)}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  borderBottom: selectedTab === tab.id ? '2px solid #ff6600' : '2px solid transparent',
-                  padding: '14px 4px',
-                  fontSize: '13.5px',
-                  fontWeight: selectedTab === tab.id ? '700' : '500',
-                  color: selectedTab === tab.id ? '#ff6600' : '#64748b',
-                  cursor: 'pointer',
-                  transition: 'all 0.15s ease'
-                }}
-              >
-                {tab.label}
-              </button>
-            ))}
+      <div className="staff-card-main">
+        {/* Filter Tabs */}
+        <div className="staff-tabs-bar">
+          {[
+            { id: 'All', label: `All Staff (${stats.total})` },
+            { id: 'Active', label: `Active (${stats.active})` },
+            { id: 'Inactive', label: `Inactive (${stats.inactive})` }
+          ].map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setSelectedTab(tab.id)}
+              style={{
+                background: 'none',
+                border: 'none',
+                borderBottom: selectedTab === tab.id ? '2px solid #ff6600' : '2px solid transparent',
+                padding: '14px 4px',
+                fontSize: '13.5px',
+                fontWeight: selectedTab === tab.id ? '700' : '500',
+                color: selectedTab === tab.id ? '#ff6600' : '#64748b',
+                cursor: 'pointer',
+                transition: 'all 0.15s ease',
+                whiteSpace: 'nowrap'
+              }}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Search & Filter Toolbar */}
+        <div className="staff-toolbar">
+          {/* Search Input */}
+          <div className="staff-search-wrap">
+            <Search size={15} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
+            <input
+              type="text"
+              placeholder="Search by name, role or phone..."
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              style={{
+                width: '100%',
+                height: '38px',
+                padding: '0 12px 0 36px',
+                fontSize: '13px',
+                border: '1px solid #e2e8f0',
+                borderRadius: '8px',
+                backgroundColor: '#ffffff',
+                outline: 'none',
+                color: '#1e293b',
+                boxSizing: 'border-box'
+              }}
+            />
           </div>
 
-          {/* Search & Filter Toolbar */}
-          <div style={{ padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap', borderBottom: '1px solid #f1f5f9' }}>
-            {/* Search Input */}
-            <div style={{ position: 'relative', flex: 1, minWidth: '240px' }}>
-              <Search size={15} style={{ position: 'absolute', left: '12px', top: '11px', color: '#94a3b8' }} />
-              <input
-                type="text"
-                placeholder="Search by name, role or phone..."
-                value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '8px 12px 8px 36px',
-                  fontSize: '13px',
-                  border: '1px solid #e2e8f0',
-                  borderRadius: '8px',
-                  backgroundColor: '#ffffff',
-                  outline: 'none',
-                  color: '#1e293b'
-                }}
-              />
-            </div>
-
-            {/* Dropdowns */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              {/* Role */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ fontSize: '12px', color: '#64748b', fontWeight: '500' }}>Role</span>
-                <select
-                  value={roleFilter}
-                  onChange={e => setRoleFilter(e.target.value)}
-                  style={{
-                    padding: '7px 10px',
-                    fontSize: '12.5px',
-                    border: '1px solid #e2e8f0',
-                    borderRadius: '6px',
-                    backgroundColor: '#ffffff',
-                    color: '#334155',
-                    outline: 'none',
-                    cursor: 'pointer'
-                  }}
-                >
-                  <option value="All">All</option>
-                  <option value="Store Manager">Store Manager</option>
-                  <option value="Sales Associate">Sales Associate</option>
-                  <option value="Cashier">Cashier</option>
-                  <option value="Inventory Executive">Inventory Executive</option>
-                  <option value="Marketing Associate">Marketing Associate</option>
-                  <option value="Part-time (Weekend)">Part-time</option>
-                </select>
-              </div>
-
-              {/* Status */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ fontSize: '12px', color: '#64748b', fontWeight: '500' }}>Status</span>
-                <select
-                  value={statusFilter}
-                  onChange={e => setStatusFilter(e.target.value)}
-                  style={{
-                    padding: '7px 10px',
-                    fontSize: '12.5px',
-                    border: '1px solid #e2e8f0',
-                    borderRadius: '6px',
-                    backgroundColor: '#ffffff',
-                    color: '#334155',
-                    outline: 'none',
-                    cursor: 'pointer'
-                  }}
-                >
-                  <option value="All">All</option>
-                  <option value="Active">Active</option>
-                  <option value="Inactive">Inactive</option>
-                </select>
-              </div>
-
-              {/* Store */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ fontSize: '12px', color: '#64748b', fontWeight: '500' }}>Store</span>
-                <select
-                  value={storeFilter}
-                  onChange={e => setStoreFilter(e.target.value)}
-                  style={{
-                    padding: '7px 10px',
-                    fontSize: '12.5px',
-                    border: '1px solid #e2e8f0',
-                    borderRadius: '6px',
-                    backgroundColor: '#ffffff',
-                    color: '#334155',
-                    outline: 'none',
-                    cursor: 'pointer'
-                  }}
-                >
-                  <option value="All">All</option>
-                  <option value="Online">Online</option>
-                  <option value="Offline">Offline</option>
-                </select>
-              </div>
-
-              {/* Bulk Delete Button if items selected */}
-              {selectedIds.length > 0 && (
-                <button
-                  onClick={handleBulkDelete}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    padding: '7px 12px',
-                    fontSize: '12.5px',
-                    fontWeight: '600',
-                    color: '#dc2626',
-                    backgroundColor: '#fef2f2',
-                    border: '1px solid #fecdd3',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    transition: 'all 0.15s ease'
-                  }}
-                  onMouseEnter={e => e.currentTarget.style.backgroundColor = '#fee2e2'}
-                  onMouseLeave={e => e.currentTarget.style.backgroundColor = '#fef2f2'}
-                >
-                  <Trash2 size={13} color="#dc2626" />
-                  <span>Delete Selected ({selectedIds.length})</span>
-                </button>
-              )}
-
-              {/* Export Button */}
-              <ExportDropdown onExport={handleExport} />
-            </div>
-          </div>
-
-          {/* Table */}
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '700px' }}>
-              <thead>
-                <tr style={{ borderBottom: '1px solid #e2e8f0', fontSize: '12px', fontWeight: '600', color: '#64748b', backgroundColor: '#fafbfc' }}>
-                  <th style={{ padding: '12px 16px', width: '40px' }}>
-                    <input
-                      type="checkbox"
-                      checked={selectedIds.length === filteredStaff.length && filteredStaff.length > 0}
-                      onChange={toggleSelectAll}
-                      style={{ cursor: 'pointer', accentColor: '#ff6600' }}
-                    />
-                  </th>
-                  <th style={{ padding: '12px 14px' }}>Name</th>
-                  <th style={{ padding: '12px 14px' }}>Role</th>
-                  <th style={{ padding: '12px 14px' }}>Phone</th>
-                  <th style={{ padding: '12px 14px' }}>Email</th>
-                  <th style={{ padding: '12px 14px' }}>Join Date</th>
-                  <th style={{ padding: '12px 14px' }}>Status</th>
-                  <th style={{ padding: '12px 14px' }}>Attendance <br/><span style={{ fontSize: '10px', fontWeight: 'normal', color: '#94a3b8' }}>(This Month)</span></th>
-                  <th style={{ padding: '12px 16px', textAlign: 'center' }}>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredStaff.length === 0 ? (
-                  <tr>
-                    <td colSpan="9" style={{ textAlign: 'center', padding: '40px', color: '#94a3b8', fontSize: '14px' }}>
-                      No staff members match the current filters.
-                    </td>
-                  </tr>
-                ) : (
-                  filteredStaff.map(staff => {
-                    const isSelected = selectedStaffId === staff.id;
-                    const isChecked = selectedIds.includes(staff.id);
-
-                    return (
-                      <tr
-                        key={staff.id}
-                        onClick={() => navigate(`/admin/staff/${staff.id}`)}
-                        style={{
-                          borderBottom: '1px solid #f1f5f9',
-                          backgroundColor: '#ffffff',
-                          cursor: 'pointer',
-                          transition: 'background-color 0.15s ease'
-                        }}
-                        onMouseEnter={e => {
-                          e.currentTarget.style.backgroundColor = '#f8fafc';
-                        }}
-                        onMouseLeave={e => {
-                          e.currentTarget.style.backgroundColor = '#ffffff';
-                        }}
-                      >
-                        {/* Checkbox */}
-                        <td style={{ padding: '12px 16px' }} onClick={e => e.stopPropagation()}>
-                          <input
-                            type="checkbox"
-                            checked={isChecked}
-                            onChange={() => toggleSelectRow(staff.id)}
-                            style={{ cursor: 'pointer', accentColor: '#ff6600' }}
-                          />
-                        </td>
-
-                        {/* Name & Avatar */}
-                        <td style={{ padding: '12px 14px' }}>
-                          <div
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              navigate(`/admin/staff/${staff.id}`);
-                            }}
-                            style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}
-                            title="Click to view & edit full profile"
-                          >
-                            <img
-                              src={staff.avatar}
-                              alt={staff.name}
-                              style={{
-                                width: '32px',
-                                height: '32px',
-                                borderRadius: '50%',
-                                objectFit: 'cover',
-                                border: '1px solid #e2e8f0'
-                              }}
-                            />
-                            <span
-                              style={{
-                                fontSize: '13px',
-                                fontWeight: '700',
-                                color: '#0f172a',
-                                transition: 'color 0.15s ease'
-                              }}
-                              onMouseEnter={e => {
-                                e.currentTarget.style.color = '#ff6600';
-                                e.currentTarget.style.textDecoration = 'underline';
-                              }}
-                              onMouseLeave={e => {
-                                e.currentTarget.style.color = '#0f172a';
-                                e.currentTarget.style.textDecoration = 'none';
-                              }}
-                            >
-                              {staff.name}
-                            </span>
-                          </div>
-                        </td>
-
-                        {/* Role */}
-                        <td style={{ padding: '12px 14px', fontSize: '12.5px', color: '#475569' }}>
-                          {staff.role}
-                        </td>
-
-                        {/* Phone */}
-                        <td style={{ padding: '12px 14px', fontSize: '12.5px', color: '#475569' }}>
-                          {staff.phone}
-                        </td>
-
-                        {/* Email */}
-                        <td style={{ padding: '12px 14px', fontSize: '12.5px', color: '#475569' }}>
-                          {staff.email}
-                        </td>
-
-                        {/* Join Date */}
-                        <td style={{ padding: '12px 14px', fontSize: '12.5px', color: '#475569', whiteSpace: 'nowrap' }}>
-                          {staff.joinDate}
-                        </td>
-
-                        {/* Status */}
-                        <td style={{ padding: '12px 14px' }}>
-                          <span style={{
-                            display: 'inline-block',
-                            padding: '3px 10px',
-                            borderRadius: '12px',
-                            fontSize: '11.5px',
-                            fontWeight: '600',
-                            backgroundColor: staff.status === 'Active' ? '#dcfce7' : '#fee2e2',
-                            color: staff.status === 'Active' ? '#15803d' : '#b91c1c'
-                          }}>
-                            {staff.status}
-                          </span>
-                        </td>
-
-                        {/* Attendance */}
-                        <td style={{ padding: '12px 14px', fontSize: '12.5px', fontWeight: '600', color: staff.attendanceRate !== '—' ? '#0f172a' : '#94a3b8' }}>
-                          {staff.attendanceRate}
-                        </td>
-
-                        {/* Actions */}
-                        <td style={{ padding: '12px 16px', textAlign: 'center', position: 'relative' }} onClick={e => e.stopPropagation()}>
-                          <button
-                            onClick={() => setActionMenuOpenId(actionMenuOpenId === staff.id ? null : staff.id)}
-                            style={{
-                              background: 'none',
-                              border: 'none',
-                              color: '#94a3b8',
-                              cursor: 'pointer',
-                              padding: '4px',
-                              borderRadius: '4px'
-                            }}
-                          >
-                            <MoreHorizontal size={16} />
-                          </button>
-
-                          {/* Action Dropdown Menu */}
-                          {actionMenuOpenId === staff.id && (
-                            <div style={{
-                              position: 'absolute',
-                              right: '16px',
-                              top: '36px',
-                              backgroundColor: '#ffffff',
-                              borderRadius: '8px',
-                              border: '1px solid #e2e8f0',
-                              boxShadow: '0 4px 16px rgba(0,0,0,0.1)',
-                              zIndex: 50,
-                              minWidth: '175px',
-                              padding: '6px 0',
-                              textAlign: 'left'
-                            }}>
-                              <button
-                                onClick={() => {
-                                  navigate(`/admin/staff/${staff.id}`);
-                                  setActionMenuOpenId(null);
-                                }}
-                                style={{
-                                  width: '100%',
-                                  padding: '8px 14px',
-                                  background: 'none',
-                                  border: 'none',
-                                  fontSize: '12.5px',
-                                  color: '#ff6600',
-                                  fontWeight: '700',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: '8px',
-                                  cursor: 'pointer'
-                                }}
-                                onMouseEnter={e => e.currentTarget.style.backgroundColor = '#fff7ed'}
-                                onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
-                              >
-                                <Eye size={13} />
-                                <span>View & Edit Profile</span>
-                              </button>
-
-                              <button
-                                onClick={() => {
-                                  handleOpenEditModal(staff);
-                                  setActionMenuOpenId(null);
-                                }}
-                                style={{
-                                  width: '100%',
-                                  padding: '8px 14px',
-                                  background: 'none',
-                                  border: 'none',
-                                  fontSize: '12.5px',
-                                  color: '#334155',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: '8px',
-                                  cursor: 'pointer'
-                                }}
-                                onMouseEnter={e => e.currentTarget.style.backgroundColor = '#f8fafc'}
-                                onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
-                              >
-                                <Edit2 size={13} />
-                                <span>Quick Edit</span>
-                              </button>
-
-                              <button
-                                onClick={() => {
-                                  setSelectedStaffId(staff.id);
-                                  setIsPasswordModalOpen(true);
-                                  setActionMenuOpenId(null);
-                                }}
-                                style={{
-                                  width: '100%',
-                                  padding: '8px 14px',
-                                  background: 'none',
-                                  border: 'none',
-                                  fontSize: '12.5px',
-                                  color: '#334155',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: '8px',
-                                  cursor: 'pointer'
-                                }}
-                                onMouseEnter={e => e.currentTarget.style.backgroundColor = '#f8fafc'}
-                                onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
-                              >
-                                <KeyRound size={13} />
-                                <span>Reset Password</span>
-                              </button>
-
-                              <button
-                                onClick={() => {
-                                  handleToggleStatus(staff.id);
-                                  setActionMenuOpenId(null);
-                                }}
-                                style={{
-                                  width: '100%',
-                                  padding: '8px 14px',
-                                  background: 'none',
-                                  border: 'none',
-                                  fontSize: '12.5px',
-                                  color: staff.status === 'Active' ? '#f59e0b' : '#22c55e',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: '8px',
-                                  cursor: 'pointer'
-                                }}
-                                onMouseEnter={e => e.currentTarget.style.backgroundColor = '#f8fafc'}
-                                onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
-                              >
-                                <AlertCircle size={13} />
-                                <span>{staff.status === 'Active' ? 'Deactivate Staff' : 'Activate Staff'}</span>
-                              </button>
-
-                              <div style={{ height: '1px', backgroundColor: '#f1f5f9', margin: '4px 0' }} />
-
-                              <button
-                                onClick={() => {
-                                  handleDeleteStaff(staff);
-                                  setActionMenuOpenId(null);
-                                }}
-                                style={{
-                                  width: '100%',
-                                  padding: '8px 14px',
-                                  background: 'none',
-                                  border: 'none',
-                                  fontSize: '12.5px',
-                                  color: '#dc2626',
-                                  fontWeight: '600',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: '8px',
-                                  cursor: 'pointer'
-                                }}
-                                onMouseEnter={e => e.currentTarget.style.backgroundColor = '#fef2f2'}
-                                onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
-                              >
-                                <Trash2 size={13} color="#dc2626" />
-                                <span>Delete Staff</span>
-                              </button>
-                            </div>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })
-                )}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Table Pagination Footer */}
-          <div style={{ padding: '14px 20px', borderTop: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
-            <div style={{ fontSize: '12.5px', color: '#64748b' }}>
-              Showing 1-{filteredStaff.length} of {filteredStaff.length} staff
-            </div>
-
-            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <button
-                  disabled
-                  style={{
-                    width: '28px',
-                    height: '28px',
-                    border: '1px solid #e2e8f0',
-                    borderRadius: '6px',
-                    backgroundColor: '#ffffff',
-                    color: '#94a3b8',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'not-allowed'
-                  }}
-                >
-                  <ChevronLeft size={14} />
-                </button>
-                <div style={{
-                  width: '28px',
-                  height: '28px',
-                  borderRadius: '6px',
-                  border: '1px solid #ff6600',
-                  backgroundColor: '#ffffff',
-                  color: '#ff6600',
-                  fontSize: '12px',
-                  fontWeight: '700',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}>
-                  1
-                </div>
-                <button
-                  disabled
-                  style={{
-                    width: '28px',
-                    height: '28px',
-                    border: '1px solid #e2e8f0',
-                    borderRadius: '6px',
-                    backgroundColor: '#ffffff',
-                    color: '#94a3b8',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'not-allowed'
-                  }}
-                >
-                  <ChevronRight size={14} />
-                </button>
-              </div>
-
+          {/* Dropdowns */}
+          <div className="staff-filters-wrap">
+            {/* Role */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{ fontSize: '12px', color: '#64748b', fontWeight: '500' }}>Role</span>
               <select
+                value={roleFilter}
+                onChange={e => setRoleFilter(e.target.value)}
                 style={{
-                  padding: '5px 8px',
-                  fontSize: '12px',
+                  padding: '7px 10px',
+                  fontSize: '12.5px',
                   border: '1px solid #e2e8f0',
                   borderRadius: '6px',
                   backgroundColor: '#ffffff',
-                  color: '#475569',
+                  color: '#334155',
                   outline: 'none',
                   cursor: 'pointer'
                 }}
               >
-                <option value="10">10 per page</option>
-                <option value="25">25 per page</option>
-                <option value="50">50 per page</option>
+                <option value="All">All</option>
+                <option value="Store Manager">Store Manager</option>
+                <option value="Sales Associate">Sales Associate</option>
+                <option value="Cashier">Cashier</option>
+                <option value="Inventory Executive">Inventory Executive</option>
+                <option value="Marketing Associate">Marketing Associate</option>
+                <option value="Part-time (Weekend)">Part-time</option>
               </select>
             </div>
+
+            {/* Status */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{ fontSize: '12px', color: '#64748b', fontWeight: '500' }}>Status</span>
+              <select
+                value={statusFilter}
+                onChange={e => setStatusFilter(e.target.value)}
+                style={{
+                  padding: '7px 10px',
+                  fontSize: '12.5px',
+                  border: '1px solid #e2e8f0',
+                  borderRadius: '6px',
+                  backgroundColor: '#ffffff',
+                  color: '#334155',
+                  outline: 'none',
+                  cursor: 'pointer'
+                }}
+              >
+                <option value="All">All</option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+            </div>
+
+            {/* Store */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{ fontSize: '12px', color: '#64748b', fontWeight: '500' }}>Store</span>
+              <select
+                value={storeFilter}
+                onChange={e => setStoreFilter(e.target.value)}
+                style={{
+                  padding: '7px 10px',
+                  fontSize: '12.5px',
+                  border: '1px solid #e2e8f0',
+                  borderRadius: '6px',
+                  backgroundColor: '#ffffff',
+                  color: '#334155',
+                  outline: 'none',
+                  cursor: 'pointer'
+                }}
+              >
+                <option value="All">All</option>
+                <option value="Online">Online</option>
+                <option value="Offline">Offline</option>
+              </select>
+            </div>
+
+            {/* Bulk Delete Button if items selected */}
+            {selectedIds.length > 0 && (
+              <button
+                onClick={handleBulkDelete}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '7px 12px',
+                  fontSize: '12.5px',
+                  fontWeight: '600',
+                  color: '#dc2626',
+                  backgroundColor: '#fef2f2',
+                  border: '1px solid #fecdd3',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease'
+                }}
+                onMouseEnter={e => e.currentTarget.style.backgroundColor = '#fee2e2'}
+                onMouseLeave={e => e.currentTarget.style.backgroundColor = '#fef2f2'}
+              >
+                <Trash2 size={13} color="#dc2626" />
+                <span>Delete Selected ({selectedIds.length})</span>
+              </button>
+            )}
+
+            {/* Export Button */}
+            <ExportDropdown onExport={handleExport} />
+          </div>
+        </div>
+
+        {/* Table */}
+        <div className="staff-table-wrap">
+          <table className="staff-table">
+            <thead>
+              <tr style={{ borderBottom: '1px solid #e2e8f0', fontSize: '12px', fontWeight: '600', color: '#64748b', backgroundColor: '#fafbfc' }}>
+                <th style={{ padding: '12px 16px', width: '40px' }}>
+                  <input
+                    type="checkbox"
+                    checked={selectedIds.length === filteredStaff.length && filteredStaff.length > 0}
+                    onChange={toggleSelectAll}
+                    style={{ cursor: 'pointer', accentColor: '#ff6600' }}
+                  />
+                </th>
+                <th style={{ padding: '12px 14px', minWidth: '160px' }}>Name</th>
+                <th style={{ padding: '12px 14px', minWidth: '130px' }}>Role</th>
+                <th style={{ padding: '12px 14px', minWidth: '120px' }}>Phone</th>
+                <th style={{ padding: '12px 14px', minWidth: '160px' }}>Email</th>
+                <th style={{ padding: '12px 14px', minWidth: '100px' }}>Join Date</th>
+                <th style={{ padding: '12px 14px', minWidth: '90px' }}>Status</th>
+                <th style={{ padding: '12px 14px', minWidth: '120px' }}>Attendance <br /><span style={{ fontSize: '10px', fontWeight: 'normal', color: '#94a3b8' }}>(This Month)</span></th>
+                <th style={{ padding: '12px 16px', minWidth: '80px', textAlign: 'center' }}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredStaff.length === 0 ? (
+                <tr>
+                  <td colSpan="9" style={{ textAlign: 'center', padding: '40px', color: '#94a3b8', fontSize: '14px' }}>
+                    No staff members match the current filters.
+                  </td>
+                </tr>
+              ) : (
+                filteredStaff.map(staff => {
+                  const isSelected = selectedStaffId === staff.id;
+                  const isChecked = selectedIds.includes(staff.id);
+
+                  return (
+                    <tr
+                      key={staff.id}
+                      onClick={() => navigate(`/admin/staff/${staff.id}`)}
+                      style={{
+                        borderBottom: '1px solid #f1f5f9',
+                        backgroundColor: '#ffffff',
+                        cursor: 'pointer',
+                        transition: 'background-color 0.15s ease'
+                      }}
+                      onMouseEnter={e => {
+                        e.currentTarget.style.backgroundColor = '#f8fafc';
+                      }}
+                      onMouseLeave={e => {
+                        e.currentTarget.style.backgroundColor = '#ffffff';
+                      }}
+                    >
+                      {/* Checkbox */}
+                      <td style={{ padding: '12px 16px' }} onClick={e => e.stopPropagation()}>
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={() => toggleSelectRow(staff.id)}
+                          style={{ cursor: 'pointer', accentColor: '#ff6600' }}
+                        />
+                      </td>
+
+                      {/* Name & Avatar */}
+                      <td style={{ padding: '12px 14px' }}>
+                        <div
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/admin/staff/${staff.id}`);
+                          }}
+                          style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}
+                          title="Click to view & edit full profile"
+                        >
+                          <img
+                            src={staff.avatar}
+                            alt={staff.name}
+                            style={{
+                              width: '32px',
+                              height: '32px',
+                              borderRadius: '50%',
+                              objectFit: 'cover',
+                              border: '1px solid #e2e8f0'
+                            }}
+                          />
+                          <span
+                            style={{
+                              fontSize: '13px',
+                              fontWeight: '700',
+                              color: '#0f172a',
+                              transition: 'color 0.15s ease'
+                            }}
+                            onMouseEnter={e => {
+                              e.currentTarget.style.color = '#ff6600';
+                              e.currentTarget.style.textDecoration = 'underline';
+                            }}
+                            onMouseLeave={e => {
+                              e.currentTarget.style.color = '#0f172a';
+                              e.currentTarget.style.textDecoration = 'none';
+                            }}
+                          >
+                            {staff.name}
+                          </span>
+                        </div>
+                      </td>
+
+                      {/* Role */}
+                      <td style={{ padding: '12px 14px', fontSize: '12.5px', color: '#475569' }}>
+                        {staff.role}
+                      </td>
+
+                      {/* Phone */}
+                      <td style={{ padding: '12px 14px', fontSize: '12.5px', color: '#475569' }}>
+                        {staff.phone}
+                      </td>
+
+                      {/* Email */}
+                      <td style={{ padding: '12px 14px', fontSize: '12.5px', color: '#475569' }}>
+                        {staff.email}
+                      </td>
+
+                      {/* Join Date */}
+                      <td style={{ padding: '12px 14px', fontSize: '12.5px', color: '#475569', whiteSpace: 'nowrap' }}>
+                        {staff.joinDate}
+                      </td>
+
+                      {/* Status */}
+                      <td style={{ padding: '12px 14px' }}>
+                        <span style={{
+                          display: 'inline-block',
+                          padding: '3px 10px',
+                          borderRadius: '12px',
+                          fontSize: '11.5px',
+                          fontWeight: '600',
+                          backgroundColor: staff.status === 'Active' ? '#dcfce7' : '#fee2e2',
+                          color: staff.status === 'Active' ? '#15803d' : '#b91c1c'
+                        }}>
+                          {staff.status}
+                        </span>
+                      </td>
+
+                      {/* Attendance */}
+                      <td style={{ padding: '12px 14px', fontSize: '12.5px', fontWeight: '600', color: staff.attendanceRate !== '—' ? '#0f172a' : '#94a3b8' }}>
+                        {staff.attendanceRate}
+                      </td>
+
+                      {/* Actions */}
+                      <td style={{ padding: '12px 16px', textAlign: 'center', position: 'relative' }} onClick={e => e.stopPropagation()}>
+                        <button
+                          onClick={() => setActionMenuOpenId(actionMenuOpenId === staff.id ? null : staff.id)}
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            color: '#94a3b8',
+                            cursor: 'pointer',
+                            padding: '4px',
+                            borderRadius: '4px'
+                          }}
+                        >
+                          <MoreHorizontal size={16} />
+                        </button>
+
+                        {/* Action Dropdown Menu */}
+                        {actionMenuOpenId === staff.id && (
+                          <div style={{
+                            position: 'absolute',
+                            right: '16px',
+                            top: '36px',
+                            backgroundColor: '#ffffff',
+                            borderRadius: '8px',
+                            border: '1px solid #e2e8f0',
+                            boxShadow: '0 4px 16px rgba(0,0,0,0.1)',
+                            zIndex: 50,
+                            minWidth: '175px',
+                            padding: '6px 0',
+                            textAlign: 'left'
+                          }}>
+                            <button
+                              onClick={() => {
+                                navigate(`/admin/staff/${staff.id}`);
+                                setActionMenuOpenId(null);
+                              }}
+                              style={{
+                                width: '100%',
+                                padding: '8px 14px',
+                                background: 'none',
+                                border: 'none',
+                                fontSize: '12.5px',
+                                color: '#ff6600',
+                                fontWeight: '700',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                                cursor: 'pointer'
+                              }}
+                              onMouseEnter={e => e.currentTarget.style.backgroundColor = '#fff7ed'}
+                              onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
+                            >
+                              <Eye size={13} />
+                              <span>View & Edit Profile</span>
+                            </button>
+
+                            <button
+                              onClick={() => {
+                                handleOpenEditModal(staff);
+                                setActionMenuOpenId(null);
+                              }}
+                              style={{
+                                width: '100%',
+                                padding: '8px 14px',
+                                background: 'none',
+                                border: 'none',
+                                fontSize: '12.5px',
+                                color: '#334155',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                                cursor: 'pointer'
+                              }}
+                              onMouseEnter={e => e.currentTarget.style.backgroundColor = '#f8fafc'}
+                              onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
+                            >
+                              <Edit2 size={13} />
+                              <span>Quick Edit</span>
+                            </button>
+
+                            <button
+                              onClick={() => {
+                                setSelectedStaffId(staff.id);
+                                setIsPasswordModalOpen(true);
+                                setActionMenuOpenId(null);
+                              }}
+                              style={{
+                                width: '100%',
+                                padding: '8px 14px',
+                                background: 'none',
+                                border: 'none',
+                                fontSize: '12.5px',
+                                color: '#334155',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                                cursor: 'pointer'
+                              }}
+                              onMouseEnter={e => e.currentTarget.style.backgroundColor = '#f8fafc'}
+                              onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
+                            >
+                              <KeyRound size={13} />
+                              <span>Reset Password</span>
+                            </button>
+
+                            <button
+                              onClick={() => {
+                                handleToggleStatus(staff.id);
+                                setActionMenuOpenId(null);
+                              }}
+                              style={{
+                                width: '100%',
+                                padding: '8px 14px',
+                                background: 'none',
+                                border: 'none',
+                                fontSize: '12.5px',
+                                color: staff.status === 'Active' ? '#f59e0b' : '#22c55e',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                                cursor: 'pointer'
+                              }}
+                              onMouseEnter={e => e.currentTarget.style.backgroundColor = '#f8fafc'}
+                              onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
+                            >
+                              <AlertCircle size={13} />
+                              <span>{staff.status === 'Active' ? 'Deactivate Staff' : 'Activate Staff'}</span>
+                            </button>
+
+                            <div style={{ height: '1px', backgroundColor: '#f1f5f9', margin: '4px 0' }} />
+
+                            <button
+                              onClick={() => {
+                                handleDeleteStaff(staff);
+                                setActionMenuOpenId(null);
+                              }}
+                              style={{
+                                width: '100%',
+                                padding: '8px 14px',
+                                background: 'none',
+                                border: 'none',
+                                fontSize: '12.5px',
+                                color: '#dc2626',
+                                fontWeight: '600',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                                cursor: 'pointer'
+                              }}
+                              onMouseEnter={e => e.currentTarget.style.backgroundColor = '#fef2f2'}
+                              onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
+                            >
+                              <Trash2 size={13} color="#dc2626" />
+                              <span>Delete Staff</span>
+                            </button>
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Table Pagination Footer */}
+        <div className="staff-pagination">
+          <div style={{ fontSize: '12.5px', color: '#64748b' }}>
+            Showing 1-{filteredStaff.length} of {filteredStaff.length} staff
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <button
+                disabled
+                style={{
+                  width: '28px',
+                  height: '28px',
+                  border: '1px solid #e2e8f0',
+                  borderRadius: '6px',
+                  backgroundColor: '#ffffff',
+                  color: '#94a3b8',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'not-allowed'
+                }}
+              >
+                <ChevronLeft size={14} />
+              </button>
+              <div style={{
+                width: '28px',
+                height: '28px',
+                borderRadius: '6px',
+                border: '1px solid #ff6600',
+                backgroundColor: '#ffffff',
+                color: '#ff6600',
+                fontSize: '12px',
+                fontWeight: '700',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>
+                1
+              </div>
+              <button
+                disabled
+                style={{
+                  width: '28px',
+                  height: '28px',
+                  border: '1px solid #e2e8f0',
+                  borderRadius: '6px',
+                  backgroundColor: '#ffffff',
+                  color: '#94a3b8',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'not-allowed'
+                }}
+              >
+                <ChevronRight size={14} />
+              </button>
+            </div>
+
+            <select
+              style={{
+                padding: '5px 8px',
+                fontSize: '12px',
+                border: '1px solid #e2e8f0',
+                borderRadius: '6px',
+                backgroundColor: '#ffffff',
+                color: '#475569',
+                outline: 'none',
+                cursor: 'pointer'
+              }}
+            >
+              <option value="10">10 per page</option>
+              <option value="25">25 per page</option>
+              <option value="50">50 per page</option>
+            </select>
+          </div>
         </div>
       </div>
 
@@ -1532,34 +1505,11 @@ const AdminStaffView = () => {
             setIsAddModalOpen(false);
             setIsEditModalOpen(false);
           }}
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(15, 23, 42, 0.6)',
-            backdropFilter: 'blur(3px)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1000,
-            padding: '20px'
-          }}
+          className="staff-modal-overlay"
         >
           <div
             onClick={e => e.stopPropagation()}
-            style={{
-              backgroundColor: '#ffffff',
-              borderRadius: '16px',
-              width: '100%',
-              maxWidth: '780px',
-              maxHeight: '90vh',
-              display: 'flex',
-              flexDirection: 'column',
-              boxShadow: '0 25px 50px rgba(0,0,0,0.25)',
-              overflow: 'hidden'
-            }}
+            className="staff-modal-box"
           >
             {/* Modal Header */}
             <div style={{ padding: '18px 24px', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#fafbfc' }}>
@@ -1585,7 +1535,7 @@ const AdminStaffView = () => {
 
             {/* Modal Form Body */}
             <form onSubmit={handleSaveStaff} style={{ flex: 1, overflowY: 'auto', padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              
+
               {/* SECTION 1: Personal Details */}
               <div style={{ backgroundColor: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '16px 18px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px', borderBottom: '1px solid #f1f5f9', paddingBottom: '8px' }}>
@@ -1595,7 +1545,7 @@ const AdminStaffView = () => {
                   </span>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
+                <div className="staff-modal-grid-2" style={{ marginBottom: '14px' }}>
                   <div>
                     <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#334155', marginBottom: '5px' }}>
                       Full Name <span style={{ color: '#ef4444' }}>*</span>
@@ -1629,7 +1579,7 @@ const AdminStaffView = () => {
                   </div>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '14px', marginBottom: '14px' }}>
+                <div className="staff-modal-grid-3" style={{ marginBottom: '14px' }}>
                   <div>
                     <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#334155', marginBottom: '5px' }}>
                       Gender (लिंग) <span style={{ color: '#ef4444' }}>*</span>
@@ -1673,7 +1623,7 @@ const AdminStaffView = () => {
                   </div>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                <div className="staff-modal-grid-2">
                   <div>
                     <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#334155', marginBottom: '5px' }}>
                       Phone Number <span style={{ color: '#ef4444' }}>*</span>
@@ -1716,7 +1666,7 @@ const AdminStaffView = () => {
                   <span style={{ fontSize: '11px', color: '#64748b' }}>Enter numbers & upload copies</span>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                <div className="staff-modal-grid-2">
                   {/* Aadhaar Card Box */}
                   <div style={{ padding: '14px', backgroundColor: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', gap: '10px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -1938,7 +1888,7 @@ const AdminStaffView = () => {
                   </span>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
+                <div className="staff-modal-grid-2" style={{ marginBottom: '14px' }}>
                   <div>
                     <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#334155', marginBottom: '5px' }}>
                       Date of Joining (DOJ) <span style={{ color: '#ef4444' }}>*</span>
@@ -1967,7 +1917,7 @@ const AdminStaffView = () => {
                   </div>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '14px' }}>
+                <div className="staff-modal-grid-2fr">
                   <div>
                     <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#334155', marginBottom: '5px' }}>
                       Previous Experience
@@ -2006,7 +1956,7 @@ const AdminStaffView = () => {
                   </span>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
+                <div className="staff-modal-grid-2" style={{ marginBottom: '14px' }}>
                   <div>
                     <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#334155', marginBottom: '5px' }}>
                       Bank Name
@@ -2034,7 +1984,7 @@ const AdminStaffView = () => {
                   </div>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                <div className="staff-modal-grid-2">
                   <div>
                     <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#334155', marginBottom: '5px' }}>
                       IFSC Code
@@ -2090,7 +2040,7 @@ const AdminStaffView = () => {
                   <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#334155', marginBottom: '8px' }}>
                     Module Permissions
                   </label>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
+                  <div className="staff-permissions-grid">
                     {['Sales', 'Inventory', 'POS', 'Reports'].map(p => (
                       <label key={p} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#334155', cursor: 'pointer' }}>
                         <input
@@ -2107,7 +2057,7 @@ const AdminStaffView = () => {
               </div>
 
               {/* Modal Footer Actions */}
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '6px', paddingTop: '16px', borderTop: '1px solid #e2e8f0' }}>
+              <div className="staff-modal-footer">
                 <button
                   type="button"
                   onClick={() => {
@@ -2134,20 +2084,7 @@ const AdminStaffView = () => {
       {isPasswordModalOpen && selectedStaff && (
         <div
           onClick={() => setIsPasswordModalOpen(false)}
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(15, 23, 42, 0.6)',
-            backdropFilter: 'blur(3px)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1000,
-            padding: '20px'
-          }}
+          className="staff-modal-overlay"
         >
           <div
             onClick={e => e.stopPropagation()}
@@ -2215,7 +2152,7 @@ const AdminStaffView = () => {
                 <span>Email new credentials to {selectedStaff.email}</span>
               </label>
 
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
+              <div className="staff-modal-footer">
                 <button
                   type="button"
                   onClick={() => setIsPasswordModalOpen(false)}
@@ -2239,20 +2176,7 @@ const AdminStaffView = () => {
       {isSectionEditModalOpen && selectedStaff && (
         <div
           onClick={() => setIsSectionEditModalOpen(false)}
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(15, 23, 42, 0.6)',
-            backdropFilter: 'blur(3px)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1000,
-            padding: '20px'
-          }}
+          className="staff-modal-overlay"
         >
           <div
             onClick={e => e.stopPropagation()}
@@ -2287,7 +2211,7 @@ const AdminStaffView = () => {
                     <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#334155', marginBottom: '4px' }}>Role</label>
                     <input type="text" required value={formData.role} onChange={e => setFormData({ ...formData, role: e.target.value })} style={{ width: '100%', padding: '8px 10px', fontSize: '13px', border: '1px solid #d1d5db', borderRadius: '6px' }} />
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                  <div className="staff-modal-grid-2">
                     <div>
                       <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#334155', marginBottom: '4px' }}>Phone</label>
                       <input type="text" required value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })} style={{ width: '100%', padding: '8px 10px', fontSize: '13px', border: '1px solid #d1d5db', borderRadius: '6px' }} />
@@ -2317,7 +2241,7 @@ const AdminStaffView = () => {
 
               {editSectionType === 'salary' && (
                 <>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                  <div className="staff-modal-grid-2">
                     <div>
                       <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#334155', marginBottom: '4px' }}>Basic Salary (₹)</label>
                       <input type="number" required value={formData.basicSalary} onChange={e => setFormData({ ...formData, basicSalary: e.target.value })} style={{ width: '100%', padding: '8px 10px', fontSize: '13px', border: '1px solid #d1d5db', borderRadius: '6px' }} />
@@ -2331,7 +2255,7 @@ const AdminStaffView = () => {
                       </select>
                     </div>
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                  <div className="staff-modal-grid-2">
                     <div>
                       <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#334155', marginBottom: '4px' }}>Bank Name</label>
                       <input type="text" value={formData.bankName} onChange={e => setFormData({ ...formData, bankName: e.target.value })} style={{ width: '100%', padding: '8px 10px', fontSize: '13px', border: '1px solid #d1d5db', borderRadius: '6px' }} />
@@ -2347,7 +2271,7 @@ const AdminStaffView = () => {
               {editSectionType === 'roles' && (
                 <div>
                   <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#334155', marginBottom: '8px' }}>Select Active Permissions</label>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                  <div className="staff-permissions-grid">
                     {['Sales', 'Inventory', 'POS', 'Reports', 'Discounts', 'Website'].map(p => (
                       <label key={p} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#334155', cursor: 'pointer' }}>
                         <input type="checkbox" checked={formData.permissions.includes(p)} onChange={() => togglePermission(p)} style={{ accentColor: '#ff6600' }} />
@@ -2358,7 +2282,7 @@ const AdminStaffView = () => {
                 </div>
               )}
 
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
+              <div className="staff-modal-footer">
                 <button type="button" onClick={() => setIsSectionEditModalOpen(false)} style={{ padding: '8px 14px', backgroundColor: '#ffffff', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '12.5px', fontWeight: '600', color: '#475569', cursor: 'pointer' }}>Cancel</button>
                 <button type="submit" style={{ padding: '8px 18px', backgroundColor: '#ff6600', border: 'none', borderRadius: '6px', fontSize: '12.5px', fontWeight: '700', color: '#ffffff', cursor: 'pointer' }}>Save Changes</button>
               </div>

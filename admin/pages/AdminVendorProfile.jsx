@@ -3,6 +3,7 @@ import AdminLayout from './AdminLayout';
 import { ArrowLeft, ChevronDown, Download, Printer, Share2, Plus, Edit2, Check, X, Save } from 'lucide-react';
 import ExportDropdown from '../components/ExportDropdown';
 import './AdminDashboard.css';
+import './AdminVendors.css';
 
 const AdminVendorProfile = () => {
   const [activeTab, setActiveTab] = useState('profile');
@@ -187,37 +188,37 @@ const AdminVendorProfile = () => {
           </div>
 
           {/* Tabs */}
-          <div style={{ display: 'flex', gap: '24px', padding: '0 24px', borderBottom: '1px solid #eef2f6' }}>
+          <div className="vendor-profile-tabs">
             <button
               onClick={() => setActiveTab('transactions')}
-              style={{ background: 'none', border: 'none', padding: '16px 0', fontSize: '13px', fontWeight: '600', cursor: 'pointer', color: activeTab === 'transactions' ? '#6d28d9' : '#000000', borderBottom: activeTab === 'transactions' ? '2px solid #6d28d9' : '2px solid transparent' }}
+              style={{ background: 'none', border: 'none', padding: '16px 0', fontSize: '13px', fontWeight: '600', cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0, color: activeTab === 'transactions' ? '#6d28d9' : '#000000', borderBottom: activeTab === 'transactions' ? '2px solid #6d28d9' : '2px solid transparent' }}
             >
               Transactions
             </button>
             <button
               onClick={() => setActiveTab('profile')}
-              style={{ background: 'none', border: 'none', padding: '16px 0', fontSize: '13px', fontWeight: '600', cursor: 'pointer', color: activeTab === 'profile' ? '#6d28d9' : '#000000', borderBottom: activeTab === 'profile' ? '2px solid #6d28d9' : '2px solid transparent' }}
+              style={{ background: 'none', border: 'none', padding: '16px 0', fontSize: '13px', fontWeight: '600', cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0, color: activeTab === 'profile' ? '#6d28d9' : '#000000', borderBottom: activeTab === 'profile' ? '2px solid #6d28d9' : '2px solid transparent' }}
             >
               Profile
             </button>
             <button
               onClick={() => setActiveTab('ledger')}
-              style={{ background: 'none', border: 'none', padding: '16px 0', fontSize: '13px', fontWeight: '600', cursor: 'pointer', color: activeTab === 'ledger' ? '#6d28d9' : '#000000', borderBottom: activeTab === 'ledger' ? '2px solid #6d28d9' : '2px solid transparent' }}
+              style={{ background: 'none', border: 'none', padding: '16px 0', fontSize: '13px', fontWeight: '600', cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0, color: activeTab === 'ledger' ? '#6d28d9' : '#000000', borderBottom: activeTab === 'ledger' ? '2px solid #6d28d9' : '2px solid transparent' }}
             >
               Ledger (Statement)
             </button>
             <button
               onClick={() => setActiveTab('item-report')}
-              style={{ background: 'none', border: 'none', padding: '16px 0', fontSize: '13px', fontWeight: '600', cursor: 'pointer', color: activeTab === 'item-report' ? '#6d28d9' : '#000000', borderBottom: activeTab === 'item-report' ? '2px solid #6d28d9' : '2px solid transparent' }}
+              style={{ background: 'none', border: 'none', padding: '16px 0', fontSize: '13px', fontWeight: '600', cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0, color: activeTab === 'item-report' ? '#6d28d9' : '#000000', borderBottom: activeTab === 'item-report' ? '2px solid #6d28d9' : '2px solid transparent' }}
             >
               Item Wise Report
             </button>
           </div>
 
-          <div style={{ padding: '24px', minHeight: '500px', background: '#fafafa' }}>
+          <div style={{ padding: 'clamp(14px, 3vw, 24px)', minHeight: '500px', background: '#fafafa' }}>
 
             {activeTab === 'profile' && (
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+              <div className="vendor-profile-grid">
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
                   
                   {/* General Details */}

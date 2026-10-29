@@ -4,6 +4,7 @@ import AdminLayout from './AdminLayout';
 import ExportDropdown from '../components/ExportDropdown';
 import { Search, Calendar, ChevronDown, MoreVertical, FileText, Plus, Eye, Edit2, Trash2, X, CheckCircle2, Download, Printer, Filter, RotateCcw } from 'lucide-react';
 import './AdminDashboard.css';
+import './AdminPurchase.css';
 
 const AdminPurchaseReturn = () => {
   const navigate = useNavigate();
@@ -141,7 +142,7 @@ const AdminPurchaseReturn = () => {
 
   return (
     <AdminLayout>
-      <div style={{ background: '#fff', minHeight: '100vh', position: 'relative' }}>
+      <div className="purchase-page-wrapper">
 
         {/* Toast Alert */}
         {toastMessage && (
@@ -167,22 +168,11 @@ const AdminPurchaseReturn = () => {
 
         {/* View Modal */}
         {selectedItem && (
-          <div style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0,0,0,0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 9998
-          }}>
-            <div style={{ background: '#fff', borderRadius: '12px', width: '520px', maxWidth: '90%', padding: '24px', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)' }}>
+          <div className="purchase-modal-overlay">
+            <div className="purchase-modal-box">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px', marginBottom: '16px' }}>
                 <div>
-                  <h3 style={{ margin: 0, fontSize: '18px', color: '#0f172a' }}>Purchase Return Details</h3>
+                  <h3 style={{ margin: 0, fontSize: '18px', color: '#0f172a', fontWeight: '700' }}>Purchase Return Details</h3>
                   <p style={{ margin: '2px 0 0', fontSize: '12px', color: '#64748b' }}>Complete transaction breakdown</p>
                 </div>
                 <button onClick={() => setSelectedItem(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748b' }}>
@@ -190,7 +180,7 @@ const AdminPurchaseReturn = () => {
                 </button>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', fontSize: '13px' }}>
+              <div className="purchase-modal-grid">
                 <div>
                   <p style={{ margin: '0 0 4px', color: '#64748b', fontSize: '11px' }}>Return Number</p>
                   <p style={{ margin: 0, fontWeight: '700', color: '#ff6600' }}>{selectedItem.returnNo}</p>
@@ -247,7 +237,7 @@ const AdminPurchaseReturn = () => {
                     setSelectedItem(null);
                     handleEdit(item);
                   }}
-                  style={{ background: '#ff6600', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '6px', fontSize: '13px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+                  className="purchase-btn-primary"
                 >
                   <Edit2 size={14} /> Edit Return
                 </button>
@@ -262,13 +252,13 @@ const AdminPurchaseReturn = () => {
           </div>
         )}
 
-        {/* Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 24px', borderBottom: '1px solid #e2e8f0' }}>
-          <div>
-            <h2 style={{ margin: 0, fontSize: '18px', fontWeight: '700', color: '#1e293b' }}>Purchase Returns</h2>
-            <p style={{ margin: '2px 0 0', fontSize: '13px', color: '#64748b' }}>Excel sheet and records of all vendor purchase returns</p>
+        {/* Header Bar */}
+        <div className="purchase-header-bar">
+          <div className="purchase-header-title">
+            <h2>Purchase Returns</h2>
+            <p>Excel sheet and records of all vendor purchase returns</p>
           </div>
-          <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+          <div className="purchase-header-actions">
             <ExportDropdown
               fileName="Purchase_Returns_Report"
               title="Purchase Returns Report"
@@ -289,74 +279,74 @@ const AdminPurchaseReturn = () => {
             />
             <button
               onClick={() => navigate('/admin/purchase-return/add')}
-              style={{ background: '#ff6600', color: '#fff', border: 'none', padding: '7px 16px', borderRadius: '4px', fontSize: '13px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', boxShadow: '0 2px 4px rgba(255, 102, 0, 0.2)' }}
+              className="purchase-btn-primary"
             >
               <Plus size={16} /> Create Purchase Return
             </button>
           </div>
         </div>
 
-        <div style={{ padding: '24px' }}>
+        <div className="purchase-content-area">
 
           {/* Summary KPI Cards */}
-          <div style={{ display: 'flex', gap: '24px', marginBottom: '24px' }}>
-            <div style={{ flex: '1', background: '#fff7ed', border: '1px solid #fed7aa', borderRadius: '8px', padding: '16px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                <div style={{ background: '#ffedd5', padding: '4px', borderRadius: '4px' }}>
-                  <FileText size={14} color="#ea580c" />
+          <div className="purchase-kpi-grid">
+            <div className="purchase-kpi-card" style={{ background: '#fff7ed', border: '1px solid #fed7aa' }}>
+              <div className="purchase-kpi-head">
+                <div className="purchase-kpi-icon" style={{ background: '#ffedd5' }}>
+                  <FileText size={15} color="#ea580c" />
                 </div>
-                <span style={{ fontSize: '13px', fontWeight: '600', color: '#ea580c' }}>Total Purchase Returns</span>
+                <span className="purchase-kpi-label" style={{ color: '#ea580c' }}>Total Purchase Returns</span>
               </div>
-              <div style={{ fontSize: '20px', fontWeight: '700', color: '#1e293b' }}>
+              <div className="purchase-kpi-val">
                 ₹ {totalReturnsAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </div>
-              <span style={{ fontSize: '11px', color: '#9a3412', marginTop: '4px', display: 'block' }}>
+              <span className="purchase-kpi-sub" style={{ color: '#9a3412' }}>
                 {returnsList.length} Total Return Invoices
               </span>
             </div>
 
-            <div style={{ flex: '1', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '8px', padding: '16px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                <div style={{ background: '#dcfce7', padding: '4px', borderRadius: '4px' }}>
-                  <CheckCircle2 size={14} color="#16a34a" />
+            <div className="purchase-kpi-card" style={{ background: '#f0fdf4', border: '1px solid #bbf7d0' }}>
+              <div className="purchase-kpi-head">
+                <div className="purchase-kpi-icon" style={{ background: '#dcfce7' }}>
+                  <CheckCircle2 size={15} color="#16a34a" />
                 </div>
-                <span style={{ fontSize: '13px', fontWeight: '600', color: '#16a34a' }}>Settled / Adjusted</span>
+                <span className="purchase-kpi-label" style={{ color: '#16a34a' }}>Settled / Adjusted</span>
               </div>
-              <div style={{ fontSize: '20px', fontWeight: '700', color: '#1e293b' }}>
+              <div className="purchase-kpi-val">
                 ₹ {settledAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </div>
-              <span style={{ fontSize: '11px', color: '#166534', marginTop: '4px', display: 'block' }}>
+              <span className="purchase-kpi-sub" style={{ color: '#166534' }}>
                 {settledList.length} Returns Settled
               </span>
             </div>
 
-            <div style={{ flex: '1', background: '#fefce8', border: '1px solid #fef08a', borderRadius: '8px', padding: '16px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                <div style={{ background: '#fef9c3', padding: '4px', borderRadius: '4px' }}>
-                  <RotateCcw size={14} color="#ca8a04" />
+            <div className="purchase-kpi-card" style={{ background: '#fefce8', border: '1px solid #fef08a' }}>
+              <div className="purchase-kpi-head">
+                <div className="purchase-kpi-icon" style={{ background: '#fef9c3' }}>
+                  <RotateCcw size={15} color="#ca8a04" />
                 </div>
-                <span style={{ fontSize: '13px', fontWeight: '600', color: '#ca8a04' }}>In Process / Pending</span>
+                <span className="purchase-kpi-label" style={{ color: '#ca8a04' }}>In Process / Pending</span>
               </div>
-              <div style={{ fontSize: '20px', fontWeight: '700', color: '#1e293b' }}>
+              <div className="purchase-kpi-val">
                 ₹ {pendingAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </div>
-              <span style={{ fontSize: '11px', color: '#854d0e', marginTop: '4px', display: 'block' }}>
+              <span className="purchase-kpi-sub" style={{ color: '#854d0e' }}>
                 {pendingList.length} Returns in Process
               </span>
             </div>
           </div>
 
           {/* Filters Bar */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
-            <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
-              <div style={{ position: 'relative' }}>
-                <Search size={16} color="#64748b" style={{ position: 'absolute', left: '10px', top: '9px' }} />
+          <div className="purchase-filter-bar">
+            <div className="purchase-filter-left">
+              <div className="purchase-search-wrap">
+                <Search size={16} className="purchase-search-icon" />
                 <input
                   type="text"
                   placeholder="Search Return No, Vendor, Invoice..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  style={{ padding: '6px 12px 6px 32px', border: '1px solid #cbd5e1', borderRadius: '4px', fontSize: '13px', outline: 'none', width: '280px' }}
+                  className="purchase-search-input"
                 />
               </div>
 
@@ -365,7 +355,7 @@ const AdminPurchaseReturn = () => {
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  style={{ padding: '6px 12px', border: '1px solid #cbd5e1', borderRadius: '4px', fontSize: '13px', outline: 'none', background: '#fff', color: '#475569' }}
+                  className="purchase-filter-select"
                 >
                   <option value="All">All Status</option>
                   <option value="Settled">Settled</option>
@@ -373,50 +363,55 @@ const AdminPurchaseReturn = () => {
                 </select>
               </div>
 
-              <button style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#fff', border: '1px solid #cbd5e1', padding: '6px 12px', borderRadius: '4px', fontSize: '13px', color: '#64748b', cursor: 'pointer' }}>
+              <button className="purchase-filter-dropdown-btn">
                 <Calendar size={14} /> Last 365 Days <ChevronDown size={14} />
               </button>
             </div>
 
-            <div style={{ fontSize: '13px', color: '#64748b' }}>
+            <div className="purchase-record-count">
               Showing <strong>{filteredReturns.length}</strong> of <strong>{returnsList.length}</strong> records
             </div>
           </div>
 
-          {/* Excel Data Sheet Table */}
-          <div style={{ border: '1px solid #e2e8f0', borderRadius: '8px', overflowX: 'auto', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '950px' }}>
+          {/* Responsive Data Sheet Table */}
+          <div className="purchase-table-wrapper">
+            <table className="purchase-table">
               <thead>
-                <tr style={{ background: '#ff6600', borderBottom: '1px solid #e2e8f0' }}>
-                  <th style={{ padding: '12px 16px', fontSize: '12px', fontWeight: '600', color: '#ffffff' }}>Date</th>
-                  <th style={{ padding: '12px 16px', fontSize: '12px', fontWeight: '600', color: '#ffffff' }}>Return Number</th>
-                  <th style={{ padding: '12px 16px', fontSize: '12px', fontWeight: '600', color: '#ffffff' }}>Original Inv No.</th>
-                  <th style={{ padding: '12px 16px', fontSize: '12px', fontWeight: '600', color: '#ffffff' }}>Vendor / Party Name</th>
-                  <th style={{ padding: '12px 16px', fontSize: '12px', fontWeight: '600', color: '#ffffff', textAlign: 'center' }}>Items Qty</th>
-                  <th style={{ padding: '12px 16px', fontSize: '12px', fontWeight: '600', color: '#ffffff' }}>Refund Mode</th>
-                  <th style={{ padding: '12px 16px', fontSize: '12px', fontWeight: '600', color: '#ffffff' }}>Return Amount</th>
-                  <th style={{ padding: '12px 16px', fontSize: '12px', fontWeight: '600', color: '#ffffff' }}>Status</th>
-                  <th style={{ padding: '12px 16px', fontSize: '12px', fontWeight: '600', color: '#ffffff', textAlign: 'center' }}>Actions</th>
+                <tr>
+                  <th style={{ minWidth: '105px' }}>Date</th>
+                  <th style={{ minWidth: '135px' }}>Return Number</th>
+                  <th style={{ minWidth: '135px' }}>Original Inv No.</th>
+                  <th style={{ minWidth: '160px' }}>Vendor / Party Name</th>
+                  <th style={{ minWidth: '95px', textAlign: 'center' }}>Items Qty</th>
+                  <th style={{ minWidth: '115px' }}>Refund Mode</th>
+                  <th style={{ minWidth: '125px' }}>Return Amount</th>
+                  <th style={{ minWidth: '110px' }}>Status</th>
+                  <th style={{ minWidth: '70px', textAlign: 'center' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredReturns.length === 0 ? (
                   <tr>
-                    <td colSpan="9" style={{ textAlign: 'center', padding: '36px', color: '#94a3b8', fontSize: '14px' }}>
-                      No purchase return records match your search query.
+                    <td colSpan="9" style={{ padding: '0' }}>
+                      <div className="purchase-empty-state">
+                        <FileText size={32} style={{ color: '#94a3b8' }} />
+                        <p style={{ margin: 0, fontWeight: '600', fontSize: '14px', color: '#334155' }}>
+                          No purchase return records match your filters
+                        </p>
+                      </div>
                     </td>
                   </tr>
                 ) : (
                   filteredReturns.map((item, idx) => (
-                    <tr key={item.id} style={{ borderBottom: '1px solid #e2e8f0', background: idx % 2 === 0 ? '#ffffff' : '#fafafa' }}>
-                      <td style={{ padding: '12px 16px', fontSize: '13px', color: '#64748b' }}>{item.date}</td>
-                      <td style={{ padding: '12px 16px', fontSize: '13px', color: '#ff6600', fontWeight: '600' }}>{item.returnNo}</td>
-                      <td style={{ padding: '12px 16px', fontSize: '13px', color: '#2563eb', fontWeight: '500' }}>{item.originalInvoice}</td>
-                      <td style={{ padding: '12px 16px', fontSize: '13px', color: '#1e293b', fontWeight: '600' }}>{item.party}</td>
-                      <td style={{ padding: '12px 16px', fontSize: '13px', color: '#475569', textAlign: 'center' }}>{item.itemsCount}</td>
-                      <td style={{ padding: '12px 16px', fontSize: '13px', color: '#64748b' }}>{item.refundMode}</td>
-                      <td style={{ padding: '12px 16px', fontSize: '13px', color: '#16a34a', fontWeight: '700' }}>{item.amount}</td>
-                      <td style={{ padding: '12px 16px', fontSize: '13px' }}>
+                    <tr key={item.id}>
+                      <td style={{ color: '#64748b' }}>{item.date}</td>
+                      <td style={{ color: '#ff6600', fontWeight: '600' }}>{item.returnNo}</td>
+                      <td style={{ color: '#2563eb', fontWeight: '500' }}>{item.originalInvoice}</td>
+                      <td style={{ color: '#1e293b', fontWeight: '600' }}>{item.party}</td>
+                      <td style={{ color: '#475569', textAlign: 'center' }}>{item.itemsCount}</td>
+                      <td style={{ color: '#64748b' }}>{item.refundMode}</td>
+                      <td style={{ color: '#16a34a', fontWeight: '700' }}>{item.amount}</td>
+                      <td>
                         <span style={{
                           padding: '4px 8px',
                           borderRadius: '4px',
@@ -428,10 +423,11 @@ const AdminPurchaseReturn = () => {
                           {item.status}
                         </span>
                       </td>
-                      <td style={{ padding: '12px 16px', textAlign: 'center', position: 'relative' }}>
+                      <td style={{ textAlign: 'center', position: 'relative' }}>
                         <button
                           onClick={() => setOpenMenuIndex(openMenuIndex === idx ? null : idx)}
                           style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px', color: '#64748b' }}
+                          title="Actions"
                         >
                           <MoreVertical size={16} />
                         </button>

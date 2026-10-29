@@ -4,6 +4,7 @@ import AdminLayout from './AdminLayout';
 import ExportDropdown from '../components/ExportDropdown';
 import { Search, Calendar, Printer, MoreVertical, ChevronDown, Plus, Eye, Edit2, Trash2, X, CheckCircle2 } from 'lucide-react';
 import './AdminDashboard.css';
+import './AdminPurchase.css';
 
 const initialPurchaseOrders = [];
 
@@ -93,7 +94,7 @@ const AdminPurchaseOrders = () => {
 
   return (
     <AdminLayout>
-      <div style={{ background: '#fff', minHeight: '100vh', padding: '0', position: 'relative' }}>
+      <div className="purchase-page-wrapper">
 
         {/* Toast Alert */}
         {toastMessage && (
@@ -119,19 +120,8 @@ const AdminPurchaseOrders = () => {
 
         {/* View Modal */}
         {selectedItem && (
-          <div style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0,0,0,0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 9998
-          }}>
-            <div style={{ background: '#fff', borderRadius: '12px', width: '500px', maxWidth: '90%', padding: '24px', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)' }}>
+          <div className="purchase-modal-overlay">
+            <div className="purchase-modal-box">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px', marginBottom: '16px' }}>
                 <h3 style={{ margin: 0, fontSize: '18px', color: '#0f172a' }}>Purchase Order Details</h3>
                 <button onClick={() => setSelectedItem(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748b' }}>
@@ -139,7 +129,7 @@ const AdminPurchaseOrders = () => {
                 </button>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', fontSize: '13px' }}>
+              <div className="purchase-modal-grid">
                 <div>
                   <p style={{ margin: '0 0 4px', color: '#64748b', fontSize: '11px' }}>Purchase Order No</p>
                   <p style={{ margin: 0, fontWeight: '700', color: '#2563eb' }}>{selectedItem.poNo}</p>
@@ -198,9 +188,9 @@ const AdminPurchaseOrders = () => {
         )}
 
         {/* Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 24px', borderBottom: '1px solid #e2e8f0' }}>
-          <h2 style={{ margin: 0, fontSize: '18px', fontWeight: '700', color: '#1e293b' }}>Purchase Orders</h2>
-          <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+        <div className="purchase-header-bar">
+          <h2 className="purchase-header-title">Purchase Orders</h2>
+          <div className="purchase-header-actions">
             <ExportDropdown
               fileName="Purchase_Orders_Report"
               title="Purchase Orders Report"
@@ -218,31 +208,31 @@ const AdminPurchaseOrders = () => {
             />
             <button 
               onClick={() => navigate('/admin/purchase-orders/add')} 
-              style={{ background: '#ff6600', color: '#fff', border: 'none', padding: '7px 16px', borderRadius: '4px', fontSize: '13px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', boxShadow: '0 2px 4px rgba(255, 102, 0, 0.2)' }}
+              className="purchase-btn-primary"
             >
               <Plus size={16} /> Create Purchase Order
             </button>
           </div>
         </div>
 
-        <div style={{ padding: '24px' }}>
+        <div className="purchase-content-area">
           {/* Filters & Create Button */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-            <div style={{ display: 'flex', gap: '12px' }}>
-              <div style={{ position: 'relative' }}>
-                <Search size={16} color="#64748b" style={{ position: 'absolute', left: '10px', top: '9px' }} />
+          <div className="purchase-filter-bar">
+            <div className="purchase-filter-left">
+              <div className="purchase-search-wrap">
+                <Search size={16} className="purchase-search-icon" />
                 <input
                   type="text"
                   placeholder="Search Purchase Orders..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  style={{ padding: '6px 12px 6px 32px', border: '1px solid #cbd5e1', borderRadius: '4px', fontSize: '13px', outline: 'none', width: '220px' }}
+                  className="purchase-search-input"
                 />
               </div>
               <div style={{ position: 'relative' }}>
                 <button 
                   onClick={() => setShowDateDropdown(!showDateDropdown)}
-                  style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#fff', border: '1px solid #cbd5e1', padding: '8px 12px', borderRadius: '4px', fontSize: '13px', color: '#64748b', cursor: 'pointer' }}
+                  className="purchase-filter-dropdown-btn"
                 >
                   <Calendar size={14} /> {dateFilter} <ChevronDown size={14} />
                 </button>
@@ -284,37 +274,40 @@ const AdminPurchaseOrders = () => {
                 )}
               </div>
             </div>
+            <div className="purchase-record-count">
+              Total: {filteredOrders.length} order{filteredOrders.length === 1 ? '' : 's'}
+            </div>
           </div>
 
           {/* Table */}
-          <div style={{ border: '1px solid #e2e8f0', borderRadius: '8px' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+          <div className="purchase-table-wrapper">
+            <table className="purchase-table">
               <thead>
-                <tr style={{ background: '#ff6600', borderBottom: '1px solid #e2e8f0' }}>
-                  <th style={{ padding: '12px 16px', fontSize: '12px', fontWeight: '600', color: '#ffffff' }}>Date <span style={{ fontSize: '10px' }}>↕</span></th>
-                  <th style={{ padding: '12px 16px', fontSize: '12px', fontWeight: '600', color: '#ffffff' }}>Purchase Order Number</th>
-                  <th style={{ padding: '12px 16px', fontSize: '12px', fontWeight: '600', color: '#ffffff' }}>Party Name</th>
-                  <th style={{ padding: '12px 16px', fontSize: '12px', fontWeight: '600', color: '#ffffff' }}>Valid Till</th>
-                  <th style={{ padding: '12px 16px', fontSize: '12px', fontWeight: '600', color: '#ffffff' }}>Amount</th>
-                  <th style={{ padding: '12px 16px', fontSize: '12px', fontWeight: '600', color: '#ffffff' }}>Status</th>
+                <tr>
+                  <th style={{ minWidth: '110px' }}>Date <span style={{ fontSize: '10px' }}>↕</span></th>
+                  <th style={{ minWidth: '165px' }}>Purchase Order Number</th>
+                  <th style={{ minWidth: '170px' }}>Party Name</th>
+                  <th style={{ minWidth: '120px' }}>Valid Till</th>
+                  <th style={{ minWidth: '120px' }}>Amount</th>
+                  <th style={{ minWidth: '120px' }}>Status</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredOrders.map((item, idx) => (
-                  <tr key={idx} style={{ borderBottom: '1px solid #e2e8f0', position: 'relative' }}>
-                    <td style={{ padding: '12px 16px', fontSize: '13px', color: '#64748b' }}>{item.date}</td>
+                  <tr key={idx} style={{ position: 'relative' }}>
+                    <td>{item.date}</td>
                     <td 
-                      style={{ padding: '12px 16px', fontSize: '13px', color: '#2563eb', fontWeight: '500', cursor: 'pointer' }}
+                      style={{ color: '#2563eb', fontWeight: '500', cursor: 'pointer' }}
                       onClick={() => handleView(item)}
                     >
                       {item.poNo}
                     </td>
-                    <td style={{ padding: '12px 16px', fontSize: '13px', color: '#1e293b', fontWeight: '500' }}>{item.party}</td>
-                    <td style={{ padding: '12px 16px', fontSize: '12px', color: '#ef4444', fontWeight: '500' }}>{item.validTill}</td>
-                    <td style={{ padding: '12px 16px', fontSize: '13px', color: '#1e293b', fontWeight: '500' }}>{item.amount}</td>
+                    <td style={{ color: '#1e293b', fontWeight: '500' }}>{item.party}</td>
+                    <td style={{ color: '#ef4444', fontWeight: '500' }}>{item.validTill}</td>
+                    <td style={{ color: '#1e293b', fontWeight: '500' }}>{item.amount}</td>
                     
                     {/* Status with 3 dots and Dropdown */}
-                    <td style={{ padding: '12px 16px', position: 'relative' }}>
+                    <td style={{ position: 'relative' }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
                         <span style={{ 
                           padding: '4px 10px', 
@@ -424,8 +417,12 @@ const AdminPurchaseOrders = () => {
                 ))}
                 {filteredOrders.length === 0 && (
                   <tr>
-                    <td colSpan="6" style={{ textAlign: 'center', padding: '32px', color: '#94a3b8' }}>
-                      No purchase orders found matching your search.
+                    <td colSpan="6" style={{ padding: 0, border: 'none' }}>
+                      <div className="purchase-empty-state">
+                        <Search size={36} color="#cbd5e1" style={{ marginBottom: '10px' }} />
+                        <p style={{ margin: 0, fontWeight: '600', color: '#64748b', fontSize: '14px' }}>No purchase orders found</p>
+                        <p style={{ margin: '4px 0 0', color: '#94a3b8', fontSize: '12px' }}>Try adjusting your search terms</p>
+                      </div>
                     </td>
                   </tr>
                 )}

@@ -32,6 +32,7 @@ import { useNavigate } from "react-router-dom";
 import ExportDropdown from "../components/ExportDropdown";
 import AdminLayout from "./AdminLayout";
 import "./AdminDashboard.css";
+import "./AdminPayments.css";
 
 const statusFilters = [
 	{ value: "all", label: "All Statuses" },
@@ -54,118 +55,6 @@ const getCustomerName = (order) =>
 	order.address_data?.fullName ||
 	`${order.address_data?.firstName || ""} ${order.address_data?.lastName || ""}`.trim() ||
 	"Customer";
-
-const adminPaymentsStyles = `
-.admin-payments-section {
-	width: 100%;
-	max-width: 100%;
-	min-width: 0;
-}
-
-.admin-payments-table-wrap {
-	display: block;
-	width: 100%;
-	max-width: 100%;
-	overflow-x: auto;
-	overflow-y: hidden;
-	-webkit-overflow-scrolling: touch;
-}
-
-.admin-payments-table {
-	width: 100%;
-	min-width: 960px;
-	border-collapse: collapse;
-}
-
-.admin-payments-table thead {
-	background: #f8fafc;
-	border-bottom: 1px solid #e2e8f0;
-	color: #475569;
-}
-
-.admin-payments-table th {
-	font-size: 13px;
-	font-weight: 700;
-	padding: 14px 16px;
-	text-align: left;
-}
-
-.admin-payments-table td {
-	padding: 14px 16px;
-	font-size: 13px;
-	line-height: 1.45;
-	vertical-align: middle;
-	border-bottom: 1px solid #f1f5f9;
-}
-
-.payment-action-wrap {
-	display: flex;
-	align-items: center;
-	gap: 6px;
-	position: relative;
-}
-
-.payment-action-wrap > button,
-.payment-menu-trigger {
-	display: inline-flex;
-	min-width: 32px;
-	height: 32px;
-	align-items: center;
-	justify-content: center;
-	border: 1px solid #d6dfed;
-	border-radius: 6px;
-	background: #ffffff;
-	color: #334155;
-	cursor: pointer;
-	transition: all 0.15s ease;
-}
-
-.payment-action-wrap > button:hover,
-.payment-menu-trigger:hover {
-	border-color: #ff6600;
-	color: #ff6600;
-	background: #fff7ed;
-}
-
-.payment-status-menu {
-	position: absolute;
-	top: 38px;
-	right: 0;
-	z-index: 50;
-	width: 150px;
-	border: 1px solid #cbd5e1;
-	border-radius: 8px;
-	background: #ffffff;
-	box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
-	padding: 4px;
-}
-
-.payment-status-menu.is-above {
-	top: auto;
-	bottom: 38px;
-}
-
-.payment-status-menu button {
-	width: 100%;
-	border: none;
-	background: transparent;
-	padding: 8px 10px;
-	border-radius: 6px;
-	display: flex;
-	align-items: center;
-	gap: 8px;
-	font-size: 13px;
-	font-weight: 500;
-	color: #334155;
-	cursor: pointer;
-	text-align: left;
-}
-
-.payment-status-menu button:hover {
-	background: #f1f5f9;
-	color: #0f172a;
-}
-`;
 
 const AdminPayments = () => {
 	const navigate = useNavigate();
@@ -267,25 +156,23 @@ const AdminPayments = () => {
 
 	return (
 		<AdminLayout>
-			<style>{adminPaymentsStyles}</style>
-
-			<div className="dashboard-wrapper">
+			<div className="dashboard-wrapper payments-page-wrapper">
 				{/* Unified Card Container */}
-				<div style={{ background: '#fff', borderRadius: '10px', border: '1px solid #eef2f6', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.03)' }}>
+				<div className="payments-card-container">
 					
 					{/* Header Row */}
-					<div style={{ padding: '18px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #eef2f6', gap: '16px', flexWrap: 'wrap' }}>
-						<div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-							<div style={{ width: '38px', height: '38px', minWidth: '38px', borderRadius: '8px', background: '#fff0e6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ff6600' }}>
+					<div className="payments-header-bar">
+						<div className="payments-title-group">
+							<div className="payments-title-icon">
 								<CreditCard size={20} />
 							</div>
-							<div>
-								<h4 style={{ margin: 0, fontSize: '16px', fontWeight: '700', color: '#1e293b' }}>Payment Transactions</h4>
-								<p style={{ margin: '2px 0 0 0', fontSize: '13px', color: '#64748b' }}>Track customer payments, transaction gateway references, and settlements</p>
+							<div className="payments-title-text">
+								<h4>Payment Transactions</h4>
+								<p>Track customer payments, transaction gateway references, and settlements</p>
 							</div>
 						</div>
 
-						<div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexShrink: 0 }}>
+						<div className="payments-header-actions">
 							<ExportDropdown
 								fileName="Payments_Report"
 								title="Payment Transactions & Status"
@@ -305,20 +192,7 @@ const AdminPayments = () => {
 							<button
 								type="button"
 								onClick={fetchOrders}
-								style={{
-									background: '#ff6600',
-									color: '#fff',
-									border: 'none',
-									padding: '8px 16px',
-									borderRadius: '6px',
-									fontSize: '13px',
-									fontWeight: '600',
-									cursor: 'pointer',
-									display: 'flex',
-									alignItems: 'center',
-									gap: '6px',
-									boxShadow: '0 2px 6px rgba(255, 102, 0, 0.25)'
-								}}
+								className="payments-refresh-btn"
 							>
 								<RefreshCcw size={15} /> Refresh Data
 							</button>
@@ -326,50 +200,41 @@ const AdminPayments = () => {
 					</div>
 
 					{/* 4 KPI Summary Bar */}
-					<div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1px', background: '#eef2f6', borderBottom: '1px solid #eef2f6' }}>
-						<div style={{ padding: '16px 24px', background: '#fff' }}>
-							<span style={{ fontSize: '12px', color: '#64748b', fontWeight: '500' }}>Total Transactions</span>
-							<h3 style={{ margin: '4px 0 0 0', fontSize: '22px', fontWeight: '700', color: '#111' }}>{orders.length}</h3>
+					<div className="payments-kpi-grid">
+						<div className="payments-kpi-card">
+							<span className="payments-kpi-label">Total Transactions</span>
+							<h3 className="payments-kpi-value" style={{ color: '#111827' }}>{orders.length}</h3>
 						</div>
-						<div style={{ padding: '16px 24px', background: '#fff' }}>
-							<span style={{ fontSize: '12px', color: '#64748b', fontWeight: '500' }}>Total Volume</span>
-							<h3 style={{ margin: '4px 0 0 0', fontSize: '22px', fontWeight: '700', color: '#2563eb' }}>₹ {totalVolume.toLocaleString()}</h3>
+						<div className="payments-kpi-card">
+							<span className="payments-kpi-label">Total Volume</span>
+							<h3 className="payments-kpi-value" style={{ color: '#2563eb' }}>₹ {totalVolume.toLocaleString()}</h3>
 						</div>
-						<div style={{ padding: '16px 24px', background: '#fff' }}>
-							<span style={{ fontSize: '12px', color: '#16a34a', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '6px' }}>
-								<div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#16a34a' }}></div> Paid Transactions
+						<div className="payments-kpi-card">
+							<span className="payments-kpi-label" style={{ color: '#16a34a' }}>
+								<div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#16a34a', flexShrink: 0 }}></div> Paid Transactions
 							</span>
-							<h3 style={{ margin: '4px 0 0 0', fontSize: '22px', fontWeight: '700', color: '#16a34a' }}>{paidCount}</h3>
+							<h3 className="payments-kpi-value" style={{ color: '#16a34a' }}>{paidCount}</h3>
 						</div>
-						<div style={{ padding: '16px 24px', background: '#fff' }}>
-							<span style={{ fontSize: '12px', color: '#dc2626', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '6px' }}>
-								<div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#dc2626' }}></div> Pending / Failed
+						<div className="payments-kpi-card">
+							<span className="payments-kpi-label" style={{ color: '#dc2626' }}>
+								<div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#dc2626', flexShrink: 0 }}></div> Pending / Failed
 							</span>
-							<h3 style={{ margin: '4px 0 0 0', fontSize: '22px', fontWeight: '700', color: '#dc2626' }}>{pendingFailedCount}</h3>
+							<h3 className="payments-kpi-value" style={{ color: '#dc2626' }}>{pendingFailedCount}</h3>
 						</div>
 					</div>
 
 					{/* Search & Filter Controls Bar */}
-					<div style={{ padding: '14px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#f8fafc', borderBottom: '1px solid #eef2f6', flexWrap: 'wrap', gap: '12px' }}>
-						<div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap', flex: 1 }}>
+					<div className="payments-toolbar">
+						<div className="payments-filters-group">
 							{/* Search Box */}
-							<div style={{ position: 'relative', width: '280px' }}>
-								<Search size={15} style={{ position: 'absolute', left: '10px', top: '10px', color: '#94a3b8' }} />
+							<div className="payments-search-wrap">
+								<Search size={15} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
 								<input
 									type="text"
 									value={searchQuery}
 									onChange={(e) => setSearchQuery(e.target.value)}
 									placeholder="Search order, customer, ref..."
-									style={{
-										width: '100%',
-										padding: '7px 12px 7px 32px',
-										borderRadius: '6px',
-										border: '1px solid #cbd5e1',
-										fontSize: '13px',
-										outline: 'none',
-										background: '#fff',
-										boxSizing: 'border-box'
-									}}
+									className="payments-search-input"
 								/>
 								{searchQuery && (
 									<button
@@ -381,29 +246,31 @@ const AdminPayments = () => {
 								)}
 							</div>
 
-							<select
-								value={statusFilter}
-								onChange={(e) => setStatusFilter(e.target.value)}
-								style={{ padding: '7px 12px', border: '1px solid #cbd5e1', borderRadius: '6px', fontSize: '13px', outline: 'none', background: '#fff', color: '#334155', cursor: 'pointer' }}
-							>
-								{statusFilters.map((s) => (
-									<option key={s.value} value={s.value}>
-										{s.label}
-									</option>
-								))}
-							</select>
+							<div className="payments-select-group">
+								<select
+									value={statusFilter}
+									onChange={(e) => setStatusFilter(e.target.value)}
+									className="payments-select"
+								>
+									{statusFilters.map((s) => (
+										<option key={s.value} value={s.value}>
+											{s.label}
+										</option>
+									))}
+								</select>
 
-							<select
-								value={methodFilter}
-								onChange={(e) => setMethodFilter(e.target.value)}
-								style={{ padding: '7px 12px', border: '1px solid #cbd5e1', borderRadius: '6px', fontSize: '13px', outline: 'none', background: '#fff', color: '#334155', cursor: 'pointer' }}
-							>
-								{methodFilters.map((m) => (
-									<option key={m.value} value={m.value}>
-										{m.label}
-									</option>
-								))}
-							</select>
+								<select
+									value={methodFilter}
+									onChange={(e) => setMethodFilter(e.target.value)}
+									className="payments-select"
+								>
+									{methodFilters.map((m) => (
+										<option key={m.value} value={m.value}>
+											{m.label}
+										</option>
+									))}
+								</select>
+							</div>
 
 							{(searchQuery || statusFilter !== "all" || methodFilter !== "all") && (
 								<button
@@ -413,24 +280,14 @@ const AdminPayments = () => {
 										setStatusFilter("all");
 										setMethodFilter("all");
 									}}
-									style={{
-										background: 'none',
-										border: 'none',
-										color: '#dc2626',
-										fontSize: '12px',
-										fontWeight: '600',
-										cursor: 'pointer',
-										display: 'flex',
-										alignItems: 'center',
-										gap: '4px'
-									}}
+									className="payments-reset-btn"
 								>
 									<X size={13} /> Reset Filters
 								</button>
 							)}
 						</div>
 
-						<div style={{ fontSize: '13px', color: '#64748b', fontWeight: '500' }}>
+						<div className="payments-count-info">
 							Showing <strong style={{ color: '#0f172a' }}>{filteredOrders.length}</strong> of {orders.length} transactions
 						</div>
 					</div>

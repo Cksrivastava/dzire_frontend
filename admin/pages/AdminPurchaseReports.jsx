@@ -3,6 +3,7 @@ import AdminLayout from './AdminLayout';
 import ExportDropdown from '../components/ExportDropdown';
 import { Search, ShoppingCart, FileText, CheckCircle2, Clock, AlertCircle, ArrowUpRight } from 'lucide-react';
 import './AdminDashboard.css';
+import './AdminReports.css';
 
 const AdminPurchaseReports = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -92,72 +93,72 @@ const AdminPurchaseReports = () => {
 
   return (
     <AdminLayout>
-      <div className="dashboard-wrapper">
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '24px' }}>
-          <div style={{ background: '#fff', padding: '20px', borderRadius: '12px', border: '1px solid #eef2f6' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '13px', color: '#64748b', fontWeight: '500' }}>Total Purchase Spend</span>
-              <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: '#eff6ff', color: '#2563eb', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div className="dashboard-wrapper reports-page-wrapper">
+        {/* 4 Stat Cards */}
+        <div className="reports-kpi-grid">
+          <div className="reports-kpi-card">
+            <div className="reports-kpi-card-header">
+              <span className="reports-kpi-label">Total Purchase Spend</span>
+              <div className="reports-kpi-icon" style={{ background: '#eff6ff', color: '#2563eb' }}>
                 <ShoppingCart size={20} />
               </div>
             </div>
-            <div style={{ fontSize: '24px', fontWeight: '700', color: '#0f172a' }}>₹{totalProcurement.toLocaleString('en-IN')}</div>
-            <div style={{ fontSize: '12px', color: '#2563eb', marginTop: '4px', fontWeight: '500' }}>Month to Date (MTD)</div>
+            <div className="reports-kpi-value">₹{totalProcurement.toLocaleString('en-IN')}</div>
+            <div className="reports-kpi-meta" style={{ color: '#2563eb' }}>Month to Date (MTD)</div>
           </div>
 
-          <div style={{ background: '#fff', padding: '20px', borderRadius: '12px', border: '1px solid #eef2f6' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '13px', color: '#64748b', fontWeight: '500' }}>Inbound Invoices</span>
-              <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: '#f5f3ff', color: '#7c3aed', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div className="reports-kpi-card">
+            <div className="reports-kpi-card-header">
+              <span className="reports-kpi-label">Inbound Invoices</span>
+              <div className="reports-kpi-icon" style={{ background: '#f5f3ff', color: '#7c3aed' }}>
                 <FileText size={20} />
               </div>
             </div>
-            <div style={{ fontSize: '24px', fontWeight: '700', color: '#0f172a' }}>{purchaseInvoices.length} Bills</div>
-            <div style={{ fontSize: '12px', color: '#7c3aed', marginTop: '4px', fontWeight: '500' }}>{vendorsList.length} Active Suppliers</div>
+            <div className="reports-kpi-value">{purchaseInvoices.length} Bills</div>
+            <div className="reports-kpi-meta" style={{ color: '#7c3aed' }}>{vendorsList.length} Active Suppliers</div>
           </div>
 
-          <div style={{ background: '#fff', padding: '20px', borderRadius: '12px', border: '1px solid #eef2f6' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '13px', color: '#64748b', fontWeight: '500' }}>GST Input Tax (ITC)</span>
-              <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: '#ecfdf5', color: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div className="reports-kpi-card">
+            <div className="reports-kpi-card-header">
+              <span className="reports-kpi-label">GST Input Tax (ITC)</span>
+              <div className="reports-kpi-icon" style={{ background: '#ecfdf5', color: '#10b981' }}>
                 <ArrowUpRight size={20} />
               </div>
             </div>
-            <div style={{ fontSize: '24px', fontWeight: '700', color: '#10b981' }}>₹{totalTaxITC.toLocaleString('en-IN')}</div>
-            <div style={{ fontSize: '12px', color: '#10b981', marginTop: '4px', fontWeight: '500' }}>Claimable against output tax</div>
+            <div className="reports-kpi-value">₹{totalTaxITC.toLocaleString('en-IN')}</div>
+            <div className="reports-kpi-meta" style={{ color: '#10b981' }}>Claimable against output tax</div>
           </div>
 
-          <div style={{ background: '#fff', padding: '20px', borderRadius: '12px', border: '1px solid #eef2f6' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '13px', color: '#64748b', fontWeight: '500' }}>Outstanding Payables</span>
-              <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: '#fff1f2', color: '#e11d48', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div className="reports-kpi-card">
+            <div className="reports-kpi-card-header">
+              <span className="reports-kpi-label">Outstanding Payables</span>
+              <div className="reports-kpi-icon" style={{ background: '#fff1f2', color: '#e11d48' }}>
                 <Clock size={20} />
               </div>
             </div>
-            <div style={{ fontSize: '24px', fontWeight: '700', color: '#e11d48' }}>₹{pendingAmount.toLocaleString('en-IN')}</div>
-            <div style={{ fontSize: '12px', color: '#e11d48', marginTop: '4px', fontWeight: '500' }}>Pending vendor settlements</div>
+            <div className="reports-kpi-value" style={{ color: '#e11d48' }}>₹{pendingAmount.toLocaleString('en-IN')}</div>
+            <div className="reports-kpi-meta" style={{ color: '#e11d48' }}>Pending vendor settlements</div>
           </div>
         </div>
 
         {/* Invoices Table Card */}
-        <div style={{ background: '#fff', borderRadius: '12px', border: '1px solid #eef2f6', overflow: 'hidden' }}>
-          <div style={{ padding: '16px 24px', borderBottom: '1px solid #eef2f6', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: '1', minWidth: '280px' }}>
-              <div style={{ position: 'relative', width: '100%', maxWidth: '300px' }}>
+        <div className="reports-table-card">
+          <div className="reports-filter-bar">
+            <div className="reports-filter-left">
+              <div className="reports-search-box">
                 <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
                 <input
                   type="text"
                   placeholder="Search invoice #, PO #, vendor..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  style={{ width: '100%', padding: '8px 12px 8px 36px', border: '1px solid #cbd5e1', borderRadius: '8px', fontSize: '13px', outline: 'none' }}
                 />
               </div>
 
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                style={{ padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: '8px', fontSize: '13px', background: '#fff', outline: 'none' }}
+                className="reports-select"
               >
                 <option value="All">All Statuses</option>
                 <option value="Paid">Paid</option>
@@ -168,7 +169,7 @@ const AdminPurchaseReports = () => {
               <select
                 value={vendorFilter}
                 onChange={(e) => setVendorFilter(e.target.value)}
-                style={{ padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: '8px', fontSize: '13px', background: '#fff', outline: 'none' }}
+                className="reports-select"
               >
                 <option value="All">All Vendors</option>
                 {vendorsList.map((v) => (
@@ -177,7 +178,7 @@ const AdminPurchaseReports = () => {
               </select>
             </div>
 
-            <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+            <div className="reports-filter-right">
               <ExportDropdown
                 fileName="Purchase_Procurement_Report"
                 title="Vendor Purchase & Procurement Invoices Report"
@@ -197,17 +198,17 @@ const AdminPurchaseReports = () => {
             </div>
           </div>
 
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
+          <div className="reports-table-scroll">
+            <table className="reports-table">
               <thead>
-                <tr style={{ background: '#f8fafc', borderBottom: '1px solid #eef2f6', color: '#64748b' }}>
-                  <th style={{ padding: '12px 20px', fontWeight: '600' }}>Invoice & PO #</th>
-                  <th style={{ padding: '12px 16px', fontWeight: '600' }}>Vendor Name</th>
-                  <th style={{ padding: '12px 16px', fontWeight: '600' }}>Invoice Date</th>
-                  <th style={{ padding: '12px 16px', fontWeight: '600' }}>Taxable Value</th>
-                  <th style={{ padding: '12px 16px', fontWeight: '600' }}>GST / ITC</th>
-                  <th style={{ padding: '12px 16px', fontWeight: '600' }}>Total Bill</th>
-                  <th style={{ padding: '12px 20px', fontWeight: '600' }}>Payment Status</th>
+                <tr style={{ background: '#ff6600', color: '#ffffff' }}>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Invoice & PO #</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Vendor Name</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Invoice Date</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Taxable Value</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>GST / ITC</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Total Bill</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Payment Status</th>
                 </tr>
               </thead>
               <tbody>

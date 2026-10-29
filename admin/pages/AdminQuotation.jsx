@@ -7,6 +7,7 @@ import AdminInventoryItemModal from '../components/AdminInventoryItemModal';
 import AdminInvoiceItemsTable from '../components/AdminInvoiceItemsTable';
 import AdminChangeBankModal from '../components/AdminChangeBankModal';
 import './AdminDashboard.css';
+import './AdminQuotation.css';
 
 const AdminQuotation = () => {
   const navigate = useNavigate();
@@ -288,17 +289,17 @@ const AdminQuotation = () => {
           </div>
         )}
 
-        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px', overflow: 'hidden' }}>
+        <div className="qtn-form-wrapper">
 
           {/* Header */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 20px', borderBottom: '1px solid #e2e8f0' }}>
+          <div className="qtn-form-header">
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <ArrowLeft size={20} color="#334155" style={{ cursor: 'pointer' }} onClick={() => navigate('/admin/quotation')} />
               <h2 style={{ margin: 0, fontSize: '16px', fontWeight: '600', color: '#1e293b' }}>
                 {editQtnId ? `Edit Quotation (${editQtnId})` : 'Create Quotation'}
               </h2>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
               <Keyboard size={20} color="#64748b" style={{ cursor: 'pointer' }} />
               <button 
                 type="button"
@@ -312,7 +313,7 @@ const AdminQuotation = () => {
                 type="button"
                 onClick={() => handleSaveQuotation(false)}
                 disabled={isSaving}
-                style={{ background: '#e0e7ff', border: 'none', padding: '6px 24px', borderRadius: '4px', fontSize: '13px', fontWeight: '600', color: '#4338ca', cursor: 'pointer' }}
+                style={{ background: '#ff6600', border: 'none', padding: '6px 24px', borderRadius: '4px', fontSize: '13px', fontWeight: '600', color: '#ffffff', cursor: 'pointer' }}
               >
                 {isSaving ? 'Saving...' : 'Save'}
               </button>
@@ -320,9 +321,9 @@ const AdminQuotation = () => {
           </div>
 
           {/* Top Section */}
-          <div style={{ display: 'flex', borderBottom: '1px solid #e2e8f0', flexWrap: 'wrap' }}>
+          <div className="qtn-form-top-section">
             {/* Left: Bill To */}
-            <div style={{ flex: '1 1 300px', padding: '16px 20px', borderRight: '1px solid #e2e8f0' }}>
+            <div className="qtn-form-bill-to">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                 <p style={{ margin: 0, fontSize: '12px', fontWeight: '500', color: '#64748b' }}>Bill To</p>
                 {selectedCustomer && (
@@ -348,33 +349,14 @@ const AdminQuotation = () => {
               {!selectedCustomer ? (
                 <div
                   onClick={() => setShowCustomerModal(true)}
-                  style={{
-                    border: '1px dashed #3b82f6',
-                    borderRadius: '6px',
-                    height: '80px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    background: '#f8fafc',
-                    width: '250px',
-                    transition: 'all 0.2s ease'
-                  }}
+                  className="qtn-customer-add-btn"
                   onMouseOver={(e) => (e.currentTarget.style.background = '#eff6ff')}
                   onMouseOut={(e) => (e.currentTarget.style.background = '#f8fafc')}
                 >
                   <span style={{ color: '#3b82f6', fontSize: '13px', fontWeight: '500' }}>+ Add Customer</span>
                 </div>
               ) : (
-                <div
-                  style={{
-                    border: '1px solid #e2e8f0',
-                    borderRadius: '6px',
-                    padding: '10px 12px',
-                    background: '#f8fafc',
-                    width: '250px'
-                  }}
-                >
+                <div className="qtn-customer-card">
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                     <User size={14} color="#ff5722" />
                     <span style={{ fontWeight: '600', fontSize: '13px', color: '#0f172a' }}>{selectedCustomer.name}</span>
@@ -393,10 +375,10 @@ const AdminQuotation = () => {
             </div>
 
             {/* Right: Invoice Meta */}
-            <div style={{ flex: '1 1 450px', padding: '16px 20px', position: 'relative' }}>
+            <div className="qtn-form-meta">
 
               <div style={{ display: 'flex', gap: '16px', marginBottom: '16px', flexWrap: 'wrap' }}>
-                <div style={{ width: '120px' }}>
+                <div style={{ minWidth: '120px', flex: '1 1 120px' }}>
                   <label style={{ display: 'block', fontSize: '11px', color: '#94a3b8', marginBottom: '4px' }}>Quotation No:</label>
                   <input 
                     type="text" 
@@ -405,7 +387,7 @@ const AdminQuotation = () => {
                     style={{ width: '100%', padding: '6px 8px', border: '1px solid #cbd5e1', borderRadius: '4px', fontSize: '12px', outline: 'none', background: '#e2e8f0', color: '#64748b', boxSizing: 'border-box' }} 
                   />
                 </div>
-                <div style={{ width: '140px' }}>
+                <div style={{ minWidth: '140px', flex: '1 1 140px' }}>
                   <label style={{ display: 'block', fontSize: '11px', color: '#94a3b8', marginBottom: '4px' }}>Quotation Date:</label>
                   <div style={{ position: 'relative' }}>
                     <input 
@@ -420,14 +402,14 @@ const AdminQuotation = () => {
               </div>
 
               {showValidityBox && (
-                <div style={{ position: 'relative', border: '1px dashed #cbd5e1', borderRadius: '6px', padding: '12px 16px', display: 'inline-block' }}>
+                <div style={{ position: 'relative', border: '1px dashed #cbd5e1', borderRadius: '6px', padding: '12px 16px', display: 'inline-block', maxWidth: '100%', boxSizing: 'border-box' }}>
                   <div 
                     onClick={() => setShowValidityBox(false)}
                     style={{ position: 'absolute', top: '-10px', right: '-10px', background: '#94a3b8', borderRadius: '50%', width: '18px', height: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
                   >
                     <X size={12} color="#fff" />
                   </div>
-                  <div style={{ display: 'flex', gap: '16px' }}>
+                  <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
                     <div style={{ width: '100px' }}>
                       <label style={{ display: 'block', fontSize: '11px', color: '#94a3b8', marginBottom: '4px' }}>Valid For:</label>
                       <div style={{ display: 'flex', alignItems: 'center', border: '1px solid #cbd5e1', borderRadius: '4px', overflow: 'hidden' }}>
@@ -472,12 +454,10 @@ const AdminQuotation = () => {
             onUpdateItem={handleUpdateItem}
             onRemoveItem={handleRemoveItem}
             onOpenInventoryModal={() => setShowInventoryModal(true)}
-          />
-
-          {/* Bottom Section */}
-          <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+          />          {/* Bottom Section */}
+          <div className="qtn-form-bottom-section">
             {/* Left Bottom */}
-            <div style={{ flex: '1 1 300px', padding: '20px', borderRight: '1px solid #e2e8f0' }}>
+            <div className="qtn-form-bottom-left">
               <div style={{ marginBottom: '24px' }}>
                 {showNotes ? (
                   <div style={{ marginBottom: '14px', background: '#f8fafc', padding: '12px', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
@@ -546,7 +526,7 @@ const AdminQuotation = () => {
                     <p style={{ margin: 0 }}>Bank & Branch Name: <span style={{ fontWeight: '600', color: '#1e293b' }}>{bankDetails.bankName}</span></p>
                     <p style={{ margin: 0 }}>Account Holder's Name: <span style={{ fontWeight: '600', color: '#1e293b' }}>{bankDetails.accountHolder}</span></p>
                   </div>
-                  <div style={{ display: 'flex', gap: '24px', marginTop: '16px' }}>
+                  <div style={{ display: 'flex', gap: '24px', marginTop: '16px', flexWrap: 'wrap' }}>
                     <span 
                       onClick={() => setShowBankModal(true)} 
                       style={{ color: '#3b82f6', fontSize: '12px', fontWeight: '500', cursor: 'pointer' }}
@@ -587,7 +567,7 @@ const AdminQuotation = () => {
                   </div>
                 ) : (
                   <p 
-                    onClick={() => setShowPaymentQR(true)}
+                    onClick={() => setShowPaymentQR(true)} 
                     style={{ color: '#3b82f6', fontSize: '12px', fontWeight: '500', margin: '0', cursor: 'pointer' }}
                   >
                     + Add Payment QR
@@ -597,7 +577,7 @@ const AdminQuotation = () => {
             </div>
 
             {/* Right Bottom */}
-            <div style={{ flex: '1 1 450px', padding: '20px' }}>
+            <div className="qtn-form-bottom-right">
 
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                 <span 
@@ -641,9 +621,9 @@ const AdminQuotation = () => {
                 <label htmlFor="autoRound" style={{ fontSize: '12px', color: '#1e293b', cursor: 'pointer' }}>Auto Round Off</label>
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px', gap: '16px', flexWrap: 'wrap' }}>
                 <span style={{ fontSize: '14px', fontWeight: '600', color: '#1e293b' }}>Total Amount</span>
-                <div style={{ background: '#f8fafc', border: '1px solid #cbd5e1', padding: '8px 12px', borderRadius: '4px', width: '200px', textAlign: 'right', fontSize: '14px', fontWeight: '700', color: '#0f172a' }}>
+                <div style={{ background: '#f8fafc', border: '1px solid #cbd5e1', padding: '8px 12px', borderRadius: '4px', width: '200px', maxWidth: '100%', textAlign: 'right', fontSize: '14px', fontWeight: '700', color: '#0f172a' }}>
                   ₹ {totalAmount.toFixed(2)}
                 </div>
               </div>

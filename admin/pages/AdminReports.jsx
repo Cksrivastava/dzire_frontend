@@ -3,6 +3,7 @@ import AdminLayout from './AdminLayout';
 import { BarChart3, TrendingUp, Users, Package, ShoppingCart, RefreshCcw, DollarSign, FileSpreadsheet } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import ExportDropdown from '../components/ExportDropdown';
+import './AdminReports.css';
 
 const AdminReports = () => {
   const reports = [
@@ -52,14 +53,14 @@ const AdminReports = () => {
 
   return (
     <AdminLayout>
-      <div className="dashboard-wrapper">
-        <div style={{ background: '#fff', borderRadius: '12px', border: '1px solid #eef2f6', overflow: 'hidden' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '18px 24px', borderBottom: '1px solid #eef2f6', flexWrap: 'wrap', gap: '16px' }}>
-            <div>
-              <h2 style={{ margin: 0, fontSize: '18px', fontWeight: '700', color: '#1e293b' }}>All Reports & Analytics</h2>
-              <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#64748b' }}>Select a report category below to view in-depth metrics and export spreadsheets</p>
+      <div className="dashboard-wrapper reports-page-wrapper">
+        <div className="reports-table-card">
+          <div className="reports-header" style={{ padding: '18px 24px', borderBottom: '1px solid #eef2f6', marginBottom: 0 }}>
+            <div className="reports-header-title">
+              <h2 style={{ fontSize: '18px' }}>All Reports & Analytics</h2>
+              <p>Select a report category below to view in-depth metrics and export spreadsheets</p>
             </div>
-            <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+            <div className="reports-header-actions">
               <ExportDropdown
                 fileName="Business_Reports_Directory"
                 title="Dzire All Business Intelligence & Financial Reports Directory"
@@ -82,7 +83,7 @@ const AdminReports = () => {
           </div>
 
           <div style={{ padding: '24px', background: '#fafafa' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
+            <div className="reports-hub-grid">
               {reports.map((report, idx) => (
                 <NavLink key={idx} to={report.path} style={{ textDecoration: 'none', color: 'inherit' }}>
                   <div

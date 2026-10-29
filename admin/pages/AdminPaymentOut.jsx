@@ -4,6 +4,7 @@ import AdminLayout from './AdminLayout';
 import ExportDropdown from '../components/ExportDropdown';
 import { Search, Calendar, Printer, MoreVertical, ChevronDown, Plus, Eye, Edit2, Trash2, X, CheckCircle2 } from 'lucide-react';
 import './AdminDashboard.css';
+import './AdminPurchase.css';
 
 const AdminPaymentOut = () => {
   const navigate = useNavigate();
@@ -93,7 +94,7 @@ const AdminPaymentOut = () => {
 
   return (
     <AdminLayout>
-      <div style={{ background: '#fff', minHeight: '100vh', padding: '0', position: 'relative' }}>
+      <div className="purchase-page-wrapper">
 
         {/* Toast Alert */}
         {toastMessage && (
@@ -119,19 +120,8 @@ const AdminPaymentOut = () => {
 
         {/* View Modal */}
         {selectedItem && (
-          <div style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0,0,0,0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 9998
-          }}>
-            <div style={{ background: '#fff', borderRadius: '12px', width: '500px', maxWidth: '90%', padding: '24px', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)' }}>
+          <div className="purchase-modal-overlay">
+            <div className="purchase-modal-box">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px', marginBottom: '16px' }}>
                 <h3 style={{ margin: 0, fontSize: '18px', color: '#0f172a' }}>Payment Out Details</h3>
                 <button onClick={() => setSelectedItem(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748b' }}>
@@ -139,7 +129,7 @@ const AdminPaymentOut = () => {
                 </button>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', fontSize: '13px' }}>
+              <div className="purchase-modal-grid">
                 <div>
                   <p style={{ margin: '0 0 4px', color: '#64748b', fontSize: '11px' }}>Payment Number</p>
                   <p style={{ margin: 0, fontWeight: '700', color: '#2563eb' }}>{selectedItem.paymentNo}</p>
@@ -189,9 +179,9 @@ const AdminPaymentOut = () => {
         )}
 
         {/* Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 24px', borderBottom: '1px solid #e2e8f0' }}>
-          <h2 style={{ margin: 0, fontSize: '18px', fontWeight: '700', color: '#1e293b' }}>Payment Out</h2>
-          <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+        <div className="purchase-header-bar">
+          <h2 className="purchase-header-title">Payment Out</h2>
+          <div className="purchase-header-actions">
             <ExportDropdown
               fileName="Payment_Out_Report"
               title="Payment Out Report"
@@ -210,68 +200,71 @@ const AdminPaymentOut = () => {
             />
             <button 
               onClick={() => navigate('/admin/payment-out/add')} 
-              style={{ background: '#ff6600', color: '#fff', border: 'none', padding: '7px 16px', borderRadius: '4px', fontSize: '13px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', boxShadow: '0 2px 4px rgba(255, 102, 0, 0.2)' }}
+              className="purchase-btn-primary"
             >
               <Plus size={16} /> Create Payment Out
             </button>
           </div>
         </div>
 
-        <div style={{ padding: '24px' }}>
-          {/* Filters & Create Button */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-            <div style={{ display: 'flex', gap: '12px' }}>
-              <div style={{ position: 'relative' }}>
-                <Search size={16} color="#64748b" style={{ position: 'absolute', left: '10px', top: '9px' }} />
+        <div className="purchase-content-area">
+          {/* Filters & Count */}
+          <div className="purchase-filter-bar">
+            <div className="purchase-filter-left">
+              <div className="purchase-search-wrap">
+                <Search size={16} className="purchase-search-icon" />
                 <input
                   type="text"
                   placeholder="Search Payment Out..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  style={{ padding: '6px 12px 6px 32px', border: '1px solid #cbd5e1', borderRadius: '4px', fontSize: '13px', outline: 'none', width: '220px' }}
+                  className="purchase-search-input"
                 />
               </div>
-              <button style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#fff', border: '1px solid #cbd5e1', padding: '8px 12px', borderRadius: '4px', fontSize: '13px', color: '#64748b', cursor: 'pointer' }}>
+              <button className="purchase-filter-dropdown-btn">
                 <Calendar size={14} /> Last 365 Days <ChevronDown size={14} />
               </button>
+            </div>
+            <div className="purchase-record-count">
+              Total: {filteredPaymentOuts.length} record{filteredPaymentOuts.length === 1 ? '' : 's'}
             </div>
           </div>
 
           {/* Table */}
-          <div style={{ border: '1px solid #e2e8f0', borderRadius: '8px' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+          <div className="purchase-table-wrapper">
+            <table className="purchase-table">
               <thead>
-                <tr style={{ background: '#ff6600', borderBottom: '1px solid #e2e8f0' }}>
-                  <th style={{ padding: '12px 16px', fontSize: '12px', fontWeight: '600', color: '#ffffff' }}>Date <span style={{ fontSize: '10px' }}>↕</span></th>
-                  <th style={{ padding: '12px 16px', fontSize: '12px', fontWeight: '600', color: '#ffffff' }}>Payment Number</th>
-                  <th style={{ padding: '12px 16px', fontSize: '12px', fontWeight: '600', color: '#ffffff' }}>Party Name</th>
-                  <th style={{ padding: '12px 16px', fontSize: '12px', fontWeight: '600', color: '#ffffff' }}>Total Amount Settled</th>
-                  <th style={{ padding: '12px 16px', fontSize: '12px', fontWeight: '600', color: '#ffffff' }}>Amount Paid</th>
-                  <th style={{ padding: '12px 16px', fontSize: '12px', fontWeight: '600', color: '#ffffff' }}>Payment Mode</th>
-                  <th style={{ padding: '12px 16px', fontSize: '12px', fontWeight: '600', color: '#ffffff' }}>Status</th>
+                <tr>
+                  <th style={{ minWidth: '110px' }}>Date <span style={{ fontSize: '10px' }}>↕</span></th>
+                  <th style={{ minWidth: '150px' }}>Payment Number</th>
+                  <th style={{ minWidth: '170px' }}>Party Name</th>
+                  <th style={{ minWidth: '150px' }}>Total Amount Settled</th>
+                  <th style={{ minWidth: '130px' }}>Amount Paid</th>
+                  <th style={{ minWidth: '130px' }}>Payment Mode</th>
+                  <th style={{ minWidth: '130px' }}>Status</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredPaymentOuts.map((item, idx) => (
-                  <tr key={idx} style={{ borderBottom: '1px solid #e2e8f0', position: 'relative' }}>
-                    <td style={{ padding: '12px 16px', fontSize: '13px', color: '#64748b' }}>{item.date}</td>
+                  <tr key={idx} style={{ position: 'relative' }}>
+                    <td>{item.date}</td>
                     <td 
-                      style={{ padding: '12px 16px', fontSize: '13px', color: '#2563eb', fontWeight: '500', cursor: 'pointer' }}
+                      style={{ color: '#2563eb', fontWeight: '500', cursor: 'pointer' }}
                       onClick={() => handleView(item)}
                     >
                       {item.paymentNo}
                     </td>
-                    <td style={{ padding: '12px 16px', fontSize: '13px', color: '#1e293b', fontWeight: '500' }}>{item.party}</td>
-                    <td style={{ padding: '12px 16px', fontSize: '13px', color: '#1e293b', fontWeight: '500' }}>{item.totalAmountSettled}</td>
-                    <td style={{ padding: '12px 16px', fontSize: '13px', color: '#16a34a', fontWeight: '600' }}>{item.amountPaid}</td>
-                    <td style={{ padding: '12px 16px', fontSize: '13px', color: '#64748b' }}>
+                    <td style={{ color: '#1e293b', fontWeight: '500' }}>{item.party}</td>
+                    <td style={{ color: '#1e293b', fontWeight: '500' }}>{item.totalAmountSettled}</td>
+                    <td style={{ color: '#16a34a', fontWeight: '600' }}>{item.amountPaid}</td>
+                    <td>
                       <span style={{ background: '#f1f5f9', color: '#475569', padding: '3px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: '500' }}>
                         {item.mode}
                       </span>
                     </td>
                     
                     {/* Status with 3 dots and Dropdown */}
-                    <td style={{ padding: '12px 16px', position: 'relative' }}>
+                    <td style={{ position: 'relative' }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
                         <span style={{ 
                           padding: '4px 10px', 
@@ -381,8 +374,12 @@ const AdminPaymentOut = () => {
                 ))}
                 {filteredPaymentOuts.length === 0 && (
                   <tr>
-                    <td colSpan="7" style={{ textAlign: 'center', padding: '32px', color: '#94a3b8' }}>
-                      No payment out records found matching your search.
+                    <td colSpan="7" style={{ padding: 0, border: 'none' }}>
+                      <div className="purchase-empty-state">
+                        <Search size={36} color="#cbd5e1" style={{ marginBottom: '10px' }} />
+                        <p style={{ margin: 0, fontWeight: '600', color: '#64748b', fontSize: '14px' }}>No payment out records found</p>
+                        <p style={{ margin: '4px 0 0', color: '#94a3b8', fontSize: '12px' }}>Try adjusting your search terms</p>
+                      </div>
                     </td>
                   </tr>
                 )}

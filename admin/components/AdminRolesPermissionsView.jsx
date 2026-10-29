@@ -37,6 +37,7 @@ import {
   AlertCircle,
   PackageSearch
 } from 'lucide-react';
+import './AdminRolesPermissions.css';
 
 export const initialRolesData = [
   {
@@ -400,7 +401,7 @@ const AdminRolesPermissionsView = () => {
         setRolesList(json.roles);
         try {
           localStorage.setItem('dzire_roles_data', JSON.stringify(json.roles));
-        } catch (e) {}
+        } catch (e) { }
       }
     } catch (err) {
       console.error("Failed to load roles from backend:", err);
@@ -754,93 +755,58 @@ const AdminRolesPermissionsView = () => {
   };
 
   return (
-    <div style={{ backgroundColor: '#f8fafc', minHeight: '100vh', padding: '24px 28px', color: '#1e293b', fontFamily: 'Inter, system-ui, -apple-system, sans-serif' }}>
+    <div className="roles-view-container">
       {/* Toast Notification */}
       {toastMessage && (
-        <div style={{
-          position: 'fixed',
-          top: '24px',
-          right: '28px',
-          backgroundColor: '#1e293b',
-          color: '#ffffff',
-          padding: '12px 20px',
-          borderRadius: '8px',
-          boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '10px',
-          zIndex: 9999,
-          fontSize: '13.5px',
-          fontWeight: '500'
-        }}>
+        <div className="roles-toast">
           <Check size={16} color="#22c55e" />
           <span>{toastMessage}</span>
         </div>
       )}
 
       {/* Top Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
-        <div>
-          <h1 style={{ fontSize: '24px', fontWeight: '800', color: '#0f172a', margin: '0 0 4px 0', letterSpacing: '-0.02em' }}>
-            Roles & Permissions
-          </h1>
-          <p style={{ fontSize: '13.5px', color: '#64748b', margin: 0 }}>
-            Create roles and control what your team can access and do.
-          </p>
+      <div className="roles-header">
+        <div className="roles-header-title">
+          <h1>Roles & Permissions</h1>
+          <p>Create roles and control what your team can access and do.</p>
         </div>
 
         <button
           onClick={handleOpenCreate}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            backgroundColor: '#ff6600',
-            color: '#ffffff',
-            border: 'none',
-            borderRadius: '8px',
-            padding: '10px 18px',
-            fontSize: '13.5px',
-            fontWeight: '700',
-            cursor: 'pointer',
-            boxShadow: '0 2px 8px rgba(255, 102, 0, 0.28)',
-            transition: 'background-color 0.15s ease'
-          }}
-          onMouseEnter={e => e.currentTarget.style.backgroundColor = '#e65c00'}
-          onMouseLeave={e => e.currentTarget.style.backgroundColor = '#ff6600'}
+          className="roles-create-btn"
         >
           <Plus size={16} />
-          <span>+ Create Role</span>
+          <span>Create Role</span>
         </button>
       </div>
 
       {/* 4 KPI Metric Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '24px' }}>
+      <div className="roles-kpi-grid">
         {/* Card 1: Total Roles */}
-        <div style={{ backgroundColor: '#ffffff', borderRadius: '12px', padding: '16px 20px', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <div style={{ width: '44px', height: '44px', borderRadius: '10px', backgroundColor: '#eff6ff', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#2563eb' }}>
+        <div className="roles-kpi-card">
+          <div className="roles-kpi-icon" style={{ backgroundColor: '#eff6ff', color: '#2563eb' }}>
             <Users size={22} />
           </div>
           <div>
-            <div style={{ fontSize: '24px', fontWeight: '800', color: '#0f172a', lineHeight: 1.1 }}>
+            <div className="roles-kpi-value">
               {totalRoles}
             </div>
-            <div style={{ fontSize: '12.5px', color: '#64748b', marginTop: '2px', fontWeight: '500' }}>
+            <div className="roles-kpi-label">
               Total Roles
             </div>
           </div>
         </div>
 
         {/* Card 2: Active Staff */}
-        <div style={{ backgroundColor: '#ffffff', borderRadius: '12px', padding: '16px 20px', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <div style={{ width: '44px', height: '44px', borderRadius: '10px', backgroundColor: '#f0fdf4', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#16a34a' }}>
+        <div className="roles-kpi-card">
+          <div className="roles-kpi-icon" style={{ backgroundColor: '#f0fdf4', color: '#16a34a' }}>
             <UserCheck size={22} />
           </div>
           <div>
-            <div style={{ fontSize: '24px', fontWeight: '800', color: '#0f172a', lineHeight: 1.1 }}>
+            <div className="roles-kpi-value">
               {activeStaff}
             </div>
-            <div style={{ fontSize: '12.5px', color: '#64748b', marginTop: '2px', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div className="roles-kpi-label" style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
               <span>Active Staff</span>
               <span
                 onClick={() => navigate('/admin/staff')}
@@ -853,30 +819,30 @@ const AdminRolesPermissionsView = () => {
         </div>
 
         {/* Card 3: Total Permissions */}
-        <div style={{ backgroundColor: '#ffffff', borderRadius: '12px', padding: '16px 20px', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <div style={{ width: '44px', height: '44px', borderRadius: '10px', backgroundColor: '#fefce8', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ca8a04' }}>
+        <div className="roles-kpi-card">
+          <div className="roles-kpi-icon" style={{ backgroundColor: '#fefce8', color: '#ca8a04' }}>
             <Key size={22} />
           </div>
           <div>
-            <div style={{ fontSize: '24px', fontWeight: '800', color: '#0f172a', lineHeight: 1.1 }}>
+            <div className="roles-kpi-value">
               {totalPermissions}
             </div>
-            <div style={{ fontSize: '12.5px', color: '#64748b', marginTop: '2px', fontWeight: '500' }}>
+            <div className="roles-kpi-label">
               Total Permissions
             </div>
           </div>
         </div>
 
         {/* Card 4: Custom Roles */}
-        <div style={{ backgroundColor: '#ffffff', borderRadius: '12px', padding: '16px 20px', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <div style={{ width: '44px', height: '44px', borderRadius: '10px', backgroundColor: '#fef2f2', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ef4444' }}>
+        <div className="roles-kpi-card">
+          <div className="roles-kpi-icon" style={{ backgroundColor: '#fef2f2', color: '#ef4444' }}>
             <Shield size={22} />
           </div>
           <div>
-            <div style={{ fontSize: '24px', fontWeight: '800', color: '#0f172a', lineHeight: 1.1 }}>
+            <div className="roles-kpi-value">
               {customRoles}
             </div>
-            <div style={{ fontSize: '12.5px', color: '#64748b', marginTop: '2px', fontWeight: '500' }}>
+            <div className="roles-kpi-label">
               Custom Roles
             </div>
           </div>
@@ -884,9 +850,9 @@ const AdminRolesPermissionsView = () => {
       </div>
 
       {/* Main Table Card */}
-      <div style={{ backgroundColor: '#ffffff', borderRadius: '12px', border: '1px solid #e2e8f0', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.02)' }}>
+      <div className="roles-main-card">
         {/* Filter Tabs */}
-        <div style={{ display: 'flex', borderBottom: '1px solid #e2e8f0', padding: '0 20px', gap: '28px' }}>
+        <div className="roles-filter-tabs">
           {[
             { id: 'All', label: `All Roles (${rolesList.length})` },
             { id: 'System', label: `System Roles (${rolesList.filter(r => r.type === 'System').length})` },
@@ -895,16 +861,11 @@ const AdminRolesPermissionsView = () => {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
+              className="roles-tab-btn"
               style={{
-                background: 'none',
-                border: 'none',
                 borderBottom: activeTab === tab.id ? '2px solid #ff6600' : '2px solid transparent',
-                padding: '14px 4px',
-                fontSize: '13.5px',
                 fontWeight: activeTab === tab.id ? '700' : '500',
-                color: activeTab === tab.id ? '#ff6600' : '#64748b',
-                cursor: 'pointer',
-                transition: 'all 0.15s ease'
+                color: activeTab === tab.id ? '#ff6600' : '#64748b'
               }}
             >
               {tab.label}
@@ -913,44 +874,26 @@ const AdminRolesPermissionsView = () => {
         </div>
 
         {/* Search & Filter Toolbar */}
-        <div style={{ padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', borderBottom: '1px solid #f1f5f9' }}>
+        <div className="roles-toolbar">
           {/* Search Input */}
-          <div style={{ position: 'relative', flex: 1, maxWidth: '420px' }}>
+          <div className="roles-search-box">
             <Search size={15} style={{ position: 'absolute', left: '12px', top: '11px', color: '#94a3b8' }} />
             <input
               type="text"
               placeholder="Search roles by name or description..."
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '8px 12px 8px 36px',
-                fontSize: '13px',
-                border: '1px solid #e2e8f0',
-                borderRadius: '8px',
-                backgroundColor: '#ffffff',
-                outline: 'none',
-                color: '#1e293b'
-              }}
+              className="roles-search-input"
             />
           </div>
 
           {/* Status Dropdown */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div className="roles-status-filter">
             <span style={{ fontSize: '12.5px', color: '#64748b', fontWeight: '500' }}>Status</span>
             <select
               value={statusFilter}
               onChange={e => setStatusFilter(e.target.value)}
-              style={{
-                padding: '7px 12px',
-                fontSize: '12.5px',
-                border: '1px solid #e2e8f0',
-                borderRadius: '6px',
-                backgroundColor: '#ffffff',
-                color: '#334155',
-                outline: 'none',
-                cursor: 'pointer'
-              }}
+              className="roles-status-select"
             >
               <option value="All">All</option>
               <option value="Active">Active</option>
@@ -960,8 +903,8 @@ const AdminRolesPermissionsView = () => {
         </div>
 
         {/* Roles Master Table */}
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+        <div className="roles-table-wrapper">
+          <table className="roles-table">
             <thead>
               <tr style={{ borderBottom: '1px solid #e2e8f0', fontSize: '12px', fontWeight: '600', color: '#64748b', backgroundColor: '#fafbfc' }}>
                 <th style={{ padding: '12px 16px', width: '40px' }}>
@@ -972,12 +915,12 @@ const AdminRolesPermissionsView = () => {
                     style={{ cursor: 'pointer', accentColor: '#ff6600' }}
                   />
                 </th>
-                <th style={{ padding: '12px 16px' }}>Role Name</th>
-                <th style={{ padding: '12px 16px' }}>Description</th>
-                <th style={{ padding: '12px 16px' }}>CRUD Permissions Scope</th>
-                <th style={{ padding: '12px 16px', textAlign: 'center' }}>No. of Staff</th>
-                <th style={{ padding: '12px 16px' }}>Status</th>
-                <th style={{ padding: '12px 16px', textAlign: 'center' }}>Actions</th>
+                <th style={{ padding: '12px 16px', minWidth: '160px' }}>Role Name</th>
+                <th style={{ padding: '12px 16px', minWidth: '200px' }}>Description</th>
+                <th style={{ padding: '12px 16px', minWidth: '180px' }}>CRUD Permissions Scope</th>
+                <th style={{ padding: '12px 16px', textAlign: 'center', minWidth: '90px' }}>No. of Staff</th>
+                <th style={{ padding: '12px 16px', minWidth: '90px' }}>Status</th>
+                <th style={{ padding: '12px 16px', textAlign: 'center', minWidth: '70px' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -994,14 +937,6 @@ const AdminRolesPermissionsView = () => {
                     <tr
                       key={role.id}
                       onClick={() => handleOpenEdit(role)}
-                      style={{
-                        borderBottom: '1px solid #f1f5f9',
-                        backgroundColor: '#ffffff',
-                        cursor: 'pointer',
-                        transition: 'background-color 0.15s ease'
-                      }}
-                      onMouseEnter={e => e.currentTarget.style.backgroundColor = '#f8fafc'}
-                      onMouseLeave={e => e.currentTarget.style.backgroundColor = '#ffffff'}
                     >
                       {/* Checkbox */}
                       <td style={{ padding: '14px 16px' }} onClick={e => e.stopPropagation()}>
@@ -1024,7 +959,8 @@ const AdminRolesPermissionsView = () => {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            fontSize: '16px'
+                            fontSize: '16px',
+                            flexShrink: 0
                           }}>
                             {role.icon}
                           </div>
@@ -1042,7 +978,7 @@ const AdminRolesPermissionsView = () => {
                       </td>
 
                       {/* Description */}
-                      <td style={{ padding: '14px 16px', fontSize: '13px', color: '#475569', maxWidth: '380px' }}>
+                      <td style={{ padding: '14px 16px', fontSize: '13px', color: '#475569', maxWidth: '380px', wordBreak: 'break-word' }}>
                         {role.description}
                       </td>
 
@@ -1192,12 +1128,12 @@ const AdminRolesPermissionsView = () => {
         </div>
 
         {/* Table Pagination Footer */}
-        <div style={{ padding: '14px 20px', borderTop: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ fontSize: '12.5px', color: '#64748b' }}>
+        <div className="roles-pagination">
+          <div className="roles-pagination-info">
             Showing 1-{filteredRoles.length} of {filteredRoles.length} roles
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          <div className="roles-pagination-controls">
             <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
               <button
                 disabled
@@ -1273,50 +1209,16 @@ const AdminRolesPermissionsView = () => {
       {isDrawerOpen && editingRole && (
         <div
           onClick={() => setIsDrawerOpen(false)}
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(15, 23, 42, 0.55)',
-            backdropFilter: 'blur(3px)',
-            zIndex: 1000,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '20px'
-          }}
+          className="roles-modal-backdrop"
         >
           <div
             onClick={e => e.stopPropagation()}
-            style={{
-              width: '880px',
-              maxWidth: '96vw',
-              height: '710px',
-              maxHeight: '92vh',
-              backgroundColor: '#ffffff',
-              borderRadius: '16px',
-              boxShadow: '0 20px 45px rgba(0,0,0,0.22)',
-              display: 'flex',
-              flexDirection: 'column',
-              overflow: 'hidden',
-              animation: 'modalScale 0.18s ease-out'
-            }}
+            className="roles-modal-container"
           >
-            <style>{`
-              @keyframes modalScale {
-                from { transform: scale(0.95); opacity: 0; }
-                to { transform: scale(1); opacity: 1; }
-              }
-            `}</style>
-
             {/* Modal Header */}
-            <div style={{ padding: '20px 24px', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div className="roles-modal-header">
               <div>
-                <h2 style={{ margin: 0, fontSize: '18px', fontWeight: '800', color: '#0f172a' }}>
-                  {drawerMode === 'create' ? 'Create New Role' : 'Edit Role'}
-                </h2>
+                <h2>{drawerMode === 'create' ? 'Create New Role' : 'Edit Role'}</h2>
               </div>
               <button
                 onClick={() => setIsDrawerOpen(false)}
@@ -1327,20 +1229,16 @@ const AdminRolesPermissionsView = () => {
             </div>
 
             {/* Drawer Sub-Tabs (Basic Details | Permissions) */}
-            <div style={{ display: 'flex', borderBottom: '1px solid #e2e8f0', padding: '0 24px', gap: '24px' }}>
+            <div className="roles-modal-subtabs">
               {['Basic Details', 'Permissions'].map(tab => (
                 <button
                   key={tab}
                   onClick={() => setDrawerTab(tab)}
+                  className="roles-modal-subtab-btn"
                   style={{
-                    background: 'none',
-                    border: 'none',
                     borderBottom: drawerTab === tab ? '2px solid #ff6600' : '2px solid transparent',
-                    padding: '12px 4px',
-                    fontSize: '13.5px',
                     fontWeight: drawerTab === tab ? '700' : '500',
-                    color: drawerTab === tab ? '#ff6600' : '#64748b',
-                    cursor: 'pointer'
+                    color: drawerTab === tab ? '#ff6600' : '#64748b'
                   }}
                 >
                   {tab}
@@ -1349,20 +1247,20 @@ const AdminRolesPermissionsView = () => {
             </div>
 
             {/* Role Header Info Banner */}
-            <div style={{ padding: '16px 24px', backgroundColor: '#fafbfc', borderBottom: '1px solid #f1f5f9' }}>
-              <div style={{ fontSize: '16px', fontWeight: '800', color: '#0f172a' }}>
+            <div className="roles-modal-banner">
+              <div className="roles-modal-banner-name">
                 {editingRole.name || 'Untitled Role'}
               </div>
-              <div style={{ fontSize: '12.5px', color: '#64748b', marginTop: '2px' }}>
+              <div className="roles-modal-banner-desc">
                 {editingRole.description || 'Set permissions for this role across modules.'}
               </div>
             </div>
 
             {/* Drawer Body */}
-            <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+            <div className="roles-modal-body">
               {/* TAB 1: BASIC DETAILS */}
               {drawerTab === 'Basic Details' && (
-                <div style={{ flex: 1, overflowY: 'auto', padding: '24px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
+                <div className="roles-form-scroll">
                   <div>
                     <label style={{ display: 'block', fontSize: '12.5px', fontWeight: '700', color: '#334155', marginBottom: '6px' }}>
                       Role Name *
@@ -1372,7 +1270,7 @@ const AdminRolesPermissionsView = () => {
                       value={editingRole.name}
                       onChange={e => setEditingRole({ ...editingRole, name: e.target.value })}
                       placeholder="e.g. Regional Manager, Auditor"
-                      style={{ width: '100%', padding: '9px 12px', fontSize: '13px', border: '1px solid #d1d5db', borderRadius: '8px', outline: 'none' }}
+                      style={{ width: '100%', padding: '9px 12px', fontSize: '13px', border: '1px solid #d1d5db', borderRadius: '8px', outline: 'none', boxSizing: 'border-box' }}
                     />
                   </div>
 
@@ -1407,7 +1305,7 @@ const AdminRolesPermissionsView = () => {
                     <label style={{ display: 'block', fontSize: '12.5px', fontWeight: '700', color: '#334155', marginBottom: '6px' }}>
                       Status
                     </label>
-                    <div style={{ display: 'flex', gap: '16px' }}>
+                    <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
                       {['Active', 'Inactive'].map(st => (
                         <label key={st} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', cursor: 'pointer' }}>
                           <input
@@ -1427,10 +1325,10 @@ const AdminRolesPermissionsView = () => {
 
               {/* TAB 2: PERMISSIONS (Read & Write Access Management) */}
               {drawerTab === 'Permissions' && (
-                <div style={{ flex: 1, minHeight: 0, display: 'grid', gridTemplateColumns: '230px 1fr', overflow: 'hidden' }}>
+                <div className="roles-permissions-split">
                   {/* Left Column: Module Navigation */}
-                  <div style={{ borderRight: '1px solid #e2e8f0', backgroundColor: '#fafbfc', padding: '12px 8px', overflowY: 'auto' }}>
-                    <div style={{ fontSize: '11px', fontWeight: '800', color: '#94a3b8', textTransform: 'uppercase', padding: '4px 8px 8px 8px', letterSpacing: '0.5px' }}>
+                  <div className="roles-module-sidebar">
+                    <div className="roles-module-sidebar-title">
                       Modules & Scope
                     </div>
                     {moduleDefinitions.map(mod => {
@@ -1445,22 +1343,12 @@ const AdminRolesPermissionsView = () => {
                         <button
                           key={mod.id}
                           onClick={() => setSelectedModuleId(mod.id)}
+                          className="roles-module-btn"
                           style={{
-                            width: '100%',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            padding: '9px 12px',
                             border: isSelected ? '1px solid #ffedd5' : '1px solid transparent',
-                            borderRadius: '8px',
                             backgroundColor: isSelected ? '#fff7ed' : 'transparent',
                             color: isSelected ? '#ea580c' : '#475569',
-                            fontWeight: isSelected ? '800' : '600',
-                            fontSize: '13px',
-                            cursor: 'pointer',
-                            marginBottom: '4px',
-                            textAlign: 'left',
-                            transition: 'all 0.15s ease'
+                            fontWeight: isSelected ? '800' : '600'
                           }}
                         >
                           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -1468,11 +1356,11 @@ const AdminRolesPermissionsView = () => {
                             <span>{mod.label}</span>
                           </div>
                           {hasAll ? (
-                            <span style={{ fontSize: '9.5px', fontWeight: '800', backgroundColor: '#dcfce7', color: '#15803d', padding: '1px 6px', borderRadius: '4px', border: '1px solid #bbf7d0' }}>
+                            <span style={{ fontSize: '9.5px', fontWeight: '800', backgroundColor: '#dcfce7', color: '#15803d', padding: '1px 6px', borderRadius: '4px', border: '1px solid #bbf7d0', marginLeft: '6px' }}>
                               CRUD
                             </span>
                           ) : hasSome ? (
-                            <span style={{ fontSize: '10px', fontWeight: '700', backgroundColor: '#e0f2fe', color: '#0369a1', padding: '1px 6px', borderRadius: '4px' }}>
+                            <span style={{ fontSize: '10px', fontWeight: '700', backgroundColor: '#e0f2fe', color: '#0369a1', padding: '1px 6px', borderRadius: '4px', marginLeft: '6px' }}>
                               {activePermsForMod.length}/{totalModPerms}
                             </span>
                           ) : null}
@@ -1482,7 +1370,7 @@ const AdminRolesPermissionsView = () => {
                   </div>
 
                   {/* Right Column: CRUD Permissions for Active Module */}
-                  <div style={{ padding: '20px 24px', overflowY: 'auto', backgroundColor: '#ffffff' }}>
+                  <div className="roles-permissions-content">
                     {moduleDefinitions.map(mod => {
                       if (selectedModuleId && selectedModuleId !== mod.id) return null;
 
@@ -1519,7 +1407,9 @@ const AdminRolesPermissionsView = () => {
                                     borderBottom: `1px solid ${cat.border}`,
                                     display: 'flex',
                                     justifyContent: 'space-between',
-                                    alignItems: 'center'
+                                    alignItems: 'center',
+                                    flexWrap: 'wrap',
+                                    gap: '8px'
                                   }}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                       <CatIcon size={14} color={cat.color} />
@@ -1574,7 +1464,7 @@ const AdminRolesPermissionsView = () => {
                                             style={{ marginTop: '2px', accentColor: cat.color, cursor: 'pointer', width: '15px', height: '15px' }}
                                           />
                                           <div style={{ flex: 1 }}>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
                                               <span style={{ fontSize: '12.5px', fontWeight: '700', color: isChecked ? '#0f172a' : '#334155' }}>
                                                 {perm.label}
                                               </span>
@@ -1611,7 +1501,7 @@ const AdminRolesPermissionsView = () => {
             </div>
 
             {/* Drawer Bottom Action Buttons */}
-            <div style={{ padding: '16px 24px', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end', gap: '12px', backgroundColor: '#fafbfc' }}>
+            <div className="roles-modal-footer">
               <button
                 type="button"
                 onClick={() => setIsDrawerOpen(false)}

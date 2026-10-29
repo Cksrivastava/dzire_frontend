@@ -9,6 +9,7 @@ import {
   Palette, Type, ListFilter, Eye, MoreVertical
 } from 'lucide-react';
 import './AdminDashboard.css';
+import './AdminAttributes.css';
 
 export const INITIAL_PRESET_ATTRIBUTES = [];
 
@@ -331,22 +332,9 @@ const AdminAttributes = () => {
       {/* Notification Toast */}
       {toastMessage && (
         <div
+          className="attr-toast"
           style={{
-            position: "fixed",
-            bottom: "24px",
-            right: "24px",
-            background: toastMessage.type === "error" ? "#dc2626" : "#10b981",
-            color: "#fff",
-            padding: "12px 20px",
-            borderRadius: "10px",
-            boxShadow: "0 10px 25px rgba(0,0,0,0.15)",
-            zIndex: 99999,
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-            fontSize: "14px",
-            fontWeight: "600",
-            animation: "fadeIn 0.2s ease-out"
+            background: toastMessage.type === "error" ? "#dc2626" : "#10b981"
           }}
         >
           <CheckCircle2 size={18} />
@@ -355,25 +343,17 @@ const AdminAttributes = () => {
       )}
 
       <div className="dashboard-wrapper">
-        {/* Main Unified Card Container matching Inventory page */}
-        <div style={{ background: '#fff', borderRadius: '10px', border: '1px solid #eef2f6', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.03)' }}>
+        {/* Main Unified Card Container */}
+        <div className="attr-card-container">
           
           {/* Tabs & Top Actions Header Bar */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #eef2f6', padding: '0 20px', flexWrap: 'wrap', gap: '12px' }}>
+          <div className="attr-header-bar">
             {/* Tabs */}
-            <div style={{ display: 'flex', gap: '32px', overflowX: 'auto', WebkitOverflowScrolling: 'touch', maxWidth: '100%', scrollbarWidth: 'none' }}>
+            <div className="attr-tabs">
               <button
                 onClick={() => setFilterType("all")}
+                className="attr-tab-btn"
                 style={{
-                  background: 'none',
-                  border: 'none',
-                  padding: '18px 0',
-                  fontSize: '14px',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  whiteSpace: 'nowrap',
-                  flexShrink: 0,
                   color: filterType === 'all' ? '#ff6600' : '#000000',
                   borderBottom: filterType === 'all' ? '3px solid #ff6600' : '3px solid transparent'
                 }}
@@ -382,16 +362,8 @@ const AdminAttributes = () => {
               </button>
               <button
                 onClick={() => setFilterType("preset")}
+                className="attr-tab-btn"
                 style={{
-                  background: 'none',
-                  border: 'none',
-                  padding: '18px 0',
-                  fontSize: '14px',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  whiteSpace: 'nowrap',
-                  flexShrink: 0,
                   color: filterType === 'preset' ? '#ff6600' : '#000000',
                   borderBottom: filterType === 'preset' ? '3px solid #ff6600' : '3px solid transparent'
                 }}
@@ -400,16 +372,8 @@ const AdminAttributes = () => {
               </button>
               <button
                 onClick={() => setFilterType("custom")}
+                className="attr-tab-btn"
                 style={{
-                  background: 'none',
-                  border: 'none',
-                  padding: '18px 0',
-                  fontSize: '14px',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  whiteSpace: 'nowrap',
-                  flexShrink: 0,
                   color: filterType === 'custom' ? '#ff6600' : '#000000',
                   borderBottom: filterType === 'custom' ? '3px solid #ff6600' : '3px solid transparent'
                 }}
@@ -419,28 +383,14 @@ const AdminAttributes = () => {
             </div>
 
             {/* Top Action Buttons */}
-            <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+            <div className="attr-top-actions">
               <button
                 onClick={handleResetToDefaults}
                 title="Reset to default system presets"
-                style={{
-                  background: '#f8fafc',
-                  border: '1px solid #cbd5e1',
-                  color: '#334155',
-                  padding: '8px 14px',
-                  borderRadius: '8px',
-                  fontSize: '13px',
-                  fontWeight: '600',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s'
-                }}
-                onMouseOver={(e) => (e.currentTarget.style.background = '#e2e8f0')}
-                onMouseOut={(e) => (e.currentTarget.style.background = '#f8fafc')}
+                className="attr-btn-reset"
               >
-                <RefreshCcw size={14} /> Reset Defaults
+                <RefreshCcw size={14} />
+                <span>Reset Defaults</span>
               </button>
               <ExportDropdown
                 data={attributes.map((a, i) => ({
@@ -457,72 +407,48 @@ const AdminAttributes = () => {
               />
               <button
                 onClick={handleOpenAddModal}
-                style={{
-                  background: '#ff6600',
-                  color: '#fff',
-                  border: 'none',
-                  padding: '8px 18px',
-                  borderRadius: '8px',
-                  fontSize: '13px',
-                  fontWeight: '600',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  cursor: 'pointer',
-                  boxShadow: '0 2px 4px rgba(255, 102, 0, 0.25)',
-                  transition: 'background 0.2s'
-                }}
-                onMouseOver={(e) => (e.currentTarget.style.background = '#e65c00')}
-                onMouseOut={(e) => (e.currentTarget.style.background = '#ff6600')}
+                className="attr-btn-primary"
               >
-                <Plus size={16} /> Add Attribute
+                <Plus size={16} />
+                <span>Add Attribute</span>
               </button>
             </div>
           </div>
 
-          {/* Metric Summary Bar (Scrollable horizontally in responsive view) */}
-          <div style={{ width: '100%', overflowX: 'auto', WebkitOverflowScrolling: 'touch', borderBottom: '1px solid #eef2f6' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(180px, 1fr))', gap: '1px', background: '#eef2f6', minWidth: '680px' }}>
-              <div style={{ padding: '16px 24px', background: '#fff', whiteSpace: 'nowrap' }}>
-                <span style={{ fontSize: '12px', color: '#64748b', fontWeight: '500' }}>Total Attributes</span>
-                <h3 style={{ margin: '4px 0 0 0', fontSize: '22px', fontWeight: '700', color: '#111' }}>{attributes.length}</h3>
+          {/* Metric Summary Bar (Responsive grid: 4 on desktop, 2x2 on mobile) */}
+          <div className="attr-metrics-container">
+            <div className="attr-metrics-grid">
+              <div className="attr-metric-card">
+                <span className="attr-metric-label">Total Attributes</span>
+                <h3 className="attr-metric-value" style={{ color: '#111' }}>{attributes.length}</h3>
               </div>
-              <div style={{ padding: '16px 24px', background: '#fff', whiteSpace: 'nowrap' }}>
-                <span style={{ fontSize: '12px', color: '#2563eb', fontWeight: '500' }}>System Presets</span>
-                <h3 style={{ margin: '4px 0 0 0', fontSize: '22px', fontWeight: '700', color: '#2563eb' }}>{attributes.filter(a => a.isPreset).length}</h3>
+              <div className="attr-metric-card">
+                <span className="attr-metric-label" style={{ color: '#2563eb' }}>System Presets</span>
+                <h3 className="attr-metric-value" style={{ color: '#2563eb' }}>{attributes.filter(a => a.isPreset).length}</h3>
               </div>
-              <div style={{ padding: '16px 24px', background: '#fff', whiteSpace: 'nowrap' }}>
-                <span style={{ fontSize: '12px', color: '#16a34a', fontWeight: '500' }}>Custom Added</span>
-                <h3 style={{ margin: '4px 0 0 0', fontSize: '22px', fontWeight: '700', color: '#16a34a' }}>{customAttributesCount}</h3>
+              <div className="attr-metric-card">
+                <span className="attr-metric-label" style={{ color: '#16a34a' }}>Custom Added</span>
+                <h3 className="attr-metric-value" style={{ color: '#16a34a' }}>{customAttributesCount}</h3>
               </div>
-              <div style={{ padding: '16px 24px', background: '#fff', whiteSpace: 'nowrap' }}>
-                <span style={{ fontSize: '12px', color: '#9333ea', fontWeight: '500' }}>Configured Values</span>
-                <h3 style={{ margin: '4px 0 0 0', fontSize: '22px', fontWeight: '700', color: '#9333ea' }}>{totalValuesCount}</h3>
+              <div className="attr-metric-card">
+                <span className="attr-metric-label" style={{ color: '#9333ea' }}>Configured Values</span>
+                <h3 className="attr-metric-value" style={{ color: '#9333ea' }}>{totalValuesCount}</h3>
               </div>
             </div>
           </div>
 
           {/* Search & Action Sub-Bar */}
-          <div style={{ padding: '14px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#f8fafc', borderBottom: '1px solid #eef2f6', flexWrap: 'wrap', gap: '12px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap', flex: 1 }}>
+          <div className="attr-subbar">
+            <div className="attr-subbar-controls">
               {/* Search Box */}
-              <div style={{ position: 'relative', width: '350px', maxWidth: '100%' }}>
-                <Search size={16} style={{ position: 'absolute', left: '10px', top: '10px', color: '#94a3b8' }} />
+              <div className="attr-search-wrap">
+                <Search size={16} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
                 <input
                   type="text"
                   placeholder="Search attribute name or value..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '8px 12px 8px 34px',
-                    borderRadius: '6px',
-                    border: '1px solid #cbd5e1',
-                    fontSize: '13px',
-                    outline: 'none',
-                    background: '#fff',
-                    boxSizing: 'border-box'
-                  }}
+                  className="attr-search-input"
                 />
                 {searchQuery && (
                   <button
@@ -538,20 +464,11 @@ const AdminAttributes = () => {
               <button
                 type="button"
                 onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
+                className="attr-btn-filter"
                 style={{
                   background: showAdvancedFilters ? '#fff0e6' : '#fff',
                   border: showAdvancedFilters ? '1px solid #ff6600' : '1px solid #cbd5e1',
-                  color: showAdvancedFilters ? '#ff6600' : '#334155',
-                  padding: '8px 16px',
-                  borderRadius: '6px',
-                  fontSize: '13px',
-                  fontWeight: '600',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  cursor: 'pointer',
-                  boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
-                  transition: 'all 0.15s ease'
+                  color: showAdvancedFilters ? '#ff6600' : '#334155'
                 }}
               >
                 <Filter size={14} color={showAdvancedFilters ? "#ff6600" : "#64748b"} /> Advanced Filters
@@ -586,20 +503,20 @@ const AdminAttributes = () => {
             </div>
 
             {/* Total Count Display */}
-            <div style={{ fontSize: '13px', color: '#64748b', fontWeight: '500' }}>
+            <div className="attr-counter-text">
               Showing <strong style={{ color: '#0f172a' }}>{filteredAttributes.length}</strong> of {attributes.length} attributes
             </div>
           </div>
 
           {/* Advanced Filters Expandable Drawer/Panel */}
           {showAdvancedFilters && (
-            <div style={{ padding: '14px 20px', background: '#f8fafc', borderBottom: '1px solid #e2e8f0', display: 'flex', gap: '20px', flexWrap: 'wrap', alignItems: 'center' }}>
-              <div>
-                <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: '#64748b', textTransform: 'uppercase', marginBottom: '4px' }}>Attribute Type</label>
+            <div className="attr-advanced-panel">
+              <div className="attr-filter-group">
+                <label className="attr-filter-label">Attribute Type</label>
                 <select
                   value={typeFilter}
                   onChange={(e) => setTypeFilter(e.target.value)}
-                  style={{ padding: '6px 12px', fontSize: '13px', borderRadius: '6px', border: '1px solid #cbd5e1', background: '#fff', outline: 'none', cursor: 'pointer' }}
+                  className="attr-filter-select"
                 >
                   <option value="all">All Types</option>
                   <option value="text">Text</option>
@@ -608,12 +525,12 @@ const AdminAttributes = () => {
                 </select>
               </div>
 
-              <div>
-                <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: '#64748b', textTransform: 'uppercase', marginBottom: '4px' }}>Values Status</label>
+              <div className="attr-filter-group">
+                <label className="attr-filter-label">Values Status</label>
                 <select
                   value={valueCountFilter}
                   onChange={(e) => setValueCountFilter(e.target.value)}
-                  style={{ padding: '6px 12px', fontSize: '13px', borderRadius: '6px', border: '1px solid #cbd5e1', background: '#fff', outline: 'none', cursor: 'pointer' }}
+                  className="attr-filter-select"
                 >
                   <option value="all">All Values</option>
                   <option value="has_values">Has Configured Values</option>
@@ -635,85 +552,316 @@ const AdminAttributes = () => {
               </p>
               <button
                 onClick={handleOpenAddModal}
-                style={{
-                  background: "#ff6600",
-                  color: "#fff",
-                  border: "none",
-                  padding: "8px 18px",
-                  borderRadius: "8px",
-                  fontSize: "13px",
-                  fontWeight: "600",
-                  cursor: "pointer"
-                }}
+                className="attr-btn-primary"
+                style={{ margin: "0 auto" }}
               >
-                + Create New Attribute
+                <Plus size={16} /> Create New Attribute
               </button>
             </div>
           ) : (
-            /* ==================== TABLE VIEW ONLY ==================== */
-            <div style={{ overflowX: "auto" }}>
-              <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "13px" }}>
-                <thead>
-                  <tr style={{ background: "#f8fafc", borderBottom: "1px solid #e2e8f0", color: "#475569", fontWeight: "700" }}>
-                    <th style={{ padding: "14px 16px", width: "40px" }}>#</th>
-                    <th style={{ padding: "14px 16px", width: "220px" }}>Attribute Name</th>
-                    <th style={{ padding: "14px 16px", width: "120px" }}>Type</th>
-                    <th style={{ padding: "14px 16px" }}>Configured Values</th>
-                    <th style={{ padding: "14px 16px", width: "130px" }}>Source</th>
-                    <th style={{ padding: "14px 16px", width: "160px", textAlign: "right" }}>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredAttributes.map((attr, idx) => (
-                    <tr
-                      key={attr.id}
-                      style={{
-                        borderBottom: "1px solid #f1f5f9",
-                        transition: "background 0.15s ease"
-                      }}
-                      onMouseEnter={(e) => (e.currentTarget.style.background = "#fcfdfd")}
-                      onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-                    >
-                      <td style={{ padding: "14px 16px", color: "#94a3b8", fontWeight: "600" }}>
-                        {idx + 1}
-                      </td>
+            <>
+              {/* ==================== DESKTOP TABLE VIEW (>= 768px) ==================== */}
+              <div className="attr-desktop-view">
+                <table className="attr-table">
+                  <thead>
+                    <tr>
+                      <th style={{ width: "40px" }}>#</th>
+                      <th style={{ width: "220px" }}>Attribute Name</th>
+                      <th style={{ width: "120px" }}>Type</th>
+                      <th>Configured Values</th>
+                      <th style={{ width: "130px" }}>Source</th>
+                      <th style={{ width: "160px", textAlign: "right" }}>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredAttributes.map((attr, idx) => (
+                      <tr key={attr.id}>
+                        <td style={{ color: "#94a3b8", fontWeight: "600" }}>
+                          {idx + 1}
+                        </td>
 
-                      <td style={{ padding: "14px 16px" }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                          <div
+                        <td>
+                          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                            <div
+                              style={{
+                                width: "34px",
+                                height: "34px",
+                                borderRadius: "8px",
+                                background: attr.name.toLowerCase() === "color" ? "linear-gradient(135deg, #ffedd5, #fed7aa)" : "#f1f5f9",
+                                color: attr.name.toLowerCase() === "color" ? "#ea580c" : "#334155",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                fontWeight: "700",
+                                flexShrink: 0
+                              }}
+                            >
+                              {attr.type === "color" ? <Palette size={16} /> : <Type size={16} />}
+                            </div>
+                            <div>
+                              <div style={{ fontWeight: "700", color: "#0f172a", fontSize: "14px" }}>
+                                {attr.name}
+                              </div>
+                              {attr.description && (
+                                <div style={{ fontSize: "11px", color: "#64748b", maxWidth: "240px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                                  {attr.description}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </td>
+
+                        <td>
+                          <span
                             style={{
-                              width: "34px",
-                              height: "34px",
-                              borderRadius: "8px",
-                              background: attr.name.toLowerCase() === "color" ? "linear-gradient(135deg, #ffedd5, #fed7aa)" : "#f1f5f9",
-                              color: attr.name.toLowerCase() === "color" ? "#ea580c" : "#334155",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              fontWeight: "700"
+                              background: "#f1f5f9",
+                              color: "#475569",
+                              padding: "4px 8px",
+                              borderRadius: "6px",
+                              fontSize: "11px",
+                              fontWeight: "600",
+                              textTransform: "capitalize"
                             }}
                           >
-                            {attr.type === "color" ? <Palette size={16} /> : <Type size={16} />}
-                          </div>
-                          <div>
-                            <div style={{ fontWeight: "700", color: "#0f172a", fontSize: "14px" }}>
-                              {attr.name}
-                            </div>
-                            {attr.description && (
-                              <div style={{ fontSize: "11px", color: "#64748b", maxWidth: "240px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                                {attr.description}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </td>
+                            {attr.type || "Text"}
+                          </span>
+                        </td>
 
-                      <td style={{ padding: "14px 16px" }}>
+                        <td>
+                          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "6px", maxWidth: "480px" }}>
+                            {(attr.values || []).map((val) => (
+                              <span
+                                key={val}
+                                style={{
+                                  display: "inline-flex",
+                                  alignItems: "center",
+                                  gap: "4px",
+                                  background: "#f8fafc",
+                                  border: "1px solid #e2e8f0",
+                                  color: "#1e293b",
+                                  padding: "2px 8px",
+                                  borderRadius: "6px",
+                                  fontSize: "12px",
+                                  fontWeight: "500"
+                                }}
+                              >
+                                {attr.type === "color" && (
+                                  <span
+                                    style={{
+                                      width: "8px",
+                                      height: "8px",
+                                      borderRadius: "50%",
+                                      background: val.toLowerCase(),
+                                      border: "1px solid rgba(0,0,0,0.15)",
+                                      display: "inline-block"
+                                    }}
+                                  />
+                                )}
+                                {val}
+                                <button
+                                  onClick={() => handleRemoveSingleValue(attr.id, val)}
+                                  title={`Remove ${val}`}
+                                  style={{
+                                    background: "none",
+                                    border: "none",
+                                    cursor: "pointer",
+                                    color: "#94a3b8",
+                                    padding: 0,
+                                    display: "flex",
+                                    alignItems: "center"
+                                  }}
+                                  onMouseEnter={(e) => (e.currentTarget.style.color = "#ef4444")}
+                                  onMouseLeave={(e) => (e.currentTarget.style.color = "#94a3b8")}
+                                >
+                                  <X size={12} />
+                                </button>
+                              </span>
+                            ))}
+
+                            {/* Quick Add Inline Form */}
+                            <div style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                              <input
+                                type="text"
+                                placeholder="+ Add value..."
+                                value={inlineValueInputs[attr.id] || ""}
+                                onChange={(e) =>
+                                  setInlineValueInputs({ ...inlineValueInputs, [attr.id]: e.target.value })
+                                }
+                                onKeyDown={(e) => {
+                                  if (e.key === "Enter") {
+                                    e.preventDefault();
+                                    handleAddInlineValue(attr.id);
+                                  }
+                                }}
+                                style={{
+                                  width: "95px",
+                                  padding: "2px 6px",
+                                  fontSize: "11px",
+                                  border: "1px dashed #cbd5e1",
+                                  borderRadius: "6px",
+                                  outline: "none",
+                                  background: "#ffffff"
+                                }}
+                              />
+                              {(inlineValueInputs[attr.id] || "").trim() && (
+                                <button
+                                  onClick={() => handleAddInlineValue(attr.id)}
+                                  style={{
+                                    background: "#10b981",
+                                    color: "#fff",
+                                    border: "none",
+                                    borderRadius: "4px",
+                                    padding: "2px 6px",
+                                    fontSize: "11px",
+                                    cursor: "pointer",
+                                    fontWeight: "700"
+                                  }}
+                                >
+                                  +
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        </td>
+
+                        <td>
+                          {attr.isPreset ? (
+                            <span
+                              style={{
+                                background: "rgba(37, 99, 235, 0.1)",
+                                color: "#2563eb",
+                                padding: "4px 8px",
+                                borderRadius: "6px",
+                                fontSize: "11px",
+                                fontWeight: "600",
+                                display: "inline-flex",
+                                alignItems: "center",
+                                gap: "4px"
+                              }}
+                            >
+                              <Box size={12} /> System
+                            </span>
+                          ) : (
+                            <span
+                              style={{
+                                background: "rgba(16, 185, 129, 0.1)",
+                                color: "#10b981",
+                                padding: "4px 8px",
+                                borderRadius: "6px",
+                                fontSize: "11px",
+                                fontWeight: "600",
+                                display: "inline-flex",
+                                alignItems: "center",
+                                gap: "4px"
+                              }}
+                            >
+                              <Sparkles size={12} /> Custom
+                            </span>
+                          )}
+                        </td>
+
+                        <td style={{ textAlign: "right" }}>
+                          <div style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                            <button
+                              onClick={() => handleOpenEditModal(attr)}
+                              title="Edit attribute"
+                              style={{
+                                background: "#f1f5f9",
+                                border: "1px solid #e2e8f0",
+                                color: "#334155",
+                                padding: "6px 10px",
+                                borderRadius: "6px",
+                                fontSize: "12px",
+                                fontWeight: "600",
+                                cursor: "pointer",
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "4px"
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.background = "#e2e8f0";
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.background = "#f1f5f9";
+                              }}
+                            >
+                              <Edit3 size={13} /> Edit
+                            </button>
+
+                            <button
+                              onClick={() => setDeleteConfirmTarget(attr)}
+                              title="Delete attribute"
+                              style={{
+                                background: "#fef2f2",
+                                border: "1px solid #fee2e2",
+                                color: "#ef4444",
+                                padding: "6px 10px",
+                                borderRadius: "6px",
+                                fontSize: "12px",
+                                fontWeight: "600",
+                                cursor: "pointer",
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "4px"
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.background = "#fee2e2";
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.background = "#fef2f2";
+                              }}
+                            >
+                              <Trash2 size={13} /> Delete
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* ==================== MOBILE CARDS VIEW (< 768px) ==================== */}
+              <div className="attr-mobile-view">
+                {filteredAttributes.map((attr, idx) => (
+                  <div key={attr.id} className="attr-mobile-card">
+                    {/* Card Top: Icon, Name, Type & Source Badges */}
+                    <div className="attr-mobile-card-header">
+                      <div className="attr-mobile-card-title-group">
+                        <div
+                          style={{
+                            width: "36px",
+                            height: "36px",
+                            borderRadius: "8px",
+                            background: attr.name.toLowerCase() === "color" ? "linear-gradient(135deg, #ffedd5, #fed7aa)" : "#f1f5f9",
+                            color: attr.name.toLowerCase() === "color" ? "#ea580c" : "#334155",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            fontWeight: "700",
+                            flexShrink: 0
+                          }}
+                        >
+                          {attr.type === "color" ? <Palette size={18} /> : <Type size={18} />}
+                        </div>
+                        <div style={{ minWidth: 0, flex: 1 }}>
+                          <div className="attr-mobile-card-name">
+                            {attr.name}
+                          </div>
+                          {attr.description && (
+                            <div className="attr-mobile-card-desc">
+                              {attr.description}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="attr-mobile-badges">
                         <span
                           style={{
                             background: "#f1f5f9",
                             color: "#475569",
-                            padding: "4px 8px",
+                            padding: "3px 8px",
                             borderRadius: "6px",
                             fontSize: "11px",
                             fontWeight: "600",
@@ -722,244 +870,182 @@ const AdminAttributes = () => {
                         >
                           {attr.type || "Text"}
                         </span>
-                      </td>
-
-                      <td style={{ padding: "14px 16px" }}>
-                        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "6px", maxWidth: "480px" }}>
-                          {(attr.values || []).map((val) => (
-                            <span
-                              key={val}
-                              style={{
-                                display: "inline-flex",
-                                alignItems: "center",
-                                gap: "4px",
-                                background: "#f8fafc",
-                                border: "1px solid #e2e8f0",
-                                color: "#1e293b",
-                                padding: "2px 8px",
-                                borderRadius: "6px",
-                                fontSize: "12px",
-                                fontWeight: "500"
-                              }}
-                            >
-                              {attr.type === "color" && (
-                                <span
-                                  style={{
-                                    width: "8px",
-                                    height: "8px",
-                                    borderRadius: "50%",
-                                    background: val.toLowerCase(),
-                                    border: "1px solid rgba(0,0,0,0.15)",
-                                    display: "inline-block"
-                                  }}
-                                />
-                              )}
-                              {val}
-                              <button
-                                onClick={() => handleRemoveSingleValue(attr.id, val)}
-                                title={`Remove ${val}`}
-                                style={{
-                                  background: "none",
-                                  border: "none",
-                                  cursor: "pointer",
-                                  color: "#94a3b8",
-                                  padding: 0,
-                                  display: "flex",
-                                  alignItems: "center"
-                                }}
-                                onMouseEnter={(e) => (e.currentTarget.style.color = "#ef4444")}
-                                onMouseLeave={(e) => (e.currentTarget.style.color = "#94a3b8")}
-                              >
-                                <X size={12} />
-                              </button>
-                            </span>
-                          ))}
-
-                          {/* Quick Add Inline Form */}
-                          <div style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
-                            <input
-                              type="text"
-                              placeholder="+ Add value..."
-                              value={inlineValueInputs[attr.id] || ""}
-                              onChange={(e) =>
-                                setInlineValueInputs({ ...inlineValueInputs, [attr.id]: e.target.value })
-                              }
-                              onKeyDown={(e) => {
-                                if (e.key === "Enter") {
-                                  e.preventDefault();
-                                  handleAddInlineValue(attr.id);
-                                }
-                              }}
-                              style={{
-                                width: "95px",
-                                padding: "2px 6px",
-                                fontSize: "11px",
-                                border: "1px dashed #cbd5e1",
-                                borderRadius: "6px",
-                                outline: "none",
-                                background: "#ffffff"
-                              }}
-                            />
-                            {(inlineValueInputs[attr.id] || "").trim() && (
-                              <button
-                                onClick={() => handleAddInlineValue(attr.id)}
-                                style={{
-                                  background: "#10b981",
-                                  color: "#fff",
-                                  border: "none",
-                                  borderRadius: "4px",
-                                  padding: "2px 6px",
-                                  fontSize: "11px",
-                                  cursor: "pointer",
-                                  fontWeight: "700"
-                                }}
-                              >
-                                +
-                              </button>
-                            )}
-                          </div>
-                        </div>
-                      </td>
-
-                      <td style={{ padding: "14px 16px" }}>
                         {attr.isPreset ? (
                           <span
                             style={{
                               background: "rgba(37, 99, 235, 0.1)",
                               color: "#2563eb",
-                              padding: "4px 8px",
+                              padding: "3px 8px",
                               borderRadius: "6px",
                               fontSize: "11px",
                               fontWeight: "600",
                               display: "inline-flex",
                               alignItems: "center",
-                              gap: "4px"
+                              gap: "3px"
                             }}
                           >
-                            <Box size={12} /> System
+                            <Box size={11} /> System
                           </span>
                         ) : (
                           <span
                             style={{
                               background: "rgba(16, 185, 129, 0.1)",
                               color: "#10b981",
-                              padding: "4px 8px",
+                              padding: "3px 8px",
                               borderRadius: "6px",
                               fontSize: "11px",
                               fontWeight: "600",
                               display: "inline-flex",
                               alignItems: "center",
-                              gap: "4px"
+                              gap: "3px"
                             }}
                           >
-                            <Sparkles size={12} /> Custom
+                            <Sparkles size={11} /> Custom
                           </span>
                         )}
-                      </td>
+                      </div>
+                    </div>
 
-                      <td style={{ padding: "14px 16px", textAlign: "right" }}>
-                        <div style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
-                          <button
-                            onClick={() => handleOpenEditModal(attr)}
-                            title="Edit attribute"
+                    {/* Values Section */}
+                    <div className="attr-mobile-values-section">
+                      <div className="attr-mobile-values-title">
+                        <span>Configured Values ({attr.values?.length || 0})</span>
+                      </div>
+
+                      <div className="attr-mobile-values-chips">
+                        {(attr.values || []).map((val) => (
+                          <span
+                            key={val}
                             style={{
-                              background: "#f1f5f9",
+                              display: "inline-flex",
+                              alignItems: "center",
+                              gap: "4px",
+                              background: "#ffffff",
                               border: "1px solid #e2e8f0",
-                              color: "#334155",
-                              padding: "6px 10px",
+                              color: "#1e293b",
+                              padding: "3px 8px",
                               borderRadius: "6px",
                               fontSize: "12px",
-                              fontWeight: "600",
-                              cursor: "pointer",
-                              display: "flex",
-                              alignItems: "center",
-                              gap: "4px"
-                            }}
-                            onMouseEnter={(e) => {
-                              e.currentTarget.style.background = "#e2e8f0";
-                            }}
-                            onMouseLeave={(e) => {
-                              e.currentTarget.style.background = "#f1f5f9";
+                              fontWeight: "500"
                             }}
                           >
-                            <Edit3 size={13} /> Edit
-                          </button>
+                            {attr.type === "color" && (
+                              <span
+                                style={{
+                                  width: "8px",
+                                  height: "8px",
+                                  borderRadius: "50%",
+                                  background: val.toLowerCase(),
+                                  border: "1px solid rgba(0,0,0,0.15)",
+                                  display: "inline-block"
+                                }}
+                              />
+                            )}
+                            {val}
+                            <button
+                              onClick={() => handleRemoveSingleValue(attr.id, val)}
+                              title={`Remove ${val}`}
+                              style={{
+                                background: "none",
+                                border: "none",
+                                cursor: "pointer",
+                                color: "#94a3b8",
+                                padding: 0,
+                                display: "flex",
+                                alignItems: "center"
+                              }}
+                            >
+                              <X size={12} />
+                            </button>
+                          </span>
+                        ))}
 
-                          <button
-                            onClick={() => setDeleteConfirmTarget(attr)}
-                            title="Delete attribute"
+                        {/* Quick Add Inline Form */}
+                        <div style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                          <input
+                            type="text"
+                            placeholder="+ Add value..."
+                            value={inlineValueInputs[attr.id] || ""}
+                            onChange={(e) =>
+                              setInlineValueInputs({ ...inlineValueInputs, [attr.id]: e.target.value })
+                            }
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") {
+                                e.preventDefault();
+                                handleAddInlineValue(attr.id);
+                              }
+                            }}
                             style={{
-                              background: "#fef2f2",
-                              border: "1px solid #fee2e2",
-                              color: "#ef4444",
-                              padding: "6px 10px",
-                              borderRadius: "6px",
+                              width: "105px",
+                              padding: "4px 8px",
                               fontSize: "12px",
-                              fontWeight: "600",
-                              cursor: "pointer",
-                              display: "flex",
-                              alignItems: "center",
-                              gap: "4px"
+                              border: "1px dashed #cbd5e1",
+                              borderRadius: "6px",
+                              outline: "none",
+                              background: "#ffffff"
                             }}
-                            onMouseEnter={(e) => {
-                              e.currentTarget.style.background = "#fee2e2";
-                            }}
-                            onMouseLeave={(e) => {
-                              e.currentTarget.style.background = "#fef2f2";
-                            }}
-                          >
-                            <Trash2 size={13} /> Delete
-                          </button>
+                          />
+                          {(inlineValueInputs[attr.id] || "").trim() && (
+                            <button
+                              onClick={() => handleAddInlineValue(attr.id)}
+                              style={{
+                                background: "#10b981",
+                                color: "#fff",
+                                border: "none",
+                                borderRadius: "4px",
+                                padding: "4px 8px",
+                                fontSize: "12px",
+                                cursor: "pointer",
+                                fontWeight: "700"
+                              }}
+                            >
+                              +
+                            </button>
+                          )}
                         </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                      </div>
+                    </div>
+
+                    {/* Actions Row */}
+                    <div className="attr-mobile-actions-row">
+                      <button
+                        onClick={() => handleOpenEditModal(attr)}
+                        className="attr-btn-card-action"
+                        style={{
+                          background: "#f8fafc",
+                          border: "1px solid #cbd5e1",
+                          color: "#334155"
+                        }}
+                      >
+                        <Edit3 size={14} /> Edit Attribute
+                      </button>
+
+                      <button
+                        onClick={() => setDeleteConfirmTarget(attr)}
+                        className="attr-btn-card-action"
+                        style={{
+                          background: "#fef2f2",
+                          border: "1px solid #fee2e2",
+                          color: "#dc2626"
+                        }}
+                      >
+                        <Trash2 size={14} /> Delete
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
           )}
         </div>
       </div>
 
       {/* ==================== ADD / EDIT ATTRIBUTE MODAL ==================== */}
       {isModalOpen && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: "rgba(15, 23, 42, 0.6)",
-            backdropFilter: "blur(2px)",
-            zIndex: 9999,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "20px"
-          }}
-        >
-          <div
-            style={{
-              background: "#ffffff",
-              width: "100%",
-              maxWidth: "520px",
-              borderRadius: "12px",
-              boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
-              overflow: "hidden"
-            }}
-          >
+        <div className="attr-modal-overlay">
+          <div className="attr-modal-content">
             {/* Modal Header */}
-            <div
-              style={{
-                padding: "18px 24px",
-                borderBottom: "1px solid #e2e8f0",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                background: "#f8fafc"
-              }}
-            >
+            <div className="attr-modal-header">
               <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                 <div
                   style={{
@@ -988,8 +1074,8 @@ const AdminAttributes = () => {
             </div>
 
             {/* Modal Body */}
-            <form onSubmit={handleSaveModal}>
-              <div style={{ padding: "24px", display: "flex", flexDirection: "column", gap: "18px" }}>
+            <form onSubmit={handleSaveModal} style={{ display: "flex", flexDirection: "column", flex: 1, minHeight: 0, overflow: "hidden" }}>
+              <div className="attr-modal-body">
                 {modalError && (
                   <div
                     style={{
@@ -1127,7 +1213,7 @@ const AdminAttributes = () => {
                       }}
                     />
                   </div>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "4px" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "4px", flexWrap: "wrap", gap: "4px" }}>
                     <span style={{ fontSize: "11px", color: "#64748b" }}>
                       Press Enter or click Add to append a value.
                     </span>
@@ -1177,16 +1263,7 @@ const AdminAttributes = () => {
               </div>
 
               {/* Modal Footer */}
-              <div
-                style={{
-                  padding: "16px 24px",
-                  borderTop: "1px solid #e2e8f0",
-                  background: "#f8fafc",
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  gap: "12px"
-                }}
-              >
+              <div className="attr-modal-footer">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
@@ -1227,33 +1304,9 @@ const AdminAttributes = () => {
 
       {/* ==================== DELETE CONFIRMATION MODAL ==================== */}
       {deleteConfirmTarget && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: "rgba(15, 23, 42, 0.6)",
-            backdropFilter: "blur(2px)",
-            zIndex: 9999,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "20px"
-          }}
-        >
-          <div
-            style={{
-              background: "#ffffff",
-              width: "100%",
-              maxWidth: "440px",
-              borderRadius: "12px",
-              boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
-              overflow: "hidden"
-            }}
-          >
-            <div style={{ padding: "24px", textAlign: "center" }}>
+        <div className="attr-modal-overlay">
+          <div className="attr-modal-content" style={{ maxWidth: "440px" }}>
+            <div style={{ padding: "24px 20px", textAlign: "center", overflowY: "auto" }}>
               <div
                 style={{
                   width: "52px",
@@ -1278,16 +1331,7 @@ const AdminAttributes = () => {
               </p>
             </div>
 
-            <div
-              style={{
-                padding: "16px 24px",
-                borderTop: "1px solid #f1f5f9",
-                background: "#f8fafc",
-                display: "flex",
-                justifyContent: "center",
-                gap: "12px"
-              }}
-            >
+            <div className="attr-modal-footer" style={{ justifyContent: "center" }}>
               <button
                 onClick={() => setDeleteConfirmTarget(null)}
                 style={{

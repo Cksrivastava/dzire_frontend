@@ -3,6 +3,7 @@ import AdminLayout from './AdminLayout';
 import ExportDropdown from '../components/ExportDropdown';
 import { Search, Users, UserCheck, RefreshCw, Award, HeartHandshake, Phone, Mail } from 'lucide-react';
 import './AdminDashboard.css';
+import './AdminReports.css';
 
 const AdminCustomerReports = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -34,73 +35,72 @@ const AdminCustomerReports = () => {
 
   return (
     <AdminLayout>
-      <div className="dashboard-wrapper">
+      <div className="dashboard-wrapper reports-page-wrapper">
         {/* Top KPI Cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '24px' }}>
-          <div style={{ background: '#fff', padding: '20px', borderRadius: '12px', border: '1px solid #eef2f6' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '13px', color: '#64748b', fontWeight: '500' }}>Registered Customers</span>
-              <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: '#eff6ff', color: '#2563eb', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div className="reports-kpi-grid">
+          <div className="reports-kpi-card">
+            <div className="reports-kpi-card-header">
+              <span className="reports-kpi-label">Registered Customers</span>
+              <div className="reports-kpi-icon" style={{ background: '#eff6ff', color: '#2563eb' }}>
                 <Users size={20} />
               </div>
             </div>
-            <div style={{ fontSize: '24px', fontWeight: '700', color: '#0f172a' }}>{totalRegistered.toLocaleString('en-IN')}</div>
-            <div style={{ fontSize: '12px', color: '#2563eb', marginTop: '4px', fontWeight: '500' }}>Total customer database</div>
+            <div className="reports-kpi-value">{totalRegistered.toLocaleString('en-IN')}</div>
+            <div className="reports-kpi-meta" style={{ color: '#2563eb' }}>Total customer database</div>
           </div>
 
-          <div style={{ background: '#fff', padding: '20px', borderRadius: '12px', border: '1px solid #eef2f6' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '13px', color: '#64748b', fontWeight: '500' }}>Active Shoppers (Month)</span>
-              <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: '#ecfdf5', color: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div className="reports-kpi-card">
+            <div className="reports-kpi-card-header">
+              <span className="reports-kpi-label">Active Shoppers (Month)</span>
+              <div className="reports-kpi-icon" style={{ background: '#ecfdf5', color: '#10b981' }}>
                 <UserCheck size={20} />
               </div>
             </div>
-            <div style={{ fontSize: '24px', fontWeight: '700', color: '#0f172a' }}>{activeThisMonth} Users</div>
-            <div style={{ fontSize: '12px', color: '#10b981', marginTop: '4px', fontWeight: '500' }}>+12% new acquisitions</div>
+            <div className="reports-kpi-value">{activeThisMonth} Users</div>
+            <div className="reports-kpi-meta" style={{ color: '#10b981' }}>+12% new acquisitions</div>
           </div>
 
-          <div style={{ background: '#fff', padding: '20px', borderRadius: '12px', border: '1px solid #eef2f6' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '13px', color: '#64748b', fontWeight: '500' }}>Repeat Purchase Rate</span>
-              <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: '#fff7ed', color: '#ff6600', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div className="reports-kpi-card">
+            <div className="reports-kpi-card-header">
+              <span className="reports-kpi-label">Repeat Purchase Rate</span>
+              <div className="reports-kpi-icon" style={{ background: '#fff7ed', color: '#ff6600' }}>
                 <RefreshCw size={20} />
               </div>
             </div>
-            <div style={{ fontSize: '24px', fontWeight: '700', color: '#ff6600' }}>{repeatRate}</div>
-            <div style={{ fontSize: '12px', color: '#ff6600', marginTop: '4px', fontWeight: '500' }}>High loyalty retention</div>
+            <div className="reports-kpi-value" style={{ color: '#ff6600' }}>{repeatRate}</div>
+            <div className="reports-kpi-meta" style={{ color: '#ff6600' }}>High loyalty retention</div>
           </div>
 
-          <div style={{ background: '#fff', padding: '20px', borderRadius: '12px', border: '1px solid #eef2f6' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '13px', color: '#64748b', fontWeight: '500' }}>Avg Customer LTV</span>
-              <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: '#f5f3ff', color: '#7c3aed', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div className="reports-kpi-card">
+            <div className="reports-kpi-card-header">
+              <span className="reports-kpi-label">Avg Customer LTV</span>
+              <div className="reports-kpi-icon" style={{ background: '#f5f3ff', color: '#7c3aed' }}>
                 <Award size={20} />
               </div>
             </div>
-            <div style={{ fontSize: '24px', fontWeight: '700', color: '#0f172a' }}>{avgLifetimeValue}</div>
-            <div style={{ fontSize: '12px', color: '#7c3aed', marginTop: '4px', fontWeight: '500' }}>Lifetime spend per buyer</div>
+            <div className="reports-kpi-value">{avgLifetimeValue}</div>
+            <div className="reports-kpi-meta" style={{ color: '#7c3aed' }}>Lifetime spend per buyer</div>
           </div>
         </div>
 
         {/* Customer Data Table Container */}
-        <div style={{ background: '#fff', borderRadius: '12px', border: '1px solid #eef2f6', overflow: 'hidden' }}>
-          <div style={{ padding: '16px 24px', borderBottom: '1px solid #eef2f6', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: '1', minWidth: '280px' }}>
-              <div style={{ position: 'relative', width: '100%', maxWidth: '300px' }}>
+        <div className="reports-table-card">
+          <div className="reports-filter-bar">
+            <div className="reports-filter-left">
+              <div className="reports-search-box">
                 <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
                 <input
                   type="text"
                   placeholder="Search customer name, email, phone..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  style={{ width: '100%', padding: '8px 12px 8px 36px', border: '1px solid #cbd5e1', borderRadius: '8px', fontSize: '13px', outline: 'none' }}
                 />
               </div>
 
               <select
                 value={segmentFilter}
                 onChange={(e) => setSegmentFilter(e.target.value)}
-                style={{ padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: '8px', fontSize: '13px', background: '#fff', outline: 'none' }}
+                className="reports-select"
               >
                 <option value="All">All Customer Segments</option>
                 <option value="VIP">VIP Customers</option>
@@ -110,7 +110,7 @@ const AdminCustomerReports = () => {
               </select>
             </div>
 
-            <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+            <div className="reports-filter-right">
               <ExportDropdown
                 fileName="Customer_Demographics_Report"
                 title="Customer Demographics & Retention Analytics Report"
@@ -129,17 +129,17 @@ const AdminCustomerReports = () => {
             </div>
           </div>
 
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
+          <div className="reports-table-scroll">
+            <table className="reports-table">
               <thead>
-                <tr style={{ background: '#f8fafc', borderBottom: '1px solid #eef2f6', color: '#64748b' }}>
-                  <th style={{ padding: '12px 20px', fontWeight: '600' }}>Customer</th>
-                  <th style={{ padding: '12px 16px', fontWeight: '600' }}>Contact</th>
-                  <th style={{ padding: '12px 16px', fontWeight: '600' }}>Segment</th>
-                  <th style={{ padding: '12px 16px', fontWeight: '600' }}>Orders</th>
-                  <th style={{ padding: '12px 16px', fontWeight: '600' }}>Total Spent</th>
-                  <th style={{ padding: '12px 16px', fontWeight: '600' }}>Avg Order Value</th>
-                  <th style={{ padding: '12px 20px', fontWeight: '600' }}>Last Active</th>
+                <tr style={{ background: '#ff6600', color: '#ffffff' }}>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Customer</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Contact</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Segment</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Orders</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Total Spent</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Avg Order Value</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Last Active</th>
                 </tr>
               </thead>
               <tbody>

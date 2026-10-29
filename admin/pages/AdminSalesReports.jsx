@@ -3,6 +3,7 @@ import AdminLayout from './AdminLayout';
 import { Calendar, DollarSign, TrendingUp, ShoppingBag, Store, Globe, ArrowUpRight, Search } from 'lucide-react';
 import ExportDropdown from '../components/ExportDropdown';
 import './AdminDashboard.css';
+import './AdminReports.css';
 
 const AdminSalesReports = () => {
   const [timeframe, setTimeframe] = useState('This Month');
@@ -46,19 +47,19 @@ const AdminSalesReports = () => {
 
   return (
     <AdminLayout>
-      <div className="dashboard-wrapper">
+      <div className="dashboard-wrapper reports-page-wrapper">
         {/* Top Header Controls */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
-          <div>
-            <h2 style={{ margin: 0, fontSize: '20px', fontWeight: '700', color: '#0f172a' }}>Sales & Revenue Analytics</h2>
-            <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#64748b' }}>Omnichannel sales breakdown across Online Store and Offline POS counters</p>
+        <div className="reports-header">
+          <div className="reports-header-title">
+            <h2>Sales & Revenue Analytics</h2>
+            <p>Omnichannel sales breakdown across Online Store and Offline POS counters</p>
           </div>
 
-          <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+          <div className="reports-header-actions">
             <select
               value={timeframe}
               onChange={(e) => setTimeframe(e.target.value)}
-              style={{ padding: '8px 14px', border: '1px solid #cbd5e1', borderRadius: '8px', fontSize: '13px', background: '#fff', fontWeight: '500', outline: 'none' }}
+              className="reports-select"
             >
               <option value="This Month">This Month (Oct 2026)</option>
               <option value="Last Month">Last Month (Sep 2026)</option>
@@ -76,55 +77,55 @@ const AdminSalesReports = () => {
         </div>
 
         {/* 4 Stat Cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '24px' }}>
-          <div style={{ background: '#fff', padding: '20px', borderRadius: '12px', border: '1px solid #eef2f6' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '13px', color: '#64748b', fontWeight: '500' }}>Total Gross Revenue</span>
-              <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: '#ecfdf5', color: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div className="reports-kpi-grid">
+          <div className="reports-kpi-card">
+            <div className="reports-kpi-card-header">
+              <span className="reports-kpi-label">Total Gross Revenue</span>
+              <div className="reports-kpi-icon" style={{ background: '#ecfdf5', color: '#10b981' }}>
                 <TrendingUp size={20} />
               </div>
             </div>
-            <div style={{ fontSize: '24px', fontWeight: '700', color: '#0f172a' }}>₹12,45,000</div>
-            <div style={{ fontSize: '12px', color: '#10b981', marginTop: '4px', fontWeight: '500' }}>+18.4% vs last period</div>
+            <div className="reports-kpi-value">₹12,45,000</div>
+            <div className="reports-kpi-meta" style={{ color: '#10b981' }}>+18.4% vs last period</div>
           </div>
 
-          <div style={{ background: '#fff', padding: '20px', borderRadius: '12px', border: '1px solid #eef2f6' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '13px', color: '#64748b', fontWeight: '500' }}>Online E-Commerce</span>
-              <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: '#fff7ed', color: '#ff6600', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div className="reports-kpi-card">
+            <div className="reports-kpi-card-header">
+              <span className="reports-kpi-label">Online E-Commerce</span>
+              <div className="reports-kpi-icon" style={{ background: '#fff7ed', color: '#ff6600' }}>
                 <Globe size={20} />
               </div>
             </div>
-            <div style={{ fontSize: '24px', fontWeight: '700', color: '#ff6600' }}>₹8,20,000</div>
-            <div style={{ fontSize: '12px', color: '#64748b', marginTop: '4px', fontWeight: '500' }}>65.8% of total sales</div>
+            <div className="reports-kpi-value" style={{ color: '#ff6600' }}>₹8,20,000</div>
+            <div className="reports-kpi-meta" style={{ color: '#64748b' }}>65.8% of total sales</div>
           </div>
 
-          <div style={{ background: '#fff', padding: '20px', borderRadius: '12px', border: '1px solid #eef2f6' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '13px', color: '#64748b', fontWeight: '500' }}>Store POS Counters</span>
-              <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: '#eff6ff', color: '#2563eb', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div className="reports-kpi-card">
+            <div className="reports-kpi-card-header">
+              <span className="reports-kpi-label">Store POS Counters</span>
+              <div className="reports-kpi-icon" style={{ background: '#eff6ff', color: '#2563eb' }}>
                 <Store size={20} />
               </div>
             </div>
-            <div style={{ fontSize: '24px', fontWeight: '700', color: '#2563eb' }}>₹4,25,000</div>
-            <div style={{ fontSize: '12px', color: '#64748b', marginTop: '4px', fontWeight: '500' }}>34.2% of total sales</div>
+            <div className="reports-kpi-value" style={{ color: '#2563eb' }}>₹4,25,000</div>
+            <div className="reports-kpi-meta" style={{ color: '#64748b' }}>34.2% of total sales</div>
           </div>
 
-          <div style={{ background: '#fff', padding: '20px', borderRadius: '12px', border: '1px solid #eef2f6' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '13px', color: '#64748b', fontWeight: '500' }}>Average Order Value</span>
-              <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: '#f5f3ff', color: '#7c3aed', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div className="reports-kpi-card">
+            <div className="reports-kpi-card-header">
+              <span className="reports-kpi-label">Average Order Value</span>
+              <div className="reports-kpi-icon" style={{ background: '#f5f3ff', color: '#7c3aed' }}>
                 <ShoppingBag size={20} />
               </div>
             </div>
-            <div style={{ fontSize: '24px', fontWeight: '700', color: '#0f172a' }}>₹2,680</div>
-            <div style={{ fontSize: '12px', color: '#7c3aed', marginTop: '4px', fontWeight: '500' }}>Across 465 transactions</div>
+            <div className="reports-kpi-value">₹2,680</div>
+            <div className="reports-kpi-meta" style={{ color: '#7c3aed' }}>Across 465 transactions</div>
           </div>
         </div>
 
         {/* 6-Month Visual Sales Trend Bar Graphic */}
-        <div style={{ background: '#fff', padding: '24px', borderRadius: '12px', border: '1px solid #eef2f6', marginBottom: '24px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+        <div className="reports-chart-card">
+          <div className="reports-chart-header">
             <div>
               <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '600', color: '#0f172a' }}>Monthly Revenue Trajectory</h3>
               <p style={{ margin: '2px 0 0 0', fontSize: '12px', color: '#64748b' }}>Stacked view of Online Store vs In-Store POS sales growth</p>
@@ -139,44 +140,45 @@ const AdminSalesReports = () => {
             </div>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', height: '180px', gap: '16px', padding: '0 16px' }}>
-            {monthlyTrend.map((m) => {
-              const heightPercent = (m.total / maxMonthTotal) * 100;
-              const onlineShare = (m.online / m.total) * 100;
-              const posShare = (m.pos / m.total) * 100;
-              return (
-                <div key={m.month} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100%', justifyContent: 'flex-end' }}>
-                  <div style={{ fontSize: '11px', fontWeight: '600', color: '#475569', marginBottom: '6px' }}>₹{(m.total / 100000).toFixed(1)}L</div>
-                  <div style={{ width: '100%', maxWidth: '48px', height: `${heightPercent}%`, borderRadius: '6px', overflow: 'hidden', display: 'flex', flexDirection: 'column-reverse' }}>
-                    <div style={{ height: `${posShare}%`, background: '#2563eb', transition: 'all 0.3s' }} title={`POS: ₹${m.pos.toLocaleString('en-IN')}`} />
-                    <div style={{ height: `${onlineShare}%`, background: '#ff6600', transition: 'all 0.3s' }} title={`Online: ₹${m.online.toLocaleString('en-IN')}`} />
+          <div className="reports-chart-scroll">
+            <div className="reports-chart-inner">
+              {monthlyTrend.map((m) => {
+                const heightPercent = (m.total / maxMonthTotal) * 100;
+                const onlineShare = (m.online / m.total) * 100;
+                const posShare = (m.pos / m.total) * 100;
+                return (
+                  <div key={m.month} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100%', justifyContent: 'flex-end' }}>
+                    <div style={{ fontSize: '11px', fontWeight: '600', color: '#475569', marginBottom: '6px' }}>₹{(m.total / 100000).toFixed(1)}L</div>
+                    <div style={{ width: '100%', maxWidth: '48px', height: `${heightPercent}%`, borderRadius: '6px', overflow: 'hidden', display: 'flex', flexDirection: 'column-reverse' }}>
+                      <div style={{ height: `${posShare}%`, background: '#2563eb', transition: 'all 0.3s' }} title={`POS: ₹${m.pos.toLocaleString('en-IN')}`} />
+                      <div style={{ height: `${onlineShare}%`, background: '#ff6600', transition: 'all 0.3s' }} title={`Online: ₹${m.online.toLocaleString('en-IN')}`} />
+                    </div>
+                    <div style={{ marginTop: '10px', fontSize: '12px', fontWeight: '600', color: '#64748b' }}>{m.month}</div>
                   </div>
-                  <div style={{ marginTop: '10px', fontSize: '12px', fontWeight: '600', color: '#64748b' }}>{m.month}</div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         </div>
 
         {/* Transactions Table */}
-        <div style={{ background: '#fff', borderRadius: '12px', border: '1px solid #eef2f6', overflow: 'hidden' }}>
-          <div style={{ padding: '16px 24px', borderBottom: '1px solid #eef2f6', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: '1', minWidth: '280px' }}>
-              <div style={{ position: 'relative', width: '100%', maxWidth: '300px' }}>
+        <div className="reports-table-card">
+          <div className="reports-filter-bar">
+            <div className="reports-filter-left">
+              <div className="reports-search-box">
                 <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
                 <input
                   type="text"
                   placeholder="Search order # or customer..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  style={{ width: '100%', padding: '8px 12px 8px 36px', border: '1px solid #cbd5e1', borderRadius: '8px', fontSize: '13px', outline: 'none' }}
                 />
               </div>
 
               <select
                 value={channelFilter}
                 onChange={(e) => setChannelFilter(e.target.value)}
-                style={{ padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: '8px', fontSize: '13px', background: '#fff', outline: 'none' }}
+                className="reports-select"
               >
                 <option value="All">All Channels</option>
                 <option value="Online Store">Online Store</option>
@@ -184,7 +186,7 @@ const AdminSalesReports = () => {
               </select>
             </div>
 
-            <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+            <div className="reports-filter-right">
               <ExportDropdown
                 fileName="Sales_Transactions_Log"
                 title="Sales Transactions Detail Log"
@@ -203,25 +205,25 @@ const AdminSalesReports = () => {
             </div>
           </div>
 
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
+          <div className="reports-table-scroll">
+            <table className="reports-table">
               <thead>
-                <tr style={{ background: '#f8fafc', borderBottom: '1px solid #eef2f6', color: '#64748b' }}>
-                  <th style={{ padding: '12px 20px', fontWeight: '600' }}>Order ID</th>
-                  <th style={{ padding: '12px 16px', fontWeight: '600' }}>Customer</th>
-                  <th style={{ padding: '12px 16px', fontWeight: '600' }}>Sales Channel</th>
-                  <th style={{ padding: '12px 16px', fontWeight: '600' }}>Payment Mode</th>
-                  <th style={{ padding: '12px 16px', fontWeight: '600' }}>Total Amount</th>
-                  <th style={{ padding: '12px 16px', fontWeight: '600' }}>Date & Time</th>
-                  <th style={{ padding: '12px 20px', fontWeight: '600' }}>Fulfillment</th>
+                <tr style={{ background: '#ff6600', color: '#ffffff' }}>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Order ID</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Customer</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Sales Channel</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Payment Mode</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Total Amount</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Date & Time</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Fulfillment</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredTransactions.map((tx) => (
-                  <tr key={tx.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                    <td style={{ padding: '14px 20px', fontWeight: '600', color: '#0f172a' }}>{tx.id}</td>
-                    <td style={{ padding: '14px 16px', color: '#334155', fontWeight: '500' }}>{tx.customer}</td>
-                    <td style={{ padding: '14px 16px' }}>
+                  <tr key={tx.id}>
+                    <td style={{ fontWeight: '600', color: '#0f172a' }}>{tx.id}</td>
+                    <td style={{ color: '#334155', fontWeight: '500' }}>{tx.customer}</td>
+                    <td>
                       <span
                         style={{
                           padding: '3px 8px',
@@ -235,10 +237,10 @@ const AdminSalesReports = () => {
                         {tx.channel}
                       </span>
                     </td>
-                    <td style={{ padding: '14px 16px', color: '#475569' }}>{tx.method}</td>
-                    <td style={{ padding: '14px 16px', color: '#0f172a', fontWeight: '700' }}>₹{tx.total.toLocaleString('en-IN')}</td>
-                    <td style={{ padding: '14px 16px', color: '#64748b' }}>{tx.date}</td>
-                    <td style={{ padding: '14px 20px' }}>
+                    <td style={{ color: '#475569' }}>{tx.method}</td>
+                    <td style={{ color: '#0f172a', fontWeight: '700' }}>₹{tx.total.toLocaleString('en-IN')}</td>
+                    <td style={{ color: '#64748b' }}>{tx.date}</td>
+                    <td>
                       <span
                         style={{
                           padding: '4px 10px',

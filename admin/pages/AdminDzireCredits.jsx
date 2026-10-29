@@ -41,6 +41,19 @@ const monthlyChartData = [
 
 const initialMembers = [];
 
+const getPageNumbers = (current, total) => {
+  if (total <= 5) {
+    return Array.from({ length: total }, (_, i) => i + 1);
+  }
+  if (current <= 3) {
+    return [1, 2, 3, 4, "...", total];
+  }
+  if (current >= total - 2) {
+    return [1, "...", total - 3, total - 2, total - 1, total];
+  }
+  return [1, "...", current - 1, current, current + 1, "...", total];
+};
+
 const AdminDzireCredits = () => {
   const [members, setMembers] = useState(initialMembers);
   const [selectedMemberId, setSelectedMemberId] = useState(null);
@@ -52,11 +65,27 @@ const AdminDzireCredits = () => {
   const [statusFilter, setStatusFilter] = useState("all");
   const [selectedRowIds, setSelectedRowIds] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [actionDropdownId, setActionDropdownId] = useState(null);
 
   // Modals
   const [showCreditModal, setShowCreditModal] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
   const [showRulesModal, setShowRulesModal] = useState(false);
+
+  // Close action dropdown on outside click
+  useEffect(() => {
+    const handleDocClick = () => setActionDropdownId(null);
+    if (actionDropdownId) {
+      document.addEventListener("click", handleDocClick);
+    }
+    return () => document.removeEventListener("click", handleDocClick);
+  }, [actionDropdownId]);
+
+  // Reset page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, typeFilter, balanceFilter, statusFilter, activeTab, rowsPerPage]);
 
   // Credit adjustment state
   const [adjustment, setAdjustment] = useState({
@@ -134,6 +163,11 @@ const AdminDzireCredits = () => {
     return true;
   });
 
+  // Pagination Slice
+  const totalPages = Math.ceil(filteredMembers.length / rowsPerPage) || 1;
+  const startIndex = (currentPage - 1) * rowsPerPage;
+  const paginatedMembers = filteredMembers.slice(startIndex, startIndex + rowsPerPage);
+
   const handleSelectAll = (e) => {
     if (e.target.checked) {
       setSelectedRowIds(filteredMembers.map(m => m.id));
@@ -157,6 +191,7 @@ const AdminDzireCredits = () => {
     setBalanceFilter("all");
     setStatusFilter("all");
     setActiveTab("all");
+    setCurrentPage(1);
   };
 
   const handleAdjustCredits = async (e) => {
@@ -614,11 +649,11 @@ const AdminDzireCredits = () => {
           
           {/* Table Container */}
           <div className="cust-table-area">
-            <div style={{ overflowX: "auto" }}>
+            <div className="cust-table-wrapper">
               <table className="cust-table">
                 <thead>
                   <tr>
-                    <th style={{ width: "36px", textAlign: "center" }}>
+                    <th style={{ width: "36px", minWidth: "36px", textAlign: "center" }}>
                       <input
                         type="checkbox"
                         checked={selectedRowIds.length === filteredMembers.length && filteredMembers.length > 0}
@@ -626,100 +661,145 @@ const AdminDzireCredits = () => {
                         style={{ cursor: "pointer", accentColor: "#ff5722" }}
                       />
                     </th>
-                    <th>Customer</th>
-                    <th>Phone</th>
-                    <th>Email</th>
-                    <th style={{ textAlign: "center" }}>Total Orders</th>
-                    <th>Total Spent</th>
-                    <th style={{ textAlign: "center" }}>Credits Earned</th>
-                    <th style={{ textAlign: "center" }}>Credits Used</th>
-                    <th style={{ textAlign: "center" }}>Current Balance</th>
-                    <th>Status</th>
-                    <th style={{ textAlign: "center" }}>Actions</th>
+                    <th style={{ minWidth: "180px" }}>Customer</th>
+                    <th style={{ minWidth: "125px" }}>Phone</th>
+                    <th style={{ minWidth: "150px" }}>Email</th>
+                    <th style={{ minWidth: "105px", textAlign: "center" }}>Total Orders</th>
+                    <th style={{ minWidth: "110px" }}>Total Spent</th>
+                    <th style={{ minWidth: "110px", textAlign: "center" }}>Credits Earned</th>
+                    <th style={{ minWidth: "105px", textAlign: "center" }}>Credits Used</th>
+                    <th style={{ minWidth: "120px", textAlign: "center" }}>Current Balance</th>
+                    <th style={{ minWidth: "90px" }}>Status</th>
+                    <th style={{ minWidth: "70px", textAlign: "center" }}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredMembers.length === 0 ? (
+                  {paginatedMembers.length === 0 ? (
                     <tr>
-                      <td colSpan={11} style={{ textAlign: "center", padding: "36px 16px", color: "#64748b" }}>
-                        No loyalty credit records found matching current criteria.
+                      <td colSpan={11} style={{ textAlign: "center", padding: "40px 16px", color: "#64748b" }}>
+                        <div className="cust-empty-state-wrap">
+                          <Coins size={34} style={{ color: "#94a3b8" }} />
+                          <p style={{ margin: 0, fontWeight: "600", fontSize: "14px", color: "#334155" }}>
+                            No loyalty credit records found matching your filters
+                          </p>
+                          <button
+                            type="button"
+                            className="cust-btn cust-btn-secondary"
+                            onClick={handleClearFilters}
+                            style={{ marginTop: "4px", fontSize: "12px", padding: "6px 14px" }}
+                          >
+                            Clear Filters
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ) : (
-                    filteredMembers.map((m) => {
-                    const isSelected = selectedMemberId === m.id;
-                    const isChecked = selectedRowIds.includes(m.id);
-                    return (
-                      <tr
-                        key={m.id}
-                        className={isSelected ? "selected-row" : ""}
-                        onClick={() => setSelectedMemberId(m.id)}
-                      >
-                        <td style={{ textAlign: "center" }} onClick={(e) => e.stopPropagation()}>
-                          <input
-                            type="checkbox"
-                            checked={isChecked}
-                            onChange={(e) => handleSelectRow(m.id, e)}
-                            style={{ cursor: "pointer", accentColor: "#ff5722" }}
-                          />
-                        </td>
-                        <td>
-                          <div className="cust-user-cell">
-                            <div className="cust-avatar-badge" style={{ background: isSelected ? "#ff5722" : "#e2e8f0", color: isSelected ? "#ffffff" : "#1e293b" }}>
-                              {m.initials}
+                    paginatedMembers.map((m) => {
+                      const isSelected = selectedMemberId === m.id;
+                      const isChecked = selectedRowIds.includes(m.id);
+                      const isActionOpen = actionDropdownId === m.id;
+
+                      return (
+                        <tr
+                          key={m.id}
+                          className={isSelected ? "selected-row" : ""}
+                          onClick={() => setSelectedMemberId(m.id)}
+                        >
+                          <td style={{ textAlign: "center" }} onClick={(e) => e.stopPropagation()}>
+                            <input
+                              type="checkbox"
+                              checked={isChecked}
+                              onChange={(e) => handleSelectRow(m.id, e)}
+                              style={{ cursor: "pointer", accentColor: "#ff5722" }}
+                            />
+                          </td>
+                          <td>
+                            <div className="cust-user-cell">
+                              <div className="cust-avatar-badge" style={{ background: isSelected ? "#ff5722" : "#e2e8f0", color: isSelected ? "#ffffff" : "#1e293b" }}>
+                                {m.initials}
+                              </div>
+                              <div>
+                                <p className="cust-user-name">{m.name}</p>
+                                <p className="cust-user-id">{m.id}</p>
+                              </div>
                             </div>
-                            <div>
-                              <p className="cust-user-name">{m.name}</p>
-                              <p className="cust-user-id">{m.id}</p>
-                            </div>
-                          </div>
-                        </td>
-                        <td style={{ whiteSpace: "nowrap", color: "#334155" }}>
-                          {m.phone}
-                        </td>
-                        <td style={{ color: "#64748b", fontSize: "12px" }}>
-                          {m.email}
-                        </td>
-                        <td style={{ textAlign: "center", fontWeight: "600" }}>
-                          {m.totalOrders}
-                        </td>
-                        <td style={{ fontWeight: "600", color: "#0f172a" }}>
-                          ₹{m.totalSpent.toLocaleString()}
-                        </td>
-                        <td style={{ textAlign: "center", fontWeight: "600", color: "#059669" }}>
-                          {m.creditsEarned}
-                        </td>
-                        <td style={{ textAlign: "center", fontWeight: "600", color: "#dc2626" }}>
-                          {m.creditsUsed}
-                        </td>
-                        <td style={{ textAlign: "center", fontWeight: "700", color: "#ff5722", fontSize: "14px" }}>
-                          {m.currentBalance}
-                        </td>
-                        <td>
-                          <span className={`cust-pill ${m.status === "Active" ? "cust-pill-active" : "cust-pill-inactive"}`}>
-                            {m.status}
-                          </span>
-                        </td>
-                        <td style={{ textAlign: "center" }} onClick={(e) => e.stopPropagation()}>
-                          <button
-                            type="button"
-                            title="Actions"
-                            style={{ background: "none", border: "none", color: "#94a3b8", cursor: "pointer", padding: "4px" }}
+                          </td>
+                          <td style={{ whiteSpace: "nowrap", color: "#334155" }}>
+                            {m.phone}
+                          </td>
+                          <td style={{ color: "#64748b", fontSize: "12px" }}>
+                            {m.email}
+                          </td>
+                          <td style={{ textAlign: "center", fontWeight: "600" }}>
+                            {m.totalOrders}
+                          </td>
+                          <td style={{ fontWeight: "600", color: "#0f172a" }}>
+                            ₹{m.totalSpent.toLocaleString()}
+                          </td>
+                          <td style={{ textAlign: "center", fontWeight: "600", color: "#059669" }}>
+                            {m.creditsEarned}
+                          </td>
+                          <td style={{ textAlign: "center", fontWeight: "600", color: "#dc2626" }}>
+                            {m.creditsUsed}
+                          </td>
+                          <td style={{ textAlign: "center", fontWeight: "700", color: "#ff5722", fontSize: "14px" }}>
+                            {m.currentBalance}
+                          </td>
+                          <td>
+                            <span className={`cust-pill ${m.status === "Active" ? "cust-pill-active" : "cust-pill-inactive"}`}>
+                              {m.status}
+                            </span>
+                          </td>
+                          <td
+                            className="cust-action-cell"
+                            onClick={(e) => e.stopPropagation()}
                           >
-                            <MoreHorizontal size={18} />
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  }))}
+                            <button
+                              type="button"
+                              title="Member Actions"
+                              className={`cust-action-btn ${isActionOpen ? "active" : ""}`}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setActionDropdownId(isActionOpen ? null : m.id);
+                              }}
+                            >
+                              <MoreHorizontal size={18} />
+                            </button>
+
+                            {isActionOpen && (
+                              <div
+                                className="cust-action-dropdown"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <button
+                                  type="button"
+                                  className="cust-action-item credit"
+                                  onClick={() => {
+                                    setSelectedMemberId(m.id);
+                                    setAdjustment({ ...adjustment, customerId: m.id });
+                                    setShowCreditModal(true);
+                                    setActionDropdownId(null);
+                                  }}
+                                >
+                                  <Coins size={14} />
+                                  <span>Adjust Credits</span>
+                                </button>
+                              </div>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
                 </tbody>
               </table>
             </div>
 
             {/* Pagination footer */}
             <div className="cust-pagination">
-              <div>
-                Showing {filteredMembers.length === 0 ? 0 : 1}-{filteredMembers.length} of {members.length} customers
+              <div className="cust-pagination-info">
+                Showing {filteredMembers.length === 0 ? 0 : startIndex + 1} -{" "}
+                {Math.min(startIndex + rowsPerPage, filteredMembers.length)} of {filteredMembers.length} customers
               </div>
               <div className="cust-page-nav">
                 <button
@@ -727,32 +807,49 @@ const AdminDzireCredits = () => {
                   className="cust-page-btn"
                   disabled={currentPage === 1}
                   onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                  title="Previous Page"
                 >
                   <ChevronLeft size={14} />
                 </button>
-                <button type="button" className={`cust-page-btn ${currentPage === 1 ? "active" : ""}`} onClick={() => setCurrentPage(1)}>1</button>
-                <button type="button" className={`cust-page-btn ${currentPage === 2 ? "active" : ""}`} onClick={() => setCurrentPage(2)}>2</button>
-                <button type="button" className={`cust-page-btn ${currentPage === 3 ? "active" : ""}`} onClick={() => setCurrentPage(3)}>3</button>
-                <button type="button" className={`cust-page-btn ${currentPage === 4 ? "active" : ""}`} onClick={() => setCurrentPage(4)}>4</button>
-                <button type="button" className={`cust-page-btn ${currentPage === 5 ? "active" : ""}`} onClick={() => setCurrentPage(5)}>5</button>
-                <span style={{ padding: "0 4px", color: "#94a3b8" }}>...</span>
-                <button type="button" className="cust-page-btn" onClick={() => setCurrentPage(429)}>429</button>
+                {getPageNumbers(currentPage, totalPages).map((p, idx) =>
+                  p === "..." ? (
+                    <span key={`dots-${idx}`} style={{ padding: "0 4px", color: "#94a3b8", fontSize: "12px" }}>
+                      ...
+                    </span>
+                  ) : (
+                    <button
+                      key={p}
+                      type="button"
+                      className={`cust-page-btn ${currentPage === p ? "active" : ""}`}
+                      onClick={() => setCurrentPage(p)}
+                    >
+                      {p}
+                    </button>
+                  )
+                )}
                 <button
                   type="button"
                   className="cust-page-btn"
+                  disabled={currentPage === totalPages || totalPages === 0}
                   onClick={() => setCurrentPage(prev => prev + 1)}
+                  title="Next Page"
                 >
                   <ChevronRight size={14} />
                 </button>
               </div>
-              <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+              <div className="cust-pagination-size">
                 <select
                   className="cust-filter-select"
-                  style={{ padding: "5px 24px 5px 8px", fontSize: "12px" }}
+                  style={{ padding: "6px 26px 6px 10px", fontSize: "12px" }}
+                  value={rowsPerPage}
+                  onChange={(e) => {
+                    setRowsPerPage(Number(e.target.value));
+                    setCurrentPage(1);
+                  }}
                 >
-                  <option value="10">10 per page</option>
-                  <option value="25">25 per page</option>
-                  <option value="50">50 per page</option>
+                  <option value={10}>10 per page</option>
+                  <option value={25}>25 per page</option>
+                  <option value={50}>50 per page</option>
                 </select>
               </div>
             </div>
@@ -781,7 +878,7 @@ const AdminDzireCredits = () => {
                 <div style={{ fontSize: "12px", color: "#ff5722", fontWeight: "600", marginTop: "2px" }}>Current Balance: {selectedMember.currentBalance} Credits</div>
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+              <div className="cust-modal-grid-2">
                 <div>
                   <label style={{ display: "block", fontSize: "12.5px", fontWeight: "600", color: "#334155", marginBottom: "4px" }}>Action</label>
                   <select

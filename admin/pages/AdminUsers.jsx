@@ -822,24 +822,24 @@ const AdminUsers = () => {
               <thead>
                 <tr
                   style={{
-                    background: "#f8fafc",
-                    borderBottom: "1px solid #e2e8f0",
-                    color: "#475569",
+                    background: "#ff6600",
+                    borderBottom: "1px solid #ff6600",
+                    color: "#ffffff",
                     fontWeight: "700",
                     fontSize: "12px",
                     textTransform: "uppercase",
                     letterSpacing: "0.05em"
                   }}
                 >
-                  <th style={{ padding: "12px 16px", width: "80px" }}>ID</th>
-                  <th style={{ padding: "12px 16px", minWidth: "190px" }}>User / Customer</th>
-                  <th style={{ padding: "12px 16px", minWidth: "200px" }}>Email</th>
-                  <th style={{ padding: "12px 16px", minWidth: "140px" }}>Phone</th>
-                  <th style={{ padding: "12px 16px", width: "100px" }}>Role</th>
-                  <th style={{ padding: "12px 16px", width: "110px" }}>City</th>
-                  <th style={{ padding: "12px 16px", width: "110px" }}>Status</th>
-                  <th style={{ padding: "12px 16px", width: "120px" }}>Joined</th>
-                  <th style={{ padding: "12px 16px", width: "130px", textAlign: "right" }}>Actions</th>
+                  <th style={{ padding: "12px 16px", width: "80px", color: "#ffffff" }}>ID</th>
+                  <th style={{ padding: "12px 16px", minWidth: "190px", color: "#ffffff" }}>User / Customer</th>
+                  <th style={{ padding: "12px 16px", minWidth: "200px", color: "#ffffff" }}>Email</th>
+                  <th style={{ padding: "12px 16px", minWidth: "140px", color: "#ffffff" }}>Phone</th>
+                  <th style={{ padding: "12px 16px", width: "100px", color: "#ffffff" }}>Role</th>
+                  <th style={{ padding: "12px 16px", width: "110px", color: "#ffffff" }}>City</th>
+                  <th style={{ padding: "12px 16px", width: "110px", color: "#ffffff" }}>Status</th>
+                  <th style={{ padding: "12px 16px", width: "120px", color: "#ffffff" }}>Joined</th>
+                  <th style={{ padding: "12px 16px", width: "130px", textAlign: "right", color: "#ffffff" }}>Actions</th>
                 </tr>
               </thead>
               <tbody>

@@ -3,6 +3,7 @@ import AdminLayout from './AdminLayout';
 import ExportDropdown from '../components/ExportDropdown';
 import { Search, Receipt, Plus, Eye, Printer, Download, CheckCircle2, AlertCircle } from 'lucide-react';
 import './AdminDashboard.css';
+import './AdminReports.css';
 
 const AdminGSTReports = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -81,25 +82,25 @@ const AdminGSTReports = () => {
 
   return (
     <AdminLayout>
-      <div className="dashboard-wrapper">
+      <div className="dashboard-wrapper reports-page-wrapper">
         {/* Data Sheet Table Container */}
-        <div style={{ background: '#fff', borderRadius: '10px', border: '1px solid #eef2f6', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
+        <div className="reports-table-card">
           
           {/* Header Action Bar */}
-          <div style={{ padding: '18px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #eef2f6', gap: '16px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0, flexShrink: 1 }}>
+          <div className="reports-header" style={{ padding: '18px 24px', borderBottom: '1px solid #eef2f6', marginBottom: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0, flex: 1 }}>
               <div style={{ width: '38px', height: '38px', minWidth: '38px', borderRadius: '8px', background: '#fff0e6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ff6600', flexShrink: 0 }}>
                 <Receipt size={20} />
               </div>
-              <div style={{ minWidth: 0 }}>
-                <h4 style={{ margin: 0, fontSize: '16px', fontWeight: '700', color: '#1e293b', whiteSpace: 'nowrap' }}>GST Tax Filing Data Sheet</h4>
-                <p style={{ margin: '2px 0 0 0', fontSize: '13px', color: '#64748b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              <div className="reports-header-title">
+                <h4 style={{ margin: 0, fontSize: '18px', fontWeight: '700', color: '#1e293b' }}>GST Tax Filing Data Sheet</h4>
+                <p style={{ margin: '2px 0 0 0', fontSize: '13px', color: '#64748b' }}>
                   GSTR-1 outward sales, GSTR-3B tax returns, and ITC reconciliation data sheet
                 </p>
               </div>
             </div>
 
-            <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexShrink: 0 }}>
+            <div className="reports-header-actions" style={{ flexShrink: 0 }}>
               <ExportDropdown
                 fileName="GST_Filing_Report"
                 title="GST Filing & Tax Liability Data Sheet"
@@ -127,47 +128,46 @@ const AdminGSTReports = () => {
           </div>
 
           {/* Metric Summary Cards Bar */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1px', background: '#eef2f6', borderBottom: '1px solid #eef2f6' }}>
-            <div style={{ padding: '16px 24px', background: '#fff' }}>
-              <span style={{ fontSize: '12px', color: '#64748b', fontWeight: '500' }}>Total Taxable Turnover</span>
-              <h3 style={{ margin: '4px 0 0 0', fontSize: '22px', fontWeight: '700', color: '#111' }}>{summary.taxableTurnover}</h3>
+          <div className="reports-summary-bar">
+            <div className="reports-summary-item">
+              <span className="reports-summary-label">Total Taxable Turnover</span>
+              <h3 className="reports-summary-val">{summary.taxableTurnover}</h3>
             </div>
-            <div style={{ padding: '16px 24px', background: '#fff' }}>
-              <span style={{ fontSize: '12px', color: '#64748b', fontWeight: '500' }}>Total GST Output Tax</span>
-              <h3 style={{ margin: '4px 0 0 0', fontSize: '22px', fontWeight: '700', color: '#6366f1' }}>{summary.outputTax}</h3>
+            <div className="reports-summary-item">
+              <span className="reports-summary-label">Total GST Output Tax</span>
+              <h3 className="reports-summary-val" style={{ color: '#6366f1' }}>{summary.outputTax}</h3>
             </div>
-            <div style={{ padding: '16px 24px', background: '#fff' }}>
-              <span style={{ fontSize: '12px', color: '#16a34a', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <div className="reports-summary-item">
+              <span className="reports-summary-label" style={{ color: '#16a34a' }}>
                 <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#16a34a' }}></div> ITC Claimed (GSTR-2B)
               </span>
-              <h3 style={{ margin: '4px 0 0 0', fontSize: '22px', fontWeight: '700', color: '#16a34a' }}>{summary.itcClaimed}</h3>
+              <h3 className="reports-summary-val" style={{ color: '#16a34a' }}>{summary.itcClaimed}</h3>
             </div>
-            <div style={{ padding: '16px 24px', background: '#fff' }}>
-              <span style={{ fontSize: '12px', color: '#dc2626', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <div className="reports-summary-item">
+              <span className="reports-summary-label" style={{ color: '#dc2626' }}>
                 <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#dc2626' }}></div> Net Tax Payable
               </span>
-              <h3 style={{ margin: '4px 0 0 0', fontSize: '22px', fontWeight: '700', color: '#dc2626' }}>{summary.netTaxPayable}</h3>
+              <h3 className="reports-summary-val" style={{ color: '#dc2626' }}>{summary.netTaxPayable}</h3>
             </div>
           </div>
 
           {/* Controls Bar */}
-          <div style={{ padding: '16px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#f8fafc', borderBottom: '1px solid #eef2f6' }}>
-            <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-              <div style={{ position: 'relative', width: '280px' }}>
+          <div className="reports-filter-bar">
+            <div className="reports-filter-left">
+              <div className="reports-search-box">
                 <Search size={15} style={{ position: 'absolute', left: '10px', top: '9px', color: '#94a3b8' }} />
                 <input 
                   type="text" 
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="Search return type, ARN, period..." 
-                  style={{ width: '100%', padding: '7px 12px 7px 32px', border: '1px solid #cbd5e1', borderRadius: '6px', fontSize: '13px', outline: 'none', background: '#fff' }} 
                 />
               </div>
 
               <select 
                 value={returnTypeFilter}
                 onChange={(e) => setReturnTypeFilter(e.target.value)}
-                style={{ padding: '7px 12px', border: '1px solid #cbd5e1', borderRadius: '6px', fontSize: '13px', outline: 'none', background: '#fff', color: '#334155' }}
+                className="reports-select"
               >
                 <option value="All">All Return Types</option>
                 <option value="GSTR-1">GSTR-1 (Outward)</option>
@@ -178,7 +178,7 @@ const AdminGSTReports = () => {
               <select 
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                style={{ padding: '7px 12px', border: '1px solid #cbd5e1', borderRadius: '6px', fontSize: '13px', outline: 'none', background: '#fff', color: '#334155' }}
+                className="reports-select"
               >
                 <option value="All">All Filing Status</option>
                 <option value="Filed">Filed</option>
@@ -188,21 +188,22 @@ const AdminGSTReports = () => {
             </div>
           </div>
 
-          {/* Table Sheet */}
-          <table className="dash-table">
-            <thead>
-              <tr>
-                <th>Return Type</th>
-                <th>Filing Period</th>
-                <th>ARN / Reference No</th>
-                <th>Taxable Turnover</th>
-                <th>CGST (9%)</th>
-                <th>SGST (9%)</th>
-                <th>Total Tax</th>
-                <th>Status</th>
-                <th style={{ textAlign: 'center' }}>Actions</th>
-              </tr>
-            </thead>
+          {/* Table Sheet with horizontal scroll */}
+          <div className="reports-table-scroll">
+            <table className="reports-table dash-table" style={{ minWidth: '920px' }}>
+              <thead>
+                <tr style={{ background: '#ff6600', color: '#ffffff' }}>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Return Type</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Filing Period</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>ARN / Reference No</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Taxable Turnover</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>CGST (9%)</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>SGST (9%)</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Total Tax</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Status</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600', textAlign: 'center' }}>Actions</th>
+                </tr>
+              </thead>
             <tbody>
               {filteredData.length === 0 ? (
                 <tr>
@@ -267,7 +268,7 @@ const AdminGSTReports = () => {
               )}
             </tbody>
           </table>
-
+          </div>
         </div>
       </div>
     </AdminLayout>

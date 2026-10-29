@@ -4,6 +4,7 @@ import AdminLayout from './AdminLayout';
 import ExportDropdown from '../components/ExportDropdown';
 import { Search, Plus, Terminal, Download, FileText, CreditCard, Undo2, HandCoins, Printer, Eye } from 'lucide-react';
 import './AdminDashboard.css';
+import './AdminPOS.css';
 
 const fallbackSalesData = [];
 
@@ -163,30 +164,30 @@ const AdminPOSDataSheet = () => {
     <AdminLayout>
       <div className="dashboard-wrapper">
         {/* Data Sheet Table Container */}
-        <div style={{ background: '#fff', borderRadius: '10px', border: '1px solid #eef2f6', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
+        <div className="pos-card-container">
           
           {/* Header Action Bar */}
-          <div style={{ padding: '18px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #eef2f6', gap: '16px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0, flexShrink: 1 }}>
-              <div style={{ width: '38px', height: '38px', minWidth: '38px', borderRadius: '8px', background: '#fff0e6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ff6600', flexShrink: 0 }}>
+          <div className="pos-header-bar">
+            <div className="pos-title-group">
+              <div className="pos-title-icon">
                 <Terminal size={20} />
               </div>
-              <div style={{ minWidth: 0 }}>
-                <h4 style={{ margin: 0, fontSize: '16px', fontWeight: '700', color: '#1e293b', whiteSpace: 'nowrap' }}>POS Billing Data Sheet</h4>
-                <p style={{ margin: '2px 0 0 0', fontSize: '13px', color: '#64748b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Point of Sale transaction data sheet, invoices, and billing history</p>
+              <div className="pos-title-text">
+                <h4>POS Billing Data Sheet</h4>
+                <p>Point of Sale transaction data sheet, invoices, and billing history</p>
               </div>
             </div>
 
-            <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexShrink: 0 }}>
+            <div className="pos-header-actions">
               <button 
                 onClick={() => navigate('/admin/quotation')} 
-                style={{ background: '#fff', border: '1px solid #cbd5e1', padding: '8px 14px', borderRadius: '6px', fontSize: '13px', fontWeight: '600', color: '#334155', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}
+                className="pos-btn-action"
               >
                 <FileText size={16} color="#10b981" /> Quotation
               </button>
               <button 
                 onClick={() => navigate('/admin/payment-in')} 
-                style={{ background: '#fff', border: '1px solid #cbd5e1', padding: '8px 14px', borderRadius: '6px', fontSize: '13px', fontWeight: '600', color: '#334155', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}
+                className="pos-btn-action"
               >
                 <HandCoins size={16} color="#3b82f6" /> Payment In
               </button>
@@ -208,7 +209,7 @@ const AdminPOSDataSheet = () => {
               />
               <button 
                 onClick={() => navigate('/admin/pos/create-sales-invoice')} 
-                style={{ background: '#ff6600', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '6px', fontSize: '13px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', boxShadow: '0 2px 6px rgba(255, 102, 0, 0.25)', whiteSpace: 'nowrap' }}
+                className="pos-btn-primary"
               >
                 <Plus size={16} /> Create Sales Invoice
               </button>
@@ -216,46 +217,46 @@ const AdminPOSDataSheet = () => {
           </div>
 
           {/* Metric Summary Cards Bar */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1px', background: '#eef2f6', borderBottom: '1px solid #eef2f6' }}>
-            <div style={{ padding: '16px 24px', background: '#fff' }}>
-              <span style={{ fontSize: '12px', color: '#64748b', fontWeight: '500' }}>Total POS Sales</span>
-              <h3 style={{ margin: '4px 0 0 0', fontSize: '22px', fontWeight: '700', color: '#111' }}>₹ {totalSales.toLocaleString('en-IN')}</h3>
+          <div className="pos-metrics-grid">
+            <div className="pos-metric-card">
+              <span className="pos-metric-label">Total POS Sales</span>
+              <h3 className="pos-metric-value" style={{ color: '#111' }}>₹ {totalSales.toLocaleString('en-IN')}</h3>
             </div>
-            <div style={{ padding: '16px 24px', background: '#fff' }}>
-              <span style={{ fontSize: '12px', color: '#64748b', fontWeight: '500' }}>Transactions Count</span>
-              <h3 style={{ margin: '4px 0 0 0', fontSize: '22px', fontWeight: '700', color: '#6366f1' }}>{transactionsCount}</h3>
+            <div className="pos-metric-card">
+              <span className="pos-metric-label">Transactions Count</span>
+              <h3 className="pos-metric-value" style={{ color: '#6366f1' }}>{transactionsCount}</h3>
             </div>
-            <div style={{ padding: '16px 24px', background: '#fff' }}>
-              <span style={{ fontSize: '12px', color: '#16a34a', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#16a34a' }}></div> Paid Amount
+            <div className="pos-metric-card">
+              <span className="pos-metric-label" style={{ color: '#16a34a' }}>
+                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#16a34a', display: 'inline-block' }}></span> Paid Amount
               </span>
-              <h3 style={{ margin: '4px 0 0 0', fontSize: '22px', fontWeight: '700', color: '#16a34a' }}>₹ {paidAmount.toLocaleString('en-IN')}</h3>
+              <h3 className="pos-metric-value" style={{ color: '#16a34a' }}>₹ {paidAmount.toLocaleString('en-IN')}</h3>
             </div>
-            <div style={{ padding: '16px 24px', background: '#fff' }}>
-              <span style={{ fontSize: '12px', color: '#dc2626', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#dc2626' }}></div> Pending Amount
+            <div className="pos-metric-card">
+              <span className="pos-metric-label" style={{ color: '#dc2626' }}>
+                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#dc2626', display: 'inline-block' }}></span> Pending Amount
               </span>
-              <h3 style={{ margin: '4px 0 0 0', fontSize: '22px', fontWeight: '700', color: '#dc2626' }}>₹ {pendingAmount.toLocaleString('en-IN')}</h3>
+              <h3 className="pos-metric-value" style={{ color: '#dc2626' }}>₹ {pendingAmount.toLocaleString('en-IN')}</h3>
             </div>
           </div>
 
           {/* Controls Bar */}
-          <div style={{ padding: '16px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#f8fafc', borderBottom: '1px solid #eef2f6' }}>
-            <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-              <div style={{ position: 'relative', width: '260px' }}>
-                <Search size={15} style={{ position: 'absolute', left: '10px', top: '9px', color: '#94a3b8' }} />
+          <div className="pos-filter-bar">
+            <div className="pos-filter-controls">
+              <div className="pos-search-wrap">
+                <Search size={15} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
                 <input 
                   type="text" 
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="Search invoice, customer..." 
-                  style={{ width: '100%', padding: '7px 12px 7px 32px', border: '1px solid #cbd5e1', borderRadius: '6px', fontSize: '13px', outline: 'none', background: '#fff' }} 
+                  className="pos-search-input"
                 />
               </div>
               <select 
                 value={paymentModeFilter}
                 onChange={(e) => setPaymentModeFilter(e.target.value)}
-                style={{ padding: '7px 12px', border: '1px solid #cbd5e1', borderRadius: '6px', fontSize: '13px', outline: 'none', background: '#fff', color: '#334155' }}
+                className="pos-select-filter"
               >
                 <option value="All">All Payment Modes</option>
                 <option value="Cash">Cash</option>
@@ -264,86 +265,91 @@ const AdminPOSDataSheet = () => {
                 <option value="Credit">Credit</option>
               </select>
             </div>
+            <div style={{ fontSize: '13px', color: '#64748b', fontWeight: '500' }}>
+              Showing <strong style={{ color: '#0f172a' }}>{filteredSales.length}</strong> of {posSalesData.length} invoices
+            </div>
           </div>
 
-          {/* Table Sheet */}
-          <table className="dash-table">
-            <thead>
-              <tr>
-                <th>Invoice No</th>
-                <th>Customer Name</th>
-                <th>Date & Time</th>
-                <th>Payment Mode</th>
-                <th>Items</th>
-                <th>Total Amount</th>
-                <th>Status</th>
-                <th style={{ textAlign: 'center' }}>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredSales.map((sale) => (
-                <tr key={sale.id}>
-                  <td>
-                    <button 
-                      onClick={() => navigate(`/admin/pos/create-sales-invoice?id=${encodeURIComponent(sale.id)}`)}
-                      style={{ background: 'none', border: 'none', color: '#2563eb', fontWeight: '600', fontSize: '13px', padding: 0, cursor: 'pointer' }}
-                    >
-                      {sale.id}
-                    </button>
-                  </td>
-                  <td>
-                    <div style={{ fontWeight: '600', color: '#1e293b', fontSize: '13px' }}>{sale.customer}</div>
-                    <div style={{ color: '#64748b', fontSize: '11px' }}>{sale.mobile}</div>
-                  </td>
-                  <td style={{ color: '#475569', fontSize: '12px' }}>{sale.dateTime}</td>
-                  <td>
-                    <span style={{ background: '#f1f5f9', color: '#334155', padding: '3px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: '600' }}>
-                      {sale.mode}
-                    </span>
-                  </td>
-                  <td style={{ color: '#475569' }}>{getCleanItemsCount(sale)} Items</td>
-                  <td style={{ fontWeight: '700', color: '#111' }}>{sale.amount}</td>
-                  <td>
-                    <span style={{ 
-                      background: sale.status === 'Paid' ? '#f0fdf4' : '#fef2f2',
-                      color: sale.status === 'Paid' ? '#16a34a' : '#dc2626',
-                      padding: '3px 10px',
-                      borderRadius: '12px',
-                      fontSize: '12px',
-                      fontWeight: '600'
-                    }}>
-                      {sale.status}
-                    </span>
-                  </td>
-                  <td style={{ textAlign: 'center' }}>
-                    <div style={{ display: 'inline-flex', gap: '6px', justifyContent: 'center' }}>
+          {/* Desktop Table Sheet (>= 768px) */}
+          <div className="pos-desktop-view">
+            <table className="dash-table">
+              <thead>
+                <tr>
+                  <th>Invoice No</th>
+                  <th>Customer Name</th>
+                  <th>Date & Time</th>
+                  <th>Payment Mode</th>
+                  <th>Items</th>
+                  <th>Total Amount</th>
+                  <th>Status</th>
+                  <th style={{ textAlign: 'center' }}>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredSales.map((sale) => (
+                  <tr key={sale.id}>
+                    <td>
                       <button 
                         onClick={() => navigate(`/admin/pos/create-sales-invoice?id=${encodeURIComponent(sale.id)}`)}
-                        title="View Invoice"
-                        style={{ background: '#f8fafc', border: '1px solid #cbd5e1', padding: '5px 10px', borderRadius: '6px', fontSize: '12px', fontWeight: '600', color: '#334155', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                        style={{ background: 'none', border: 'none', color: '#2563eb', fontWeight: '600', fontSize: '13px', padding: 0, cursor: 'pointer' }}
                       >
-                        <Eye size={13} /> View
+                        {sale.id}
                       </button>
-                      <button 
-                        onClick={() => handlePrint(sale)}
-                        title="Print Invoice"
-                        style={{ background: '#f8fafc', border: '1px solid #cbd5e1', padding: '5px 10px', borderRadius: '6px', fontSize: '12px', fontWeight: '600', color: '#334155', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
-                      >
-                        <Printer size={13} /> Print
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-              {filteredSales.length === 0 && (
-                <tr>
-                  <td colSpan="8" style={{ textAlign: 'center', padding: '32px', color: '#94a3b8' }}>
-                    No POS invoices found matching your filter.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                    </td>
+                    <td>
+                      <div style={{ fontWeight: '600', color: '#1e293b', fontSize: '13px' }}>{sale.customer}</div>
+                      <div style={{ color: '#64748b', fontSize: '11px' }}>{sale.mobile}</div>
+                    </td>
+                    <td style={{ color: '#475569', fontSize: '12px' }}>{sale.dateTime}</td>
+                    <td>
+                      <span style={{ background: '#f1f5f9', color: '#334155', padding: '3px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: '600' }}>
+                        {sale.mode}
+                      </span>
+                    </td>
+                    <td style={{ color: '#475569' }}>{getCleanItemsCount(sale)} Items</td>
+                    <td style={{ fontWeight: '700', color: '#111' }}>{sale.amount}</td>
+                    <td>
+                      <span style={{ 
+                        background: sale.status === 'Paid' ? '#f0fdf4' : '#fef2f2',
+                        color: sale.status === 'Paid' ? '#16a34a' : '#dc2626',
+                        padding: '3px 10px',
+                        borderRadius: '12px',
+                        fontSize: '12px',
+                        fontWeight: '600'
+                      }}>
+                        {sale.status}
+                      </span>
+                    </td>
+                    <td style={{ textAlign: 'center' }}>
+                      <div style={{ display: 'inline-flex', gap: '6px', justifyContent: 'center' }}>
+                        <button 
+                          onClick={() => navigate(`/admin/pos/create-sales-invoice?id=${encodeURIComponent(sale.id)}`)}
+                          title="View Invoice"
+                          style={{ background: '#f8fafc', border: '1px solid #cbd5e1', padding: '5px 10px', borderRadius: '6px', fontSize: '12px', fontWeight: '600', color: '#334155', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                        >
+                          <Eye size={13} /> View
+                        </button>
+                        <button 
+                          onClick={() => handlePrint(sale)}
+                          title="Print Invoice"
+                          style={{ background: '#f8fafc', border: '1px solid #cbd5e1', padding: '5px 10px', borderRadius: '6px', fontSize: '12px', fontWeight: '600', color: '#334155', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                        >
+                          <Printer size={13} /> Print
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+                {filteredSales.length === 0 && (
+                  <tr>
+                    <td colSpan="8" style={{ textAlign: 'center', padding: '32px', color: '#94a3b8' }}>
+                      No POS invoices found matching your filter.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
 
         </div>
       </div>

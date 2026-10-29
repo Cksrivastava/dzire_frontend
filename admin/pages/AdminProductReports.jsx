@@ -3,6 +3,7 @@ import AdminLayout from './AdminLayout';
 import ExportDropdown from '../components/ExportDropdown';
 import { Search, Package, TrendingUp, AlertTriangle, ArrowUpDown, Filter, ShoppingBag } from 'lucide-react';
 import './AdminDashboard.css';
+import './AdminReports.css';
 
 const AdminProductReports = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -126,72 +127,72 @@ const AdminProductReports = () => {
 
   return (
     <AdminLayout>
-      <div className="dashboard-wrapper">
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '24px' }}>
-          <div style={{ background: '#fff', padding: '20px', borderRadius: '12px', border: '1px solid #eef2f6' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '13px', color: '#64748b', fontWeight: '500' }}>Total Product Sales</span>
-              <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: '#ecfdf5', color: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div className="dashboard-wrapper reports-page-wrapper">
+        {/* 4 Stat Cards */}
+        <div className="reports-kpi-grid">
+          <div className="reports-kpi-card">
+            <div className="reports-kpi-card-header">
+              <span className="reports-kpi-label">Total Product Sales</span>
+              <div className="reports-kpi-icon" style={{ background: '#ecfdf5', color: '#10b981' }}>
                 <TrendingUp size={20} />
               </div>
             </div>
-            <div style={{ fontSize: '24px', fontWeight: '700', color: '#0f172a' }}>₹{totalRevenue.toLocaleString('en-IN')}</div>
-            <div style={{ fontSize: '12px', color: '#10b981', marginTop: '4px', fontWeight: '500' }}>Across all catalog SKUs</div>
+            <div className="reports-kpi-value">₹{totalRevenue.toLocaleString('en-IN')}</div>
+            <div className="reports-kpi-meta" style={{ color: '#10b981' }}>Across all catalog SKUs</div>
           </div>
 
-          <div style={{ background: '#fff', padding: '20px', borderRadius: '12px', border: '1px solid #eef2f6' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '13px', color: '#64748b', fontWeight: '500' }}>Units Dispatched</span>
-              <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: '#eff6ff', color: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div className="reports-kpi-card">
+            <div className="reports-kpi-card-header">
+              <span className="reports-kpi-label">Units Dispatched</span>
+              <div className="reports-kpi-icon" style={{ background: '#eff6ff', color: '#3b82f6' }}>
                 <ShoppingBag size={20} />
               </div>
             </div>
-            <div style={{ fontSize: '24px', fontWeight: '700', color: '#0f172a' }}>{totalUnits.toLocaleString('en-IN')}</div>
-            <div style={{ fontSize: '12px', color: '#3b82f6', marginTop: '4px', fontWeight: '500' }}>Total volume sold</div>
+            <div className="reports-kpi-value">{totalUnits.toLocaleString('en-IN')}</div>
+            <div className="reports-kpi-meta" style={{ color: '#3b82f6' }}>Total volume sold</div>
           </div>
 
-          <div style={{ background: '#fff', padding: '20px', borderRadius: '12px', border: '1px solid #eef2f6' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '13px', color: '#64748b', fontWeight: '500' }}>Active Catalog Items</span>
-              <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: '#f5f3ff', color: '#8b5cf6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div className="reports-kpi-card">
+            <div className="reports-kpi-card-header">
+              <span className="reports-kpi-label">Active Catalog Items</span>
+              <div className="reports-kpi-icon" style={{ background: '#f5f3ff', color: '#8b5cf6' }}>
                 <Package size={20} />
               </div>
             </div>
-            <div style={{ fontSize: '24px', fontWeight: '700', color: '#0f172a' }}>{productsData.length} SKUs</div>
-            <div style={{ fontSize: '12px', color: '#8b5cf6', marginTop: '4px', fontWeight: '500' }}>Covering 5 categories</div>
+            <div className="reports-kpi-value">{productsData.length} SKUs</div>
+            <div className="reports-kpi-meta" style={{ color: '#8b5cf6' }}>Covering 5 categories</div>
           </div>
 
-          <div style={{ background: '#fff', padding: '20px', borderRadius: '12px', border: '1px solid #eef2f6' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '13px', color: '#64748b', fontWeight: '500' }}>Inventory Attention</span>
-              <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: '#fffbeb', color: '#f59e0b', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div className="reports-kpi-card">
+            <div className="reports-kpi-card-header">
+              <span className="reports-kpi-label">Inventory Attention</span>
+              <div className="reports-kpi-icon" style={{ background: '#fffbeb', color: '#f59e0b' }}>
                 <AlertTriangle size={20} />
               </div>
             </div>
-            <div style={{ fontSize: '24px', fontWeight: '700', color: '#0f172a' }}>{lowStockCount} SKUs</div>
-            <div style={{ fontSize: '12px', color: '#f59e0b', marginTop: '4px', fontWeight: '500' }}>Low or out of stock</div>
+            <div className="reports-kpi-value">{lowStockCount} SKUs</div>
+            <div className="reports-kpi-meta" style={{ color: '#f59e0b' }}>Low or out of stock</div>
           </div>
         </div>
 
         {/* Data Container */}
-        <div style={{ background: '#fff', borderRadius: '12px', border: '1px solid #eef2f6', overflow: 'hidden' }}>
-          <div style={{ padding: '16px 24px', borderBottom: '1px solid #eef2f6', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: '1', minWidth: '280px' }}>
-              <div style={{ position: 'relative', width: '100%', maxWidth: '320px' }}>
+        <div className="reports-table-card">
+          <div className="reports-filter-bar">
+            <div className="reports-filter-left">
+              <div className="reports-search-box">
                 <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
                 <input
                   type="text"
                   placeholder="Search by product name or SKU..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  style={{ width: '100%', padding: '8px 12px 8px 36px', border: '1px solid #cbd5e1', borderRadius: '8px', fontSize: '13px', outline: 'none' }}
                 />
               </div>
 
               <select
                 value={categoryFilter}
                 onChange={(e) => setCategoryFilter(e.target.value)}
-                style={{ padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: '8px', fontSize: '13px', background: '#fff', outline: 'none' }}
+                className="reports-select"
               >
                 <option value="All">All Categories</option>
                 <option value="Backpacks">Backpacks</option>
@@ -204,7 +205,7 @@ const AdminProductReports = () => {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                style={{ padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: '8px', fontSize: '13px', background: '#fff', outline: 'none' }}
+                className="reports-select"
               >
                 <option value="All">All Stock Status</option>
                 <option value="In Stock">In Stock</option>
@@ -215,7 +216,7 @@ const AdminProductReports = () => {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                style={{ padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: '8px', fontSize: '13px', background: '#fff', outline: 'none' }}
+                className="reports-select"
               >
                 <option value="revenue">Sort by Revenue</option>
                 <option value="units">Sort by Units Sold</option>
@@ -223,7 +224,7 @@ const AdminProductReports = () => {
               </select>
             </div>
 
-            <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+            <div className="reports-filter-right">
               <ExportDropdown
                 fileName="Product_Performance_Report"
                 title="Product Sales Velocity & Catalog Performance Report"
@@ -243,18 +244,18 @@ const AdminProductReports = () => {
             </div>
           </div>
 
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
+          <div className="reports-table-scroll">
+            <table className="reports-table">
               <thead>
-                <tr style={{ background: '#f8fafc', borderBottom: '1px solid #eef2f6', color: '#64748b' }}>
-                  <th style={{ padding: '12px 20px', fontWeight: '600' }}>Product Details</th>
-                  <th style={{ padding: '12px 16px', fontWeight: '600' }}>Category</th>
-                  <th style={{ padding: '12px 16px', fontWeight: '600' }}>Price</th>
-                  <th style={{ padding: '12px 16px', fontWeight: '600' }}>Units Sold</th>
-                  <th style={{ padding: '12px 16px', fontWeight: '600' }}>Total Revenue</th>
-                  <th style={{ padding: '12px 16px', fontWeight: '600' }}>Gross Margin</th>
-                  <th style={{ padding: '12px 16px', fontWeight: '600' }}>Return %</th>
-                  <th style={{ padding: '12px 20px', fontWeight: '600' }}>Stock Status</th>
+                <tr style={{ background: '#ff6600', color: '#ffffff' }}>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Product Details</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Category</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Price</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Units Sold</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Total Revenue</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Gross Margin</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Return %</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Stock Status</th>
                 </tr>
               </thead>
               <tbody>

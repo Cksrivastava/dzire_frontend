@@ -3,6 +3,7 @@ import AdminLayout from './AdminLayout';
 import ExportDropdown from '../components/ExportDropdown';
 import { Search, TrendingUp, Eye, Printer, DollarSign, ArrowUpRight, BarChart3 } from 'lucide-react';
 import './AdminDashboard.css';
+import './AdminReports.css';
 
 const AdminProfitReports = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -55,25 +56,25 @@ const AdminProfitReports = () => {
 
   return (
     <AdminLayout>
-      <div className="dashboard-wrapper">
+      <div className="dashboard-wrapper reports-page-wrapper">
         {/* Data Sheet Table Container */}
-        <div style={{ background: '#fff', borderRadius: '10px', border: '1px solid #eef2f6', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
+        <div className="reports-table-card">
           
           {/* Header Action Bar */}
-          <div style={{ padding: '18px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #eef2f6', gap: '16px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0, flexShrink: 1 }}>
+          <div className="reports-header" style={{ padding: '18px 24px', borderBottom: '1px solid #eef2f6', marginBottom: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0, flex: 1 }}>
               <div style={{ width: '38px', height: '38px', minWidth: '38px', borderRadius: '8px', background: '#fff0e6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ff6600', flexShrink: 0 }}>
                 <TrendingUp size={20} />
               </div>
-              <div style={{ minWidth: 0 }}>
-                <h4 style={{ margin: 0, fontSize: '16px', fontWeight: '700', color: '#1e293b', whiteSpace: 'nowrap' }}>Profitability & Margins Data Sheet</h4>
-                <p style={{ margin: '2px 0 0 0', fontSize: '13px', color: '#64748b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              <div className="reports-header-title">
+                <h4 style={{ margin: 0, fontSize: '18px', fontWeight: '700', color: '#1e293b' }}>Profitability & Margins Data Sheet</h4>
+                <p style={{ margin: '2px 0 0 0', fontSize: '13px', color: '#64748b' }}>
                   Channel-wise gross revenue, Cost of Goods Sold (COGS), and net profit analysis
                 </p>
               </div>
             </div>
 
-            <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexShrink: 0 }}>
+            <div className="reports-header-actions" style={{ flexShrink: 0 }}>
               <ExportDropdown
                 fileName="Profitability_Analysis_Report"
                 title="Profitability & Channel Margins Statement"
@@ -101,47 +102,46 @@ const AdminProfitReports = () => {
           </div>
 
           {/* Metric Summary Cards Bar */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1px', background: '#eef2f6', borderBottom: '1px solid #eef2f6' }}>
-            <div style={{ padding: '16px 24px', background: '#fff' }}>
-              <span style={{ fontSize: '12px', color: '#64748b', fontWeight: '500' }}>Consolidated Gross Revenue</span>
-              <h3 style={{ margin: '4px 0 0 0', fontSize: '22px', fontWeight: '700', color: '#111' }}>{summary.grossRevenue}</h3>
+          <div className="reports-summary-bar">
+            <div className="reports-summary-item">
+              <span className="reports-summary-label">Consolidated Gross Revenue</span>
+              <h3 className="reports-summary-val">{summary.grossRevenue}</h3>
             </div>
-            <div style={{ padding: '16px 24px', background: '#fff' }}>
-              <span style={{ fontSize: '12px', color: '#64748b', fontWeight: '500' }}>Cost of Goods Sold (COGS)</span>
-              <h3 style={{ margin: '4px 0 0 0', fontSize: '22px', fontWeight: '700', color: '#6366f1' }}>{summary.cogs}</h3>
+            <div className="reports-summary-item">
+              <span className="reports-summary-label">Cost of Goods Sold (COGS)</span>
+              <h3 className="reports-summary-val" style={{ color: '#6366f1' }}>{summary.cogs}</h3>
             </div>
-            <div style={{ padding: '16px 24px', background: '#fff' }}>
-              <span style={{ fontSize: '12px', color: '#16a34a', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <div className="reports-summary-item">
+              <span className="reports-summary-label" style={{ color: '#16a34a' }}>
                 <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#16a34a' }}></div> Net Gross Profit
               </span>
-              <h3 style={{ margin: '4px 0 0 0', fontSize: '22px', fontWeight: '700', color: '#16a34a' }}>{summary.grossProfit}</h3>
+              <h3 className="reports-summary-val" style={{ color: '#16a34a' }}>{summary.grossProfit}</h3>
             </div>
-            <div style={{ padding: '16px 24px', background: '#fff' }}>
-              <span style={{ fontSize: '12px', color: '#2563eb', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <div className="reports-summary-item">
+              <span className="reports-summary-label" style={{ color: '#2563eb' }}>
                 <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#2563eb' }}></div> Overall Profit Margin
               </span>
-              <h3 style={{ margin: '4px 0 0 0', fontSize: '22px', fontWeight: '700', color: '#2563eb' }}>{summary.overallMargin}</h3>
+              <h3 className="reports-summary-val" style={{ color: '#2563eb' }}>{summary.overallMargin}</h3>
             </div>
           </div>
 
           {/* Controls Bar */}
-          <div style={{ padding: '16px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#f8fafc', borderBottom: '1px solid #eef2f6' }}>
-            <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-              <div style={{ position: 'relative', width: '280px' }}>
+          <div className="reports-filter-bar">
+            <div className="reports-filter-left">
+              <div className="reports-search-box">
                 <Search size={15} style={{ position: 'absolute', left: '10px', top: '9px', color: '#94a3b8' }} />
                 <input 
                   type="text" 
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="Search sales channel, department..." 
-                  style={{ width: '100%', padding: '7px 12px 7px 32px', border: '1px solid #cbd5e1', borderRadius: '6px', fontSize: '13px', outline: 'none', background: '#fff' }} 
                 />
               </div>
 
               <select 
                 value={channelFilter}
                 onChange={(e) => setChannelFilter(e.target.value)}
-                style={{ padding: '7px 12px', border: '1px solid #cbd5e1', borderRadius: '6px', fontSize: '13px', outline: 'none', background: '#fff', color: '#334155' }}
+                className="reports-select"
               >
                 <option value="All">All Sales Channels</option>
                 <option value="E-Commerce">E-Commerce Website</option>
@@ -154,7 +154,7 @@ const AdminProfitReports = () => {
               <select 
                 value={marginFilter}
                 onChange={(e) => setMarginFilter(e.target.value)}
-                style={{ padding: '7px 12px', border: '1px solid #cbd5e1', borderRadius: '6px', fontSize: '13px', outline: 'none', background: '#fff', color: '#334155' }}
+                className="reports-select"
               >
                 <option value="All">All Margin Ranges</option>
                 <option value="High">High Margin (≥ 35%)</option>
@@ -163,90 +163,91 @@ const AdminProfitReports = () => {
             </div>
           </div>
 
-          {/* Table Sheet */}
-          <table className="dash-table">
-            <thead>
-              <tr>
-                <th>Sales Channel</th>
-                <th>Department</th>
-                <th>Orders</th>
-                <th>Gross Revenue</th>
-                <th>COGS (Cost)</th>
-                <th>Operating Cost</th>
-                <th>Gross Profit</th>
-                <th>Margin %</th>
-                <th>Status</th>
-                <th style={{ textAlign: 'center' }}>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredData.length === 0 ? (
-                <tr>
-                  <td colSpan="10" style={{ textAlign: 'center', padding: '32px', color: '#64748b', fontSize: '13px' }}>
-                    No channel profitability records found.
-                  </td>
+          {/* Table Sheet with horizontal scroll */}
+          <div className="reports-table-scroll">
+            <table className="reports-table dash-table" style={{ minWidth: '950px' }}>
+              <thead>
+                <tr style={{ background: '#ff6600', color: '#ffffff' }}>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Sales Channel</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Department</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Orders</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Gross Revenue</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>COGS (Cost)</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Operating Cost</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Gross Profit</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Margin %</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600' }}>Status</th>
+                  <th style={{ color: '#ffffff', backgroundColor: '#ff6600', textAlign: 'center' }}>Actions</th>
                 </tr>
-              ) : (
-                filteredData.map((item) => (
-                  <tr key={item.id}>
-                    <td>
-                      <div style={{ fontWeight: '600', color: '#1e293b', fontSize: '13px' }}>{item.channel}</div>
-                      <div style={{ color: '#2563eb', fontSize: '11px' }}>ID: {item.id}</div>
-                    </td>
-                    <td style={{ color: '#475569', fontSize: '12px' }}>{item.department}</td>
-                    <td style={{ color: '#475569', fontWeight: '600' }}>{item.orders} Orders</td>
-                    <td style={{ fontWeight: '700', color: '#111' }}>{item.grossRevenue}</td>
-                    <td style={{ color: '#dc2626', fontWeight: '500' }}>{item.cogs}</td>
-                    <td style={{ color: '#64748b' }}>{item.operatingCost}</td>
-                    <td style={{ fontWeight: '700', color: '#16a34a' }}>{item.grossProfit}</td>
-                    <td>
-                      <span style={{ 
-                        background: item.marginPercent >= 35 ? '#f0fdf4' : '#fff7ed',
-                        color: item.marginPercent >= 35 ? '#16a34a' : '#ea580c',
-                        padding: '3px 8px',
-                        borderRadius: '4px',
-                        fontSize: '12px',
-                        fontWeight: '700'
-                      }}>
-                        {item.marginBadge}
-                      </span>
-                    </td>
-                    <td>
-                      <span style={{ 
-                        background: item.status === 'Top Margin' ? '#f0fdf4' : item.status === 'High Margin' ? '#eff6ff' : '#f8fafc',
-                        color: item.status === 'Top Margin' ? '#16a34a' : item.status === 'High Margin' ? '#2563eb' : '#475569',
-                        padding: '3px 10px',
-                        borderRadius: '12px',
-                        fontSize: '12px',
-                        fontWeight: '600'
-                      }}>
-                        {item.status}
-                      </span>
-                    </td>
-                    <td style={{ textAlign: 'center' }}>
-                      <div style={{ display: 'inline-flex', gap: '6px', justifyContent: 'center' }}>
-                        <button 
-                          onClick={() => alert(`Channel Cost Breakdown:\n\nChannel: ${item.channel} (${item.id})\nDepartment: ${item.department}\nTotal Orders: ${item.orders}\nGross Revenue: ${item.grossRevenue}\nCOGS: ${item.cogs}\nOperating Cost: ${item.operatingCost}\nGross Profit: ${item.grossProfit}\nMargin: ${item.marginBadge} (${item.status})`)}
-                          title="View Breakdown"
-                          style={{ background: '#f8fafc', border: '1px solid #cbd5e1', padding: '5px 10px', borderRadius: '6px', fontSize: '12px', fontWeight: '600', color: '#334155', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
-                        >
-                          <Eye size={13} /> View
-                        </button>
-                        <button 
-                          onClick={() => window.print()}
-                          title="Print"
-                          style={{ background: '#f8fafc', border: '1px solid #cbd5e1', padding: '5px 10px', borderRadius: '6px', fontSize: '12px', fontWeight: '600', color: '#334155', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
-                        >
-                          <Printer size={13} /> Print
-                        </button>
-                      </div>
+              </thead>
+              <tbody>
+                {filteredData.length === 0 ? (
+                  <tr>
+                    <td colSpan="10" style={{ textAlign: 'center', padding: '32px', color: '#64748b', fontSize: '13px' }}>
+                      No channel profitability records found.
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-
+                ) : (
+                  filteredData.map((item) => (
+                    <tr key={item.id}>
+                      <td>
+                        <div style={{ fontWeight: '600', color: '#1e293b', fontSize: '13px' }}>{item.channel}</div>
+                        <div style={{ color: '#2563eb', fontSize: '11px' }}>ID: {item.id}</div>
+                      </td>
+                      <td style={{ color: '#475569', fontSize: '12px' }}>{item.department}</td>
+                      <td style={{ color: '#475569', fontWeight: '600' }}>{item.orders} Orders</td>
+                      <td style={{ fontWeight: '700', color: '#111' }}>{item.grossRevenue}</td>
+                      <td style={{ color: '#dc2626', fontWeight: '500' }}>{item.cogs}</td>
+                      <td style={{ color: '#64748b' }}>{item.operatingCost}</td>
+                      <td style={{ fontWeight: '700', color: '#16a34a' }}>{item.grossProfit}</td>
+                      <td>
+                        <span style={{ 
+                          background: item.marginPercent >= 35 ? '#f0fdf4' : '#fff7ed',
+                          color: item.marginPercent >= 35 ? '#16a34a' : '#ea580c',
+                          padding: '3px 8px',
+                          borderRadius: '4px',
+                          fontSize: '12px',
+                          fontWeight: '700'
+                        }}>
+                          {item.marginBadge}
+                        </span>
+                      </td>
+                      <td>
+                        <span style={{ 
+                          background: item.status === 'Top Margin' ? '#f0fdf4' : item.status === 'High Margin' ? '#eff6ff' : '#f8fafc',
+                          color: item.status === 'Top Margin' ? '#16a34a' : item.status === 'High Margin' ? '#2563eb' : '#475569',
+                          padding: '3px 10px',
+                          borderRadius: '12px',
+                          fontSize: '12px',
+                          fontWeight: '600'
+                        }}>
+                          {item.status}
+                        </span>
+                      </td>
+                      <td style={{ textAlign: 'center' }}>
+                        <div style={{ display: 'inline-flex', gap: '6px', justifyContent: 'center' }}>
+                          <button 
+                            onClick={() => alert(`Channel Cost Breakdown:\n\nChannel: ${item.channel} (${item.id})\nDepartment: ${item.department}\nTotal Orders: ${item.orders}\nGross Revenue: ${item.grossRevenue}\nCOGS: ${item.cogs}\nOperating Cost: ${item.operatingCost}\nGross Profit: ${item.grossProfit}\nMargin: ${item.marginBadge} (${item.status})`)}
+                            title="View Breakdown"
+                            style={{ background: '#f8fafc', border: '1px solid #cbd5e1', padding: '5px 10px', borderRadius: '6px', fontSize: '12px', fontWeight: '600', color: '#334155', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                          >
+                            <Eye size={13} /> View
+                          </button>
+                          <button 
+                            onClick={() => window.print()}
+                            title="Print"
+                            style={{ background: '#f8fafc', border: '1px solid #cbd5e1', padding: '5px 10px', borderRadius: '6px', fontSize: '12px', fontWeight: '600', color: '#334155', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                          >
+                            <Printer size={13} /> Print
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </AdminLayout>

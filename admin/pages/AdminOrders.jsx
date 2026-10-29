@@ -957,23 +957,23 @@ const AdminOrders = () => {
               <thead>
                 <tr
                   style={{
-                    background: "#f8fafc",
-                    borderBottom: "1px solid #e2e8f0",
-                    color: "#475569",
+                    background: "#ff6600",
+                    borderBottom: "1px solid #ff6600",
+                    color: "#ffffff",
                     fontWeight: "700",
                     fontSize: "12px",
                     textTransform: "uppercase",
                     letterSpacing: "0.05em"
                   }}
                 >
-                  <th style={{ padding: "12px 16px", width: "100px" }}>Order ID</th>
-                  <th style={{ padding: "12px 16px", minWidth: "160px" }}>Date & Time</th>
-                  <th style={{ padding: "12px 16px", minWidth: "180px" }}>Customer</th>
-                  <th style={{ padding: "12px 16px", minWidth: "220px" }}>Product Summary</th>
-                  <th style={{ padding: "12px 16px", width: "110px" }}>Amount</th>
-                  <th style={{ padding: "12px 16px", minWidth: "140px" }}>Payment</th>
-                  <th style={{ padding: "12px 16px", minWidth: "150px" }}>Order Status</th>
-                  <th style={{ padding: "12px 16px", width: "120px", textAlign: "right" }}>Actions</th>
+                  <th style={{ padding: "12px 16px", width: "100px", color: "#ffffff" }}>Order ID</th>
+                  <th style={{ padding: "12px 16px", minWidth: "160px", color: "#ffffff" }}>Date & Time</th>
+                  <th style={{ padding: "12px 16px", minWidth: "180px", color: "#ffffff" }}>Customer</th>
+                  <th style={{ padding: "12px 16px", minWidth: "220px", color: "#ffffff" }}>Product Summary</th>
+                  <th style={{ padding: "12px 16px", width: "110px", color: "#ffffff" }}>Amount</th>
+                  <th style={{ padding: "12px 16px", minWidth: "140px", color: "#ffffff" }}>Payment</th>
+                  <th style={{ padding: "12px 16px", minWidth: "150px", color: "#ffffff" }}>Order Status</th>
+                  <th style={{ padding: "12px 16px", width: "120px", textAlign: "right", color: "#ffffff" }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
